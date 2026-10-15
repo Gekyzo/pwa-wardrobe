@@ -11,13 +11,19 @@ export const fitsSeason = (garment, season = 'any') => season === 'any' || garme
 
 const byId = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
-// The picks of one colour: the garments near it, nearest first, at most MAX_CANDIDATES.
-const candidates = (color, garments) =>
-  garments
+const nearest = (a, b) => a.distance - b.distance || byId(a.garment.id, b.garment.id);
+
+// The picks of one colour: the garments near it, nearest first, at most MAX_CANDIDATES. The
+// nearest garment of each slot is kept first, so that many garments of one slot hide no other.
+const candidates = (color, garments) => {
+  const near = garments
     .map((garment) => ({ color, garment, distance: distance(color, garment.color) }))
     .filter((pick) => pick.distance <= MATCH_MAX)
-    .sort((a, b) => a.distance - b.distance || byId(a.garment.id, b.garment.id))
-    .slice(0, MAX_CANDIDATES);
+    .sort(nearest);
+  const firsts = near.filter((pick, i) => near.findIndex((other) => other.garment.slot === pick.garment.slot) === i);
+  const rest = near.filter((pick) => !firsts.includes(pick));
+  return [...firsts, ...rest.slice(0, MAX_CANDIDATES - firsts.length)].sort(nearest);
+};
 
 const slotFree = (picks, garment) => garment.slot === 'accessory' || !picks.some((pick) => pick.garment.slot === garment.slot);
 

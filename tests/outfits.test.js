@@ -105,6 +105,16 @@ test('a colour keeps at most MAX_CANDIDATES candidates (OUT-6)', () => {
   assert.equal(outfits.length, MAX_OUTFITS);
 });
 
+test('the cap keeps the nearest garments of each slot, so many accessories hide no bottom (OUT-6)', () => {
+  const [p, q, r] = three.colors;
+  // Accessories first in id order: a cap blind to the slot fills with them and drops the bottom.
+  const accessories = Array.from({ length: 50 }, (_, i) => ({ ...g(p, 'accessory'), id: `a${String(i).padStart(2, '0')}` }));
+  const bottom = { ...g(p, 'bottom'), id: 'z-bottom' };
+  const garments = [...accessories, bottom, g(q, 'top'), g(r, 'shoes')];
+  const outfits = outfitsFor(three.number, garments);
+  assert.ok(outfits.some((o) => ids(o).includes('z-bottom')));
+});
+
 test('an outfit with the same garments is listed once (OUT-5)', () => {
   // Two colours of one combination near each other (combination 337): their two garments can
   // swap places, which gives two assignments of one set of garments.

@@ -50,8 +50,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **OUT-5** The score of an outfit is the sum of its distances; it is exact when each distance
   is 0. The outfits are sorted exact first, then by score, then by combination and garment ids.
   One set of garments for one combination is listed once. At most `MAX_OUTFITS` are given.
-- **OUT-6** Each colour keeps its `MAX_CANDIDATES` nearest garments, so that a search stays short
-  in a wardrobe with many garments of one colour.
+- **OUT-6** Each colour keeps at most `MAX_CANDIDATES` garments, so that a search stays short in a
+  wardrobe with many garments of one colour: first the nearest garment of each slot, then the
+  nearest of the others. Many garments of one slot hide no garment of another slot.
 - **OUT-7** The season filter is `any`, `warm` or `cold`. A garment fits it when the filter is
   `any`, the season of the garment is `all`, or the two are equal.
 - **OUT-8** `outfitsWith` gives the outfits that contain one garment: over each combination of a
