@@ -33,11 +33,13 @@ test('the markup has no text of its own', () => {
   assert.doesNotMatch(body, /\s(aria-label|placeholder|title)="/);
 });
 
-test('the note sheet has a veil, a dialog and a text field with the maximum length', () => {
-  const [layer = ''] = body.match(/<div id="note-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
-  assert.match(layer, /<div id="note-veil" class="sheet-veil">/);
-  assert.match(layer, /<form id="note-form" class="sheet" role="dialog"/);
-  assert.match(layer, /<textarea id="note-text"[^>]*maxlength="200"/);
+test('the garment sheet has a veil, a dialog, a name field with the maximum length and the colour pick', () => {
+  const [layer = ''] = body.match(/<div id="garment-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
+  assert.match(layer, /<div id="garment-veil" class="sheet-veil">/);
+  assert.match(layer, /<form id="garment-form" class="sheet" role="dialog"/);
+  assert.match(layer, /<input id="garment-name"[^>]*maxlength="60"/);
+  assert.match(layer, /<input id="garment-color-input"[^>]*type="color"/);
+  assert.match(layer, /<div id="garment-swatches" class="swatch-grid">/);
 });
 
 test('the walkthrough has one drawing for each page, in the order of the pages', () => {

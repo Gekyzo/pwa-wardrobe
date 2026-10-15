@@ -81,7 +81,7 @@ export const initApp = (root, { slug, name, short, theme }, now = new Date()) =>
 
 const NEXT_STEPS = `Next:
   1. Replace icons/source.png, then npm run icons
-  2. Replace or delete the notes demo (docs/spec/07-notes.md lists its files)
+  2. Replace or delete the domain (docs/spec/07-wardrobe.md lists its files)
   3. git init -b main && npm run hooks
   4. Create the GitHub repo; set Pages source to "GitHub Actions"
   5. npm test`;

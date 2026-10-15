@@ -1,6 +1,6 @@
 import { $, ui, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
-import { bind as bindNotes, renderNotes, closeNoteSheet } from '#ui/notes';
+import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -9,7 +9,7 @@ import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onb
 const renderAll = () => {
   renderNav();
   $('title').textContent = t(`nav.${ui.view}`);
-  renderNotes();
+  renderWardrobe();
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
@@ -17,7 +17,7 @@ const renderAll = () => {
 setRender(renderAll);
 
 bindNav();
-bindNotes();
+bindWardrobe();
 bindSettings();
 bindInstall();
 bindOnboarding();
@@ -40,9 +40,9 @@ document.addEventListener('keydown', (event) => {
     return;
   }
   if (event.key !== 'Escape') return;
-  if (ui.sheetOpen) closeNoteSheet();
-  else if (ui.noteId !== null) {
-    ui.noteId = null;
+  if (ui.sheetOpen) closeGarmentSheet();
+  else if (ui.garmentId !== null || ui.combination !== null) {
+    Object.assign(ui, { garmentId: null, combination: null });
     render();
   }
 });

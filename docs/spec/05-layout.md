@@ -18,14 +18,14 @@ Rules of `styles.css` for the size classes, `src/sections.js`, `src/modules.js`,
   toast and the add button move beside it.
 - **LAY-3** A section with a list and a detail uses the `pane` layout. Below 840px it shows the
   list, or the detail alone while an entry is open, with a **Back** button (`pane-back`). From
-  840px it shows both; with no entry open the detail says `notes.pick`, and **Back** is hidden.
+  840px it shows both; with no entry open the detail says `wardrobe.pick` or `combinations.pick`, and **Back** is hidden.
 - **LAY-4** The safe-area insets of the phone pad the header (top), the bar (bottom), the rail
   (start side), the sheets and the walkthrough. The page keeps out of a cutout on either side,
   and so do the toast and the add button, which are fixed.
 
 ## Navigation
 
-- **NAV-1** The sections are `notes` and `settings`, in the order of `SECTIONS`. The navigation
+- **NAV-1** The sections are `wardrobe` and `settings`, in the order of `SECTIONS`. The navigation
   shows one item for each section that is on (MOD-1). The current one has
   `aria-current="page"`, and its title is the title of the header.
 - **NAV-2** A horizontal slide of at least 60 px that starts in the header or the content, out of
@@ -34,9 +34,9 @@ Rules of `styles.css` for the size classes, `src/sections.js`, `src/modules.js`,
 
 ## Modules
 
-- **MOD-1** `MODULES` lists the parts that Settings turns off: `notes`, which shows the Notes
-  section. With a module off, its sections leave the navigation, and a view of one of them goes
-  to the first section that is on.
+- **MOD-1** `MODULES` lists the parts that Settings turns off: `combinations`, which shows the
+  Combinations section. With a module off, its sections leave the navigation, and a view of one
+  of them goes to the first section that is on.
 - **MOD-2** The modules that are off are a preference of the device under `wardrobe.modules`,
   not part of the doc. No module off removes the key.
 - **MOD-3** A switch of Modules animates the item of its section: it breaks into dust and its

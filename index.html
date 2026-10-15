@@ -25,21 +25,22 @@
     </div>
 
     <main>
-      <section id="notes" class="pane">
+      <section id="wardrobe" class="pane">
         <div class="pane-list">
-          <ul id="note-list" class="item-list"></ul>
-          <div id="notes-empty" class="empty-state" hidden>
-            <p data-i18n="notes.empty"></p>
+          <ul id="garment-list" class="item-list"></ul>
+          <div id="wardrobe-empty" class="empty-state" hidden>
+            <p data-i18n="wardrobe.empty"></p>
           </div>
         </div>
-        <article id="note-detail" class="pane-detail">
-          <button id="note-back" class="button quiet pane-back" type="button" data-i18n="notes.back"></button>
-          <p id="note-detail-empty" class="empty-state" data-i18n="notes.pick"></p>
-          <p id="note-detail-text"></p>
-          <div id="note-actions" class="cluster">
-            <button id="note-edit" class="button outline" type="button" data-i18n="notes.edit"></button>
-            <button id="note-delete" class="button danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="notes.delete"></span></button>
+        <article id="garment-detail" class="pane-detail">
+          <button id="garment-back" class="button quiet pane-back" type="button" data-i18n="action.back"></button>
+          <p id="garment-detail-empty" class="empty-state" data-i18n="wardrobe.pick"></p>
+          <div id="garment-info" class="detail-head"></div>
+          <div id="garment-actions" class="cluster">
+            <button id="garment-edit" class="button outline" type="button" data-i18n="action.edit"></button>
+            <button id="garment-delete" class="button danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="action.delete"></span></button>
           </div>
+          <div id="garment-outfits" class="outfits"></div>
         </article>
       </section>
 
@@ -63,7 +64,7 @@
         </div>
         <h2 class="settings-title" data-i18n="settings.modules"></h2>
         <div class="list-group">
-          <label class="switch"><span data-i18n="nav.notes"></span><input class="switch-input" type="checkbox" role="switch" data-module="notes"></label>
+          <label class="switch"><span data-i18n="nav.combinations"></span><input class="switch-input" type="checkbox" role="switch" data-module="combinations"></label>
         </div>
         <h2 class="settings-title" data-i18n="settings.app"></h2>
         <div class="list-group">
@@ -80,12 +81,12 @@
       </section>
     </main>
 
-    <button id="fab" class="fab" type="button" data-i18n-attr="aria-label:notes.add">+</button>
+    <button id="fab" class="fab" type="button" data-i18n-attr="aria-label:wardrobe.add">+</button>
 
     <nav class="nav-bar" data-i18n-attr="aria-label:nav.label">
-      <button class="nav-item" type="button" data-view="notes">
-        <svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg>
-        <span data-i18n="nav.notes"></span>
+      <button class="nav-item" type="button" data-view="wardrobe">
+        <svg class="icon" aria-hidden="true"><use href="icons.svg#hanger"/></svg>
+        <span data-i18n="nav.wardrobe"></span>
       </button>
       <button class="nav-item" type="button" data-view="settings">
         <svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg>
@@ -93,13 +94,20 @@
       </button>
     </nav>
 
-    <div id="note-sheet" class="sheet-layer" hidden>
-      <div id="note-veil" class="sheet-veil"></div>
-      <form id="note-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="note-sheet-title" autocomplete="off">
+    <div id="garment-sheet" class="sheet-layer" hidden>
+      <div id="garment-veil" class="sheet-veil"></div>
+      <form id="garment-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="garment-sheet-title" autocomplete="off">
         <div class="sheet-grab"></div>
-        <h2 id="note-sheet-title" class="sheet-title"></h2>
-        <label class="field"><textarea id="note-text" class="input" maxlength="200" rows="3" required></textarea><span class="field-label" data-i18n="notes.text"></span></label>
-        <button class="button primary wide" type="submit" data-i18n="notes.save"></button>
+        <h2 id="garment-sheet-title" class="sheet-title"></h2>
+        <label class="field"><input id="garment-name" class="input field-input" type="text" maxlength="60" required data-i18n-attr="placeholder:wardrobe.name"><span class="field-label" data-i18n="wardrobe.name"></span></label>
+        <select id="garment-slot" class="select" data-i18n-attr="aria-label:wardrobe.slot"></select>
+        <select id="garment-season" class="select" data-i18n-attr="aria-label:wardrobe.season"></select>
+        <div class="color-pick">
+          <input id="garment-color-input" class="color-pick-input" type="color" data-i18n-attr="aria-label:wardrobe.color">
+          <span id="garment-color-name" class="color-pick-name"></span>
+        </div>
+        <div id="garment-swatches" class="swatch-grid"></div>
+        <button class="button primary wide" type="submit" data-i18n="action.save"></button>
       </form>
     </div>
 
@@ -139,7 +147,6 @@
         "imports": {
           "#app": "./src/app.js",
           "#config": "./src/config.js",
-          "#notes": "./src/notes.js",
           "#wada": "./src/wada.js",
           "#palette": "./src/palette.js",
           "#garments": "./src/garments.js",
@@ -157,7 +164,8 @@
           "#ui/install": "./src/ui/install.js",
           "#ui/motion": "./src/ui/motion.js",
           "#ui/nav": "./src/ui/nav.js",
-          "#ui/notes": "./src/ui/notes.js",
+          "#ui/outfit": "./src/ui/outfit.js",
+          "#ui/wardrobe": "./src/ui/wardrobe.js",
           "#ui/settings": "./src/ui/settings.js",
           "#swipe": "./src/swipe.js",
           "#particles": "./src/particles.js",

@@ -183,7 +183,7 @@
   /* @component icon
      @summary A line icon of icons.svg. It takes the colour of the text around it.
      @variant small  The size --icon-s, for an icon beside a label.
-     @example <svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg>
+     @example <svg class="icon" aria-hidden="true"><use href="icons.svg#hanger"/></svg>
      @example <svg class="icon small" aria-hidden="true"><use href="icons.svg#download"/></svg> */
   .icon {
     flex: none;
@@ -588,7 +588,7 @@
   /* @component nav-bar
      @summary The bottom bar below 600px, a rail at the start side from 600px: one item for each section that is on.
      @part nav-item  A section: its icon and its name. The current one has aria-current="page".
-     @example <nav class="nav-bar" style="width: 100%"><button class="nav-item" type="button" aria-current="page"><svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg><span>Notes</span></button><button class="nav-item" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg><span>Later</span><em class="badge">2</em></button></nav> */
+     @example <nav class="nav-bar" style="width: 100%"><button class="nav-item" type="button" aria-current="page"><svg class="icon" aria-hidden="true"><use href="icons.svg#hanger"/></svg><span>Notes</span></button><button class="nav-item" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg><span>Later</span><em class="badge">2</em></button></nav> */
   .nav-bar {
     display: flex;
     flex: none;
@@ -762,7 +762,7 @@
   /* @component toast
      @summary A short message at the bottom, with an optional action. With a sheet open it goes to the top.
      @part toast-text  The message.
-     @example <div class="toast" role="status" style="position: static"><span class="toast-text">Note deleted</span><button class="button strong" type="button">Undo</button></div> */
+     @example <div class="toast" role="status" style="position: static"><span class="toast-text">Garment deleted</span><button class="button strong" type="button">Undo</button></div> */
   .toast {
     position: fixed;
     /* Above the add button, in reach of the thumb. */
@@ -847,6 +847,209 @@
   .empty-state.inline {
     margin: var(--space-3) 0;
     text-align: left;
+  }
+
+  /* @component swatch
+     @summary A block of one palette colour. The code sets its background to the hex of the colour.
+     @variant dot    A small round mark beside a name.
+     @variant large  The colour of a detail, full width.
+     @example <span class="swatch" style="background: #f9c1ce"></span>
+     @example <span class="swatch dot" style="background: #ae5224"></span>
+     @example <span class="swatch large" style="background: #2e5f8a"></span> */
+  .swatch {
+    display: inline-block;
+    flex: none;
+    width: var(--tap);
+    height: var(--tap);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    vertical-align: middle;
+  }
+
+  .swatch.dot {
+    width: var(--icon-s);
+    height: var(--icon-s);
+    border-radius: var(--radius-round);
+  }
+
+  .swatch.large {
+    width: 100%;
+    height: var(--tap-l);
+  }
+
+  /* @component strip
+     @summary The colours of a combination as equal blocks in one row.
+     @part strip-block  One colour. The code sets its background.
+     @example <span class="strip"><span class="strip-block" style="background: #f9c1ce"></span><span class="strip-block" style="background: #2e5f8a"></span><span class="strip-block" style="background: #ae5224"></span></span> */
+  .strip {
+    display: inline-flex;
+    flex: none;
+    width: var(--tap-l);
+    height: var(--icon-s);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    vertical-align: middle;
+  }
+
+  .strip-block {
+    flex: 1;
+  }
+
+  /* @component blocks
+     @summary The colours of a combination in a detail: large equal blocks with their names.
+     @part blocks-item  One colour: its swatch, then its name.
+     @part blocks-name  The name of the colour.
+     @example <div class="blocks" style="width: 100%"><div class="blocks-item"><span class="swatch large" style="background: #f9c1ce"></span><span class="blocks-name">Hermosa Pink</span></div><div class="blocks-item"><span class="swatch large" style="background: #2e5f8a"></span><span class="blocks-name">Cobalt Blue</span></div></div> */
+  .blocks {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+  }
+
+  .blocks-item {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .blocks-name {
+    color: var(--muted);
+    font-size: var(--text-xs);
+  }
+
+  /* @component swatch-grid
+     @summary The colours of the palette as buttons that scroll. The chosen one has aria-pressed="true".
+     @part swatch-grid-item  One colour. The code sets its background, and its name as aria-label.
+     @example <div class="swatch-grid" style="width: 100%"><button class="swatch-grid-item" type="button" aria-label="Hermosa Pink" aria-pressed="true" style="background: #f9c1ce"></button><button class="swatch-grid-item" type="button" aria-label="Burnt Sienna" aria-pressed="false" style="background: #ae5224"></button></div> */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--tap), 1fr));
+    gap: var(--space-1);
+    max-height: calc(var(--tap) * 4);
+    margin: var(--space-3) 0;
+    padding: var(--space-1);
+    overflow-y: auto;
+  }
+
+  .swatch-grid-item {
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+  }
+
+  .swatch-grid-item[aria-pressed="true"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* @component color-pick
+     @summary The colour of a garment: the input of the phone, which snaps to the palette, and the name.
+     @part color-pick-input  The native colour input.
+     @part color-pick-name   The name of the chosen palette colour.
+     @example <div class="color-pick"><input class="color-pick-input" type="color" value="#f9c1ce" aria-label="Colour"><span class="color-pick-name">Hermosa Pink</span></div> */
+  .color-pick {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: var(--space-3) 0 0;
+  }
+
+  .color-pick-input {
+    flex: none;
+    width: var(--tap);
+    height: var(--tap);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: none;
+  }
+
+  .color-pick-name {
+    font-weight: var(--weight-strong);
+  }
+
+  /* @component detail-head
+     @summary The head of a detail: the colour, the title and a muted line.
+     @part detail-head-title  The name of the entry.
+     @part detail-head-meta   A muted line below the title.
+     @example <div class="detail-head" style="width: 100%"><span class="swatch large" style="background: #2e5f8a"></span><h2 class="detail-head-title">Linen shirt</h2><p class="detail-head-meta">Cobalt Blue · Top · All year</p></div> */
+  .detail-head {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .detail-head-title {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-l);
+  }
+
+  .detail-head-meta {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  /* @component outfits
+     @summary The outfits of a detail: a title, the season filter, then the outfit cards.
+     @part outfits-title  The title.
+     @part outfits-list   The list of the cards.
+     @example <div class="outfits" style="width: 100%"><h2 class="outfits-title">Outfits</h2><ul class="outfits-list"><li class="outfit"><div class="outfit-head"><span class="outfit-number">No. 12</span></div></li></ul></div> */
+  .outfits-title {
+    margin: var(--space-5) 0 0;
+    font-size: var(--text-m);
+  }
+
+  .outfits-list {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* @component outfit
+     @summary One outfit: the number and the colours of its combination, then its garments.
+     @part outfit-head      The number, the strip and the exact mark.
+     @part outfit-number    The number of the combination.
+     @part outfit-garments  The garments of the outfit.
+     @part outfit-garment   One garment: colour, name, slot.
+     @part outfit-slot      The slot of the garment, muted.
+     @example <ul class="outfits-list" style="width: 100%"><li class="outfit"><div class="outfit-head"><span class="outfit-number">No. 12</span><span class="strip"><span class="strip-block" style="background: #f9c1ce"></span><span class="strip-block" style="background: #2e5f8a"></span></span><span class="pill">Exact</span></div><ul class="outfit-garments"><li class="outfit-garment"><span class="swatch dot" style="background: #f9c1ce"></span><span>Pink shirt</span><small class="outfit-slot">Top</small></li></ul></li></ul> */
+  .outfit {
+    padding: var(--space-3);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+  }
+
+  .outfit-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .outfit-number {
+    font-weight: var(--weight-strong);
+  }
+
+  .outfit-garments {
+    display: grid;
+    gap: var(--space-1);
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .outfit-garment {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .outfit-slot {
+    color: var(--muted);
+    font-size: var(--text-xs);
   }
 
   /* @component item-list

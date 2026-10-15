@@ -1,4 +1,4 @@
-import { NOTES_KEY, emptyNotes, normalizeNotes } from '#notes';
+import { GARMENTS_KEY, emptyGarments, normalizeGarments } from '#garments';
 import {
   loadDoc,
   saveDoc,
@@ -70,23 +70,32 @@ export let navMotion = false;
 export const textOf = ({ key, params }) => t(key, params);
 
 // Read before the doc. A stored doc, valid or not, means that the install is not new.
-const firstStart = storage ? shouldShow({ seen: loadOnboarded(storage), hasState: hasStoredDoc(storage, NOTES_KEY) }) : false;
+const firstStart = storage ? shouldShow({ seen: loadOnboarded(storage), hasState: hasStoredDoc(storage, GARMENTS_KEY) }) : false;
 
-const DOC = { key: NOTES_KEY, normalize: normalizeNotes, empty: emptyNotes };
-export let state = storage ? loadDoc(storage, DOC) : emptyNotes();
+const DOC = { key: GARMENTS_KEY, normalize: normalizeGarments, empty: emptyGarments };
+export let state = storage ? loadDoc(storage, DOC) : emptyGarments();
 
 export const ui = {
   // The section in view.
-  view: 'notes',
-  // The note whose detail is open, or null.
-  noteId: null,
+  view: 'wardrobe',
+  // The garment whose detail is open, or null.
+  garmentId: null,
+  // The number of the combination whose detail is open, or null.
+  combination: null,
   sheetOpen: false,
-  // The note that the sheet edits, or null for a new note.
+  // The garment that the sheet edits, or null for a new garment.
   editing: null,
-  // The note row whose side actions are open, or null.
+  // The colour that the sheet holds, or null before a pick.
+  draftColor: null,
+  // The garment row whose side actions are open, or null.
   openId: null,
   // Where the last swipe left its row, so that the next render moves the row from there.
   settleFrom: null,
+  // The season filter of the outfits (OUT-7), the size filter and the wearable switch of the
+  // combinations. Not stored.
+  season: 'any',
+  size: null,
+  wearable: false,
   // The page of the walkthrough in view, or null while the walkthrough is closed.
   onboarding: firstStart ? 0 : null,
   // `running` is the version of the cached shell; `latest` is the deployed one.
@@ -127,7 +136,7 @@ export const render = () => renderer();
 
 export const commit = (next) => {
   state = next;
-  const saved = storage !== null && saveDoc(storage, NOTES_KEY, state);
+  const saved = storage !== null && saveDoc(storage, GARMENTS_KEY, state);
   render();
   return saved;
 };

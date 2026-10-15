@@ -11,7 +11,6 @@
 | `src/modules.js` | The modules that Settings turns off, and the visible sections | `sections` |
 | `src/storage.js` | Load, save, validation hook, export, import, device preferences | `config`, `modules` |
 | `src/install.js` | The install offer state machine | nothing |
-| `src/notes.js` | Pure note operations, the doc and its validation (demo) | `config` |
 | `src/wada.js` | The 159 colours of Sanzo Wada's palette and their combinations (data) | nothing |
 | `src/palette.js` | Lab, ΔE, the nearest colour, the combinations and their index | `wada` |
 | `src/garments.js` | The doc of the garments, its operations and its validation | `config`, `wada` |
@@ -19,14 +18,15 @@
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
-| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply` | `notes`, `storage`, `i18n`, `onboarding` |
+| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply` | `garments`, `storage`, `i18n`, `onboarding` |
 | `src/ui/controls.js` | The icon builder and the side-action button | `ui/context` |
 | `src/ui/motion.js` | Row collapse, expand and slide animations | `ui/context` |
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
-| `src/ui/notes.js` | The Notes section, its rows and its sheet (demo) | `notes`, `swipe`, `ui/context`, `ui/controls` |
-| `src/ui/settings.js` | Settings, and the text of the page in its language | `notes`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
+| `src/ui/outfit.js` | The swatch, the strip, the blocks, the outfit cards and the season filter | `palette`, `outfits`, `ui/context` |
+| `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `garments`, `palette`, `outfits`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
+| `src/ui/settings.js` | Settings, and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/app.js` | Wires the views, the global keys, the service worker and the update check | all of the above |
@@ -42,7 +42,7 @@
   storage object), so that a test passes a fake.
 - **ENG-5** No module imports `src/app.js`. A view of `src/ui/` renders the screen through
   `render` of `src/ui/context.js`.
-- **ENG-6** A module of `src/` is imported by its alias, `from '#notes'`, never by a relative
+- **ENG-6** A module of `src/` is imported by its alias, `from '#garments'`, never by a relative
   path. Node resolves `#name` through `imports` of `package.json`; the browser resolves it through
   the import map of `index.html`. `tests/aliases.test.js` checks that the two agree.
 - **ENG-7** A new id comes from `crypto.randomUUID()`. An operation that creates a record takes
@@ -59,7 +59,7 @@
 
 ## Storage keys
 
-The doc keys are in [07-notes.md](07-notes.md). The device preferences are `wardrobe.lang`,
+The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are `wardrobe.lang`,
 `wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules` and `wardrobe.onboarded`.
 
 ## Change guide
@@ -81,7 +81,6 @@ The doc keys are in [07-notes.md](07-notes.md). The device preferences are `ward
 
 | Test file | Covers |
 |---|---|
-| `tests/notes.test.js` | The note operations and the validation of the doc (demo) |
 | `tests/palette.test.js` | The palette, the colour distance and the combinations |
 | `tests/garments.test.js` | The garment operations, their order and the validation of the doc |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |

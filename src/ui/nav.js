@@ -16,7 +16,7 @@ const enter = (way) => {
 export const setView = (view) => {
   if (view === ui.view) return;
   const way = direction(ui.view, view, visibleSections(off));
-  Object.assign(ui, { view, noteId: null, openId: null });
+  Object.assign(ui, { view, garmentId: null, combination: null, openId: null });
   scroller.scrollTop = 0;
   render();
   enter(way);

@@ -1,4 +1,4 @@
-import { normalizeNotes } from '#notes';
+import { normalizeGarments } from '#garments';
 import { exportJson, exportFilename, importJson } from '#storage';
 import { LANGUAGES, LANGUAGE_NAMES } from '#i18n';
 import { switchModule } from '#modules';
@@ -92,13 +92,13 @@ export const bind = () => {
     const [file] = event.target.files;
     event.target.value = '';
     if (!file) return;
-    const result = importJson(await file.text(), normalizeNotes);
+    const result = importJson(await file.text(), normalizeGarments);
     if (result.error) {
       showToast(textOf(result.error));
       return;
     }
-    const notes = t('notes.count', { count: result.state.notes.length });
-    if (!window.confirm(t('import.confirm', { notes }))) return;
+    const items = t('garments.count', { count: result.state.garments.length });
+    if (!window.confirm(t('import.confirm', { items }))) return;
     apply(result, { undoText: t('toast.imported') });
   });
 };
