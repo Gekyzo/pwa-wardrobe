@@ -78,8 +78,9 @@ export let state = storage ? loadDoc(storage, DOC) : emptyGarments();
 export const ui = {
   // The section in view.
   view: 'wardrobe',
-  // The garment whose detail is open, or null.
+  // The garment whose detail is open, or null, and the image that its detail shows large.
   garmentId: null,
+  detailImage: null,
   // The number of the combination whose detail is open, or null.
   combination: null,
   sheetOpen: false,

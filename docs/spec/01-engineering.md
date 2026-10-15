@@ -26,7 +26,7 @@
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
-| `src/ui/outfit.js` | The swatch, the strip, the blocks, the outfit cards and the season filter | `palette`, `outfits`, `ui/context` |
+| `src/ui/outfit.js` | The swatch, the image of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
 | `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `garments`, `links`, `palette`, `outfits`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
 | `src/ui/settings.js` | Settings, and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |

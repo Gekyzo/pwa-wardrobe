@@ -944,6 +944,67 @@
     outline-offset: 2px;
   }
 
+  /* @component thumb
+     @summary The main image of a garment, cut to fill its box. The code removes it when it does not load.
+     @variant small  In an outfit card.
+     @variant large  At the top of a detail, full width.
+     @example <img class="thumb" alt="" src="icons/icon-192.png">
+     @example <img class="thumb small" alt="" src="icons/icon-192.png">
+     @example <img class="thumb large" alt="" src="icons/icon-192.png" style="width: 160px"> */
+  .thumb {
+    flex: none;
+    height: calc(var(--tap-l) - var(--space-2));
+    margin-left: var(--space-1);
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radius-s);
+    background: var(--bg);
+    object-fit: cover;
+  }
+
+  .thumb.small {
+    height: var(--tap);
+    margin-left: 0;
+  }
+
+  .thumb.large {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    margin-left: 0;
+    border-radius: var(--radius-m);
+    object-fit: contain;
+  }
+
+  /* @component image-strip
+     @summary The other images of a detail, in one row that scrolls. The image shown large has
+       aria-pressed="true".
+     @part image-strip-item  One image as a button, with a label. It holds an image-grid-img.
+     @example <div class="image-strip" style="width: 100%"><button class="image-strip-item" type="button" aria-pressed="true" aria-label="Image 1"><img class="image-grid-img" alt="" src="icons/logo.png"></button><button class="image-strip-item" type="button" aria-pressed="false" aria-label="Image 2"><img class="image-grid-img" alt="" src="icons/icon-192.png"></button></div> */
+  .image-strip {
+    display: flex;
+    gap: var(--space-2);
+    margin: var(--space-2) 0;
+    padding: var(--space-1);
+    overflow-x: auto;
+  }
+
+  .image-strip-item {
+    flex: none;
+    width: var(--tap-l);
+    aspect-ratio: 3 / 4;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    background: var(--bg);
+  }
+
+  .image-strip-item[aria-pressed="true"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   /* @component image-grid
      @summary The images of a link in the garment sheet. A tap on one keeps it or drops it; a kept
        one shows a star, which is on for the main image.

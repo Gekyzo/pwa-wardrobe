@@ -91,7 +91,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Wardrobe section
 
 - **WAR-1** The Wardrobe section lists the garments in the order of the slots, then by name. A
-  row shows the colour as a dot, the name, and the slot and season. With no garment it shows
+  row shows the main image of the garment (GAR-7), if it has one, the colour as a dot, the name,
+  and the slot, the season and the brand, if it has one. With no garment it shows
   `wardrobe.empty`.
 - **WAR-2** A row slides left to show **Delete** (GAR-4); the toast `toast.garmentDeleted` offers
   **Undo** for 5 seconds.
@@ -101,19 +102,21 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.
-- **WAR-4** A tap on a row opens its detail (LAY-3): the colour, the name, the colour name, slot
-  and season, **Edit** and **Delete**, and the outfits that contain it (OUT-8) under the season
-  filter, or `wardrobe.noOutfits`.
+- **WAR-4** A tap on a row opens its detail (LAY-3): the main image large and, with two or more
+  images, all the images in a row below it, where a tap on one shows it large; the colour, the
+  name, the colour name, slot, season and brand, **Edit**, **Open link** when the garment has a
+  link, which opens it in a new tab, and **Delete**, and the outfits that contain it (OUT-8)
+  under the season filter, or `wardrobe.noOutfits`.
 - **WAR-5** An outfit card shows `outfit.number`, the strip of its combination, `outfit.exact`
-  for an exact outfit, and each garment with its colour, name and slot. The season filter
-  (OUT-7) is shared by the details of the app and is not stored.
+  for an exact outfit, and each garment with its main image, if it has one, its colour, name
+  and slot. The season filter (OUT-7) is shared by the details of the app and is not stored.
 - **WAR-6** **Load images** of the sheet is on while the link is an `http` or `https` URL and no
   load runs; during a load it reads `wardrobe.loading`. The images of the page (LNK-2) join the
   images of the sheet, which shows them as a grid; a failure shows `error.linkFailed`. A tap on
   an image keeps it or drops it. A kept image is added last, and more than 8 kept images is
   `error.imagesFull`. A kept image has a star; a tap on the star makes it the main image
   (GAR-7), and the star of the main image is on. An image that does not load is not shown,
-  unless it is kept. The field **Image URL** with **Add** keeps one more image by its URL, for a
+  unless it is kept. Out of the sheet, a main image that does not load is not shown. The field **Image URL** with **Add** keeps one more image by its URL, for a
   page that the proxy cannot read; a value that is not an `http` or `https` URL is
   `error.imagesInvalid`. **Save** stores the kept images in their order.
 

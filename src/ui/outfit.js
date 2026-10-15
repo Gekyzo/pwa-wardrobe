@@ -1,3 +1,4 @@
+import { mainImage } from '#garments';
 import { colorOf, combination } from '#palette';
 import { SEASON_FILTERS } from '#outfits';
 import { el, ui, t, render } from '#ui/context';
@@ -11,6 +12,16 @@ export const swatch = (colorId, variant = '') => {
 
 // A remote image: no referrer, since some shops refuse a request from another site.
 export const remoteImage = (src, className) => el('img', { className, referrerPolicy: 'no-referrer', loading: 'lazy', decoding: 'async', alt: '', src });
+
+// The main image of a garment (GAR-7), or null when it has none. An image that does not load
+// leaves the page, so the colour dot beside it stands alone.
+export const thumb = (garment, variant = '') => {
+  const url = mainImage(garment);
+  if (!url) return null;
+  const image = remoteImage(url, variant === 'small' ? 'thumb small' : 'thumb');
+  image.addEventListener('error', () => image.remove(), { once: true });
+  return image;
+};
 
 // The colours of a combination as equal blocks in one row.
 export const strip = (colors) =>
@@ -45,6 +56,7 @@ const card = (outfit) =>
       ...(outfit.exact ? [el('span', { className: 'pill', textContent: t('outfit.exact') })] : []),
     ]),
     el('ul', { className: 'outfit-garments' }, outfit.picks.map(({ garment }) => el('li', { className: 'outfit-garment' }, [
+      ...[thumb(garment, 'small')].filter(Boolean),
       swatch(garment.color, 'dot'),
       el('span', { textContent: garment.name }),
       el('small', { className: 'outfit-slot', textContent: t(`slot.${garment.slot}`) }),

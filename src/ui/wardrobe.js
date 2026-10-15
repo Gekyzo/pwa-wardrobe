@@ -5,7 +5,7 @@ import { outfitsWith } from '#outfits';
 import { settle } from '#swipe';
 import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, textOf, apply, render, guardClick, showToast } from '#ui/context';
 import { icon, iconButton } from '#ui/controls';
-import { swatch, remoteImage, renderOutfits } from '#ui/outfit';
+import { swatch, thumb, remoteImage, renderOutfits } from '#ui/outfit';
 
 const options = (select, values, prefix, chosen) =>
   select.replaceChildren(...values.map((value) => el('option', { value, textContent: t(`${prefix}.${value}`), selected: value === chosen })));
@@ -122,6 +122,7 @@ export const closeGarmentSheet = () => {
 
 const openGarment = (id) => {
   ui.garmentId = id;
+  ui.detailImage = null;
   render();
 };
 
@@ -171,7 +172,7 @@ const bindSwipe = (row, width, id) => {
   row.addEventListener('pointercancel', finish);
 };
 
-const metaOf = (garment) => `${t(`slot.${garment.slot}`)} · ${t(`season.${garment.season}`)}`;
+const metaOf = (garment) => [t(`slot.${garment.slot}`), t(`season.${garment.season}`), garment.brand].filter(Boolean).join(' · ');
 
 // A row slides left to show Delete (WAR-2).
 const row = (garment) => {
@@ -182,7 +183,7 @@ const row = (garment) => {
     el('span', {}, [swatch(garment.color, 'dot'), ` ${garment.name}`]),
     el('small', { className: 'item-row-meta', textContent: metaOf(garment) }),
   ]);
-  const body = el('div', { className: 'item-row-body' }, [name]);
+  const body = el('div', { className: 'item-row-body' }, [...[thumb(garment)].filter(Boolean), name]);
   const from = ui.settleFrom?.id === garment.id ? ui.settleFrom.x : null;
   if (from !== null) {
     // Start where the drag ended, then move to the settled place with the CSS transition.
@@ -199,7 +200,27 @@ const row = (garment) => {
   return node;
 };
 
+// The images of a detail: one large, and the others below it; a tap on one shows it large.
+const gallery = (garment) => {
+  if (!garment.images.length) return [];
+  const shown = garment.images.includes(ui.detailImage) ? ui.detailImage : garment.images[0];
+  const large = remoteImage(shown, 'thumb large');
+  large.addEventListener('error', () => large.remove(), { once: true });
+  if (garment.images.length === 1) return [large];
+  const others = garment.images.map((url, index) => {
+    const button = el('button', { className: 'image-strip-item', type: 'button', onclick: () => {
+      ui.detailImage = url;
+      render();
+    } }, [remoteImage(url, 'image-grid-img')]);
+    button.setAttribute('aria-pressed', String(url === shown));
+    button.setAttribute('aria-label', t('wardrobe.image', { number: index + 1 }));
+    return button;
+  });
+  return [large, el('div', { className: 'image-strip' }, others)];
+};
+
 const info = (garment) => [
+  ...gallery(garment),
   swatch(garment.color, 'large'),
   el('h2', { className: 'detail-head-title', textContent: garment.name }),
   el('p', { className: 'detail-head-meta', textContent: `${colorOf(garment.color).name} · ${metaOf(garment)}` }),
@@ -221,6 +242,8 @@ export const renderWardrobe = () => {
   $('garment-info').replaceChildren(...(garment ? info(garment) : []));
   $('garment-detail-empty').hidden = Boolean(garment);
   $('garment-actions').hidden = !garment;
+  $('garment-open').hidden = !garment?.link;
+  if (garment?.link) $('garment-open').href = garment.link;
   $('garment-outfits').hidden = !garment;
   if (garment && visible) {
     const outfits = outfitsWith(garment, state.garments, { season: ui.season });
