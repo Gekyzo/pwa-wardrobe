@@ -9,6 +9,9 @@ export const swatch = (colorId, variant = '') => {
   return node;
 };
 
+// A remote image: no referrer, since some shops refuse a request from another site.
+export const remoteImage = (src, className) => el('img', { className, referrerPolicy: 'no-referrer', loading: 'lazy', decoding: 'async', alt: '', src });
+
 // The colours of a combination as equal blocks in one row.
 export const strip = (colors) =>
   el('span', { className: 'strip' }, colors.map((id) => {

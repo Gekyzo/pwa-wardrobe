@@ -52,16 +52,18 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 
 ## Links
 
-- **LNK-1** `loadPageImages` reads the page of a link through the public proxy
-  `https://api.allorigins.win/raw?url=`, with the link encoded, and stops after 15 seconds. The
-  browser cannot read the page of another origin directly. The proxy sees each link that the
-  app loads.
+- **LNK-1** `loadPageImages` reads the page of a link through the public proxy Jina Reader,
+  `https://r.jina.ai/` followed by the link, with the header `X-Return-Format: html`, and stops
+  after 20 seconds. The browser cannot read the page of another origin directly. The proxy runs
+  the scripts of the page and gives the rendered HTML. It sees each link that the app loads. A
+  shop that refuses robots gives no page.
 - **LNK-2** `imagesOfPage` gives the images of a page in this order: the `og:image` and
   `twitter:image` meta, the `image` of a `Product` in `application/ld+json` (also inside
   `@graph`), then one image for each `<img>`: the widest of its `srcset`, else its `data-src`,
   else its `src`. Each URL is resolved against the link. It keeps only `http` and `https` URLs,
-  and drops `.svg` files and paths that contain `logo`, `icon`, `sprite`, `pixel` or
-  `placeholder`. Each URL is given one time, and at most 24 are given.
+  and drops `.svg` files and paths that contain `logo`, `icon`, `sprite`, `pixel`,
+  `placeholder`, `chip` or `swatch`. Two URLs of one path, with another query, are one image: the
+  first is kept. At most 24 are given.
 - **LNK-3** A link that is not an `http` or `https` URL, a failed request, a status that is not
   OK, or a page with no image gives `error.linkFailed`. `loadPageImages` never throws.
 
@@ -93,8 +95,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   `wardrobe.empty`.
 - **WAR-2** A row slides left to show **Delete** (GAR-4); the toast `toast.garmentDeleted` offers
   **Undo** for 5 seconds.
-- **WAR-3** **+** opens the sheet of a new garment: the name, the slot, the season and the
-  colour. The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a
+- **WAR-3** **+** opens the sheet of a new garment: the name, the brand, the slot, the season,
+  the colour, the link and the images. The brand field suggests the brands of the wardrobe
+  (GAR-6). The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.
@@ -104,6 +107,15 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-5** An outfit card shows `outfit.number`, the strip of its combination, `outfit.exact`
   for an exact outfit, and each garment with its colour, name and slot. The season filter
   (OUT-7) is shared by the details of the app and is not stored.
+- **WAR-6** **Load images** of the sheet is on while the link is an `http` or `https` URL and no
+  load runs; during a load it reads `wardrobe.loading`. The images of the page (LNK-2) join the
+  images of the sheet, which shows them as a grid; a failure shows `error.linkFailed`. A tap on
+  an image keeps it or drops it. A kept image is added last, and more than 8 kept images is
+  `error.imagesFull`. A kept image has a star; a tap on the star makes it the main image
+  (GAR-7), and the star of the main image is on. An image that does not load is not shown,
+  unless it is kept. The field **Image URL** with **Add** keeps one more image by its URL, for a
+  page that the proxy cannot read; a value that is not an `http` or `https` URL is
+  `error.imagesInvalid`. **Save** stores the kept images in their order.
 
 ## Combinations section
 

@@ -25,7 +25,6 @@ export default {
   'wardrobe.main': 'Principal',
   'wardrobe.setMain': 'Hacer principal',
   'wardrobe.openLink': 'Abrir enlace',
-  'wardrobe.imagesHint': 'Toca una imagen para guardarla.',
   'wardrobe.image': 'Imagen {number}',
   'garments.count': { one: '{count} prenda', other: '{count} prendas' },
   'toast.garmentDeleted': 'Prenda borrada.',

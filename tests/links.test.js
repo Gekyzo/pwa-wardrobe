@@ -5,8 +5,9 @@ import { MAX_CANDIDATES, PROXY, TIMEOUT, proxyUrl, imagesOfPage, loadPageImages 
 const base = 'https://shop.example/es/p/shirt-123?colour=blue';
 
 test('the proxy URL carries the encoded link (LNK-1)', () => {
-  assert.equal(proxyUrl('https://a.example/p?x=1&y=2'), `${PROXY}${encodeURIComponent('https://a.example/p?x=1&y=2')}`);
-  assert.equal(TIMEOUT, 15000);
+  assert.equal(PROXY, 'https://r.jina.ai/');
+  assert.equal(proxyUrl('https://a.example/p?x=1&y=2'), 'https://r.jina.ai/https://a.example/p?x=1&y=2');
+  assert.equal(TIMEOUT, 20000);
 });
 
 test('the meta images come first, then JSON-LD, then the img tags (LNK-2)', () => {
@@ -47,8 +48,14 @@ test('icons, logos, svg, data and other schemes are dropped, and each URL is lis
   const html = `
     <img src="/logo.png"><img src="/icons/cart.png"><img src="/sprite.jpg"><img src="/a.svg">
     <img src="/tracking-pixel.gif"><img src="/placeholder.jpg"><img src="data:image/png;base64,AA">
+    <img src="/goods/chip/goods_39_chip.jpg"><img src="/swatches/blue.jpg">
     <img src="ftp://x.example/a.jpg"><img src="/ok.jpg"><img src="https://shop.example/ok.jpg">`;
   assert.deepEqual(imagesOfPage(html, base), ['https://shop.example/ok.jpg']);
+});
+
+test('one path with another query is the same image, and the first one is kept', () => {
+  const html = '<img src="/a.jpg"><img src="/a.jpg?width=600"><img src="/b.jpg?w=1"><img src="/b.jpg?w=2">';
+  assert.deepEqual(imagesOfPage(html, base), ['https://shop.example/a.jpg', 'https://shop.example/b.jpg?w=1']);
 });
 
 test('at most MAX_CANDIDATES images are given', () => {
@@ -77,6 +84,7 @@ test('loadPageImages fetches through the proxy with a timeout (LNK-1)', async ()
   assert.deepEqual(await loadPageImages(base, fetchFn), { images: ['https://shop.example/a.jpg'] });
   assert.equal(calls[0].url, proxyUrl(base));
   assert.ok(calls[0].options.signal instanceof AbortSignal);
+  assert.deepEqual(calls[0].options.headers, { 'X-Return-Format': 'html' });
 });
 
 test('loadPageImages gives error.linkFailed and never throws (LNK-3)', async () => {

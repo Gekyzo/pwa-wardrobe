@@ -1,10 +1,11 @@
-import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, SLOTS, SEASONS } from '#garments';
+import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, isWebUrl, SLOTS, SEASONS } from '#garments';
+import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor } from '#palette';
 import { outfitsWith } from '#outfits';
 import { settle } from '#swipe';
-import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, apply, render, guardClick } from '#ui/context';
-import { iconButton } from '#ui/controls';
-import { swatch, renderOutfits } from '#ui/outfit';
+import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, textOf, apply, render, guardClick, showToast } from '#ui/context';
+import { icon, iconButton } from '#ui/controls';
+import { swatch, remoteImage, renderOutfits } from '#ui/outfit';
 
 const options = (select, values, prefix, chosen) =>
   select.replaceChildren(...values.map((value) => el('option', { value, textContent: t(`${prefix}.${value}`), selected: value === chosen })));
@@ -19,6 +20,77 @@ const showColor = ({ fromInput = false } = {}) => {
   });
 };
 
+// The Load images button: on for an http or https link, while no load runs.
+const showLoad = () => {
+  const button = $('garment-load');
+  button.disabled = ui.loadingImages || !isWebUrl($('garment-link').value.trim());
+  button.textContent = t(ui.loadingImages ? 'wardrobe.loading' : 'wardrobe.loadImages');
+};
+
+// The grid of the images that the sheet offers: a tap keeps or drops one; the star of a kept one
+// makes it the main image (WAR-6).
+const showImages = () => {
+  const grid = $('garment-images');
+  grid.hidden = ui.candidates.length === 0;
+  grid.replaceChildren(...ui.candidates.map((url, index) => {
+    const kept = ui.draftImages.includes(url);
+    const pick = el('button', { className: 'image-grid-pick', type: 'button', onclick: () => {
+      const { images, error } = toggleImage(ui.draftImages, url);
+      if (error) showToast(textOf(error));
+      ui.draftImages = images;
+      showImages();
+    } }, [remoteImage(url, 'image-grid-img')]);
+    pick.setAttribute('aria-pressed', String(kept));
+    pick.setAttribute('aria-label', t('wardrobe.image', { number: index + 1 }));
+    const item = el('div', { className: 'image-grid-item' }, [pick]);
+    if (kept) {
+      const main = ui.draftImages[0] === url;
+      const star = el('button', { className: 'button icon toggle image-grid-main', type: 'button', onclick: () => {
+        ui.draftImages = makeMain(ui.draftImages, url);
+        showImages();
+      } }, [icon('star')]);
+      star.setAttribute('aria-pressed', String(main));
+      star.setAttribute('aria-label', t(main ? 'wardrobe.main' : 'wardrobe.setMain'));
+      item.append(star);
+    }
+    // An image that does not load is not offered.
+    pick.firstChild.addEventListener('error', () => {
+      if (!kept) item.hidden = true;
+    });
+    return item;
+  }));
+};
+
+const offer = (urls) => {
+  ui.candidates = [...new Set([...ui.candidates, ...urls])];
+  showImages();
+};
+
+const loadImages = async () => {
+  const link = $('garment-link').value.trim();
+  ui.loadingImages = true;
+  showLoad();
+  const result = await loadPageImages(link);
+  ui.loadingImages = false;
+  if (!ui.sheetOpen) return;
+  showLoad();
+  if (result.error) showToast(textOf(result.error));
+  else offer(result.images);
+};
+
+const addImageUrl = () => {
+  const url = $('garment-image-url').value.trim();
+  if (!isWebUrl(url)) {
+    showToast(t('error.imagesInvalid'));
+    return;
+  }
+  $('garment-image-url').value = '';
+  const { images, error } = ui.draftImages.includes(url) ? { images: ui.draftImages } : toggleImage(ui.draftImages, url);
+  if (error) showToast(textOf(error));
+  ui.draftImages = images;
+  offer([url]);
+};
+
 const openSheet = (id = null) => {
   const garment = id ? findGarment(state, id) : null;
   ui.sheetOpen = true;
@@ -26,6 +98,15 @@ const openSheet = (id = null) => {
   ui.draftColor = garment?.color ?? null;
   $('garment-sheet-title').textContent = t(id ? 'wardrobe.editTitle' : 'wardrobe.new');
   $('garment-name').value = garment?.name ?? '';
+  $('garment-brand').value = garment?.brand ?? '';
+  $('garment-brands').replaceChildren(...brandsOf(state.garments).map((value) => el('option', { value })));
+  $('garment-link').value = garment?.link ?? '';
+  $('garment-image-url').value = '';
+  ui.draftImages = [...(garment?.images ?? [])];
+  ui.candidates = [...ui.draftImages];
+  ui.loadingImages = false;
+  showLoad();
+  showImages();
   options($('garment-slot'), SLOTS, 'slot', garment?.slot ?? 'top');
   options($('garment-season'), SEASONS, 'season', garment?.season ?? 'all');
   showColor();
@@ -171,9 +252,25 @@ export const bind = () => {
     ui.draftColor = id;
     showColor({ fromInput: true });
   });
+  $('garment-link').addEventListener('input', showLoad);
+  $('garment-load').addEventListener('click', loadImages);
+  $('garment-image-add').addEventListener('click', addImageUrl);
+  $('garment-image-url').addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    addImageUrl();
+  });
   $('garment-form').addEventListener('submit', (event) => {
     event.preventDefault();
-    const fields = { name: $('garment-name').value, slot: $('garment-slot').value, season: $('garment-season').value, color: ui.draftColor };
+    const fields = {
+      name: $('garment-name').value,
+      slot: $('garment-slot').value,
+      season: $('garment-season').value,
+      color: ui.draftColor,
+      brand: $('garment-brand').value,
+      link: $('garment-link').value,
+      images: ui.draftImages,
+    };
     const result = ui.editing ? editGarment(state, ui.editing, fields) : addGarment(state, fields);
     if (apply(result)) closeGarmentSheet();
   });

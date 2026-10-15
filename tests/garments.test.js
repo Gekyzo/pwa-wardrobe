@@ -18,6 +18,8 @@ import {
   normalizeGarments,
   brandsOf,
   mainImage,
+  toggleImage,
+  makeMain,
 } from '#garments';
 
 const shirt = { name: 'Shirt', slot: 'top', season: 'all', color: 3 };
@@ -185,4 +187,21 @@ test('the main image is the first image, or null (GAR-7)', () => {
   assert.equal(mainImage({ images: ['https://a/1.jpg', 'https://a/2.jpg'] }), 'https://a/1.jpg');
   assert.equal(mainImage({ images: [] }), null);
   assert.equal(mainImage({}), null);
+});
+
+test('toggleImage adds an image at the end or removes it, up to MAX_IMAGES (WAR-6)', () => {
+  const a = 'https://a/1.jpg';
+  const b = 'https://a/2.jpg';
+  const images = [a];
+  assert.deepEqual(toggleImage(images, b), { images: [a, b] });
+  assert.deepEqual(toggleImage([a, b], a), { images: [b] });
+  assert.deepEqual(images, [a]);
+  const full = Array.from({ length: MAX_IMAGES }, (_, i) => `https://a/${i}.png`);
+  assert.deepEqual(toggleImage(full, b), { images: full, error: { key: 'error.imagesFull', params: { max: MAX_IMAGES } } });
+});
+
+test('makeMain moves a chosen image first, and ignores another one (GAR-7)', () => {
+  const [a, b, c] = ['https://a/1.jpg', 'https://a/2.jpg', 'https://a/3.jpg'];
+  assert.deepEqual(makeMain([a, b, c], c), [c, a, b]);
+  assert.deepEqual(makeMain([a, b], 'https://x/y.jpg'), [a, b]);
 });

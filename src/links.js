@@ -1,15 +1,15 @@
 import { isWebUrl } from '#garments';
 
 // The images of a shop page. The browser cannot read another origin's page (CORS), so the page
-// comes through a public proxy, and its HTML is read with patterns, not a DOM, so that the tests
-// run in Node.
-export const PROXY = 'https://api.allorigins.win/raw?url=';
-export const TIMEOUT = 15000;
+// comes through a public proxy, Jina Reader, which also runs the scripts of the page and gives the
+// rendered HTML. The HTML is read with patterns, not a DOM, so that the tests run in Node.
+export const PROXY = 'https://r.jina.ai/';
+export const TIMEOUT = 20000;
 export const MAX_CANDIDATES = 24;
 
-const SKIP = /logo|icon|sprite|pixel|placeholder/i;
+const SKIP = /logo|icon|sprite|pixel|placeholder|chip|swatch/i;
 
-export const proxyUrl = (link) => `${PROXY}${encodeURIComponent(link)}`;
+export const proxyUrl = (link) => `${PROXY}${link}`;
 
 const ENTITIES = { amp: '&', quot: '"', apos: "'", lt: '<', gt: '>' };
 const decode = (text) =>
@@ -83,7 +83,13 @@ const resolver = (base) => (url) => {
 export const imagesOfPage = (html, base) => {
   const keep = resolver(base);
   const found = [...metaImages(html).map(keep), ...ldImages(html).map(keep), ...imgImages(html, keep)].filter(Boolean);
-  return [...new Set(found)].slice(0, MAX_CANDIDATES);
+  // One path with another query, such as `?width=600`, is the same image.
+  const byPath = new Map();
+  for (const url of found) {
+    const { origin, pathname } = new URL(url);
+    if (!byPath.has(origin + pathname)) byPath.set(origin + pathname, url);
+  }
+  return [...byPath.values()].slice(0, MAX_CANDIDATES);
 };
 
 const failed = { error: { key: 'error.linkFailed' } };
@@ -92,7 +98,7 @@ const failed = { error: { key: 'error.linkFailed' } };
 export const loadPageImages = async (link, fetchFn = fetch) => {
   if (!isWebUrl(link)) return failed;
   try {
-    const response = await fetchFn(proxyUrl(link), { signal: AbortSignal.timeout(TIMEOUT) });
+    const response = await fetchFn(proxyUrl(link), { headers: { 'X-Return-Format': 'html' }, signal: AbortSignal.timeout(TIMEOUT) });
     if (!response.ok) return failed;
     const images = imagesOfPage(await response.text(), link);
     return images.length ? { images } : failed;

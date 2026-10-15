@@ -944,6 +944,66 @@
     outline-offset: 2px;
   }
 
+  /* @component image-grid
+     @summary The images of a link in the garment sheet. A tap on one keeps it or drops it; a kept
+       one shows a star, which is on for the main image.
+     @part image-grid-item  One image and, once kept, its star.
+     @part image-grid-pick  The button that keeps the image, with aria-pressed and a label.
+     @part image-grid-img   The image.
+     @part image-grid-main  The star: a button icon toggle, on for the main image.
+     @example <div class="image-grid" style="width: 100%"><div class="image-grid-item"><button class="image-grid-pick" type="button" aria-pressed="true" aria-label="Image 1"><img class="image-grid-img" alt="" src="icons/logo.png"></button><button class="button icon toggle image-grid-main" type="button" aria-pressed="true" aria-label="Main"><svg class="icon" aria-hidden="true"><use href="icons.svg#star"/></svg></button></div><div class="image-grid-item"><button class="image-grid-pick" type="button" aria-pressed="false" aria-label="Image 2"><img class="image-grid-img" alt="" src="icons/icon-192.png"></button></div></div> */
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--tap-l) * 1.5), 1fr));
+    gap: var(--space-2);
+    max-height: calc(var(--tap-l) * 5);
+    margin: var(--space-3) 0;
+    padding: var(--space-1);
+    overflow-y: auto;
+  }
+
+  .image-grid-item {
+    position: relative;
+  }
+
+  .image-grid-pick {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    opacity: 0.6;
+  }
+
+  .image-grid-pick[aria-pressed="true"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    opacity: 1;
+  }
+
+  .image-grid-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-grid-main {
+    position: absolute;
+    top: var(--space-1);
+    right: var(--space-1);
+    border-radius: var(--radius-round);
+    background: var(--surface);
+    box-shadow: var(--shadow-s);
+  }
+
+  .image-grid-main[aria-pressed="true"] .icon {
+    fill: currentColor;
+  }
+
   /* @component color-pick
      @summary The colour of a garment: the input of the phone, which snaps to the palette, and the name.
      @part color-pick-input  The native colour input.

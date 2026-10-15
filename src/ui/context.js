@@ -87,6 +87,10 @@ export const ui = {
   editing: null,
   // The colour that the sheet holds, or null before a pick.
   draftColor: null,
+  // The images that the sheet offers, and those it keeps, the main one first (WAR-6).
+  candidates: [],
+  draftImages: [],
+  loadingImages: false,
   // The garment row whose side actions are open, or null.
   openId: null,
   // Where the last swipe left its row, so that the next render moves the row from there.

@@ -75,6 +75,15 @@ export const brandsOf = (garments) => {
 
 export const mainImage = (garment) => garment.images?.[0] ?? null;
 
+// The chosen images of the sheet with `url` added at the end or removed.
+export const toggleImage = (images, url) => {
+  if (images.includes(url)) return { images: images.filter((image) => image !== url) };
+  if (images.length >= MAX_IMAGES) return { images, error: { key: 'error.imagesFull', params: { max: MAX_IMAGES } } };
+  return { images: [...images, url] };
+};
+
+export const makeMain = (images, url) => (images.includes(url) ? [url, ...images.filter((image) => image !== url)] : images);
+
 // A clean version 2 doc, or null. Version 1 had no brand, link or images: checkFields gives
 // them their empty values. Add a migration here when the version goes up.
 export const normalizeGarments = (data) => {
