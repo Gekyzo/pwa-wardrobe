@@ -34,7 +34,7 @@ the identifier in a commit body or in a test name to point at a rule.
 | `LAY`, `NAV`, `MOD`, `ONB` | 05-layout |
 | `I18N` | 06-i18n |
 | `NOTE` | 07-notes |
-| `PAL` | 07-wardrobe |
+| `PAL`, `GAR` | 07-wardrobe |
 
 ## Words
 

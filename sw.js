@@ -26,6 +26,7 @@ const SHELL = [
   './src/notes.js',
   './src/wada.js',
   './src/palette.js',
+  './src/garments.js',
   './src/install.js',
   './src/sections.js',
   './src/modules.js',

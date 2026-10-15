@@ -62,4 +62,10 @@ export default {
   'error.textRequired': 'Write a text.',
   'error.textTooLong': 'At most {max} characters.',
   'error.noteMissing': 'The note no longer exists.',
+  'error.nameRequired': 'Write a name.',
+  'error.nameTooLong': 'At most {max} characters.',
+  'error.slotInvalid': 'Pick a type of garment.',
+  'error.seasonInvalid': 'Pick a season.',
+  'error.colorInvalid': 'Pick a colour.',
+  'error.garmentMissing': 'The garment no longer exists.',
 };
