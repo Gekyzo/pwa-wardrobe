@@ -2,8 +2,8 @@
 
 The domain of the app: garments with a colour of the palette of *A Dictionary of Color
 Combinations* (Sanzo Wada, 1933), the combinations of the book, and the outfits that a wardrobe
-gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`, `tests/palette.test.js`,
-`tests/garments.test.js`.
+gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`, `src/outfits.js`,
+`tests/palette.test.js`, `tests/garments.test.js`, `tests/outfits.test.js`.
 
 ## Palette
 
@@ -35,3 +35,23 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **GAR-5** `normalizeGarments` accepts a doc of version 1 whose garments have a non-empty id, no
   id two times, and fields that pass GAR-3. It trims each name and drops unknown fields. A new
   version adds its migration here.
+
+## Outfits
+
+- **OUT-1** `MATCH_MAX` is 10, `MAX_OUTFITS` is 20 and `MAX_CANDIDATES` is 8.
+- **OUT-2** A garment matches a colour of a combination when the distance of their colours
+  (PAL-3) is at most `MATCH_MAX`.
+- **OUT-3** An outfit of a combination of `k` colours has `k` garments: a different garment for
+  each colour, in the order of the colours.
+- **OUT-4** No two garments of an outfit share a slot, except `accessory`. An outfit holds a
+  `top` and a `bottom`.
+- **OUT-5** The score of an outfit is the sum of its distances; it is exact when each distance
+  is 0. The outfits are sorted exact first, then by score, then by combination and garment ids.
+  One set of garments for one combination is listed once. At most `MAX_OUTFITS` are given.
+- **OUT-6** Each colour keeps its `MAX_CANDIDATES` nearest garments, so that a search stays short
+  in a wardrobe with many garments of one colour.
+- **OUT-7** The season filter is `any`, `warm` or `cold`. A garment fits it when the filter is
+  `any`, the season of the garment is `all`, or the two are equal.
+- **OUT-8** `outfitsWith` gives the outfits that contain one garment: over each combination of a
+  colour near it, the garment takes each place that it matches, out of the candidate cap, and the
+  other places are searched among the other garments.

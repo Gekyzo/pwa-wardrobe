@@ -68,4 +68,6 @@ export default {
   'error.seasonInvalid': 'Elige una temporada.',
   'error.colorInvalid': 'Elige un color.',
   'error.garmentMissing': 'La prenda ya no existe.',
+  'outfits.noColor': 'Ninguna prenda cerca de {color}.',
+  'outfits.noSet': 'Ningún grupo de prendas tiene una parte de arriba y una de abajo.',
 };

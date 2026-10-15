@@ -68,4 +68,6 @@ export default {
   'error.seasonInvalid': 'Pick a season.',
   'error.colorInvalid': 'Pick a colour.',
   'error.garmentMissing': 'The garment no longer exists.',
+  'outfits.noColor': 'No garment near {color}.',
+  'outfits.noSet': 'No set of garments has a top and a bottom.',
 };

@@ -15,6 +15,7 @@
 | `src/wada.js` | The 159 colours of Sanzo Wada's palette and their combinations (data) | nothing |
 | `src/palette.js` | Lab, ΔE, the nearest colour, the combinations and their index | `wada` |
 | `src/garments.js` | The doc of the garments, its operations and its validation | `config`, `wada` |
+| `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/reorder.js` | The geometry of a row move (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
@@ -85,6 +86,7 @@ The doc keys are in [07-notes.md](07-notes.md). The device preferences are `ward
 | `tests/notes.test.js` | The note operations and the validation of the doc (demo) |
 | `tests/palette.test.js` | The palette, the colour distance and the combinations |
 | `tests/garments.test.js` | The garment operations, their order and the validation of the doc |
+| `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |
 | `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
 | `tests/install.test.js` | The install offer states (INS-1) |
 | `tests/swipe.test.js` | The settle rule of a row slide |
