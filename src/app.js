@@ -1,6 +1,7 @@
 import { $, ui, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
 import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
+import { bind as bindCombinations, renderCombinations } from '#ui/combinations';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -10,6 +11,7 @@ const renderAll = () => {
   renderNav();
   $('title').textContent = t(`nav.${ui.view}`);
   renderWardrobe();
+  renderCombinations();
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
@@ -18,6 +20,7 @@ setRender(renderAll);
 
 bindNav();
 bindWardrobe();
+bindCombinations();
 bindSettings();
 bindInstall();
 bindOnboarding();

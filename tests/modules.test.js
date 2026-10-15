@@ -7,11 +7,15 @@ test('MODULES is combinations (MOD-1)', () => {
 });
 
 test('visibleSections with no module off is the full navigation', () => {
-  assert.deepEqual(visibleSections([]), ['wardrobe', 'settings']);
+  assert.deepEqual(visibleSections([]), ['wardrobe', 'combinations', 'settings']);
+});
+
+test('visibleSections without combinations keeps the wardrobe and settings', () => {
+  assert.deepEqual(visibleSections(['combinations']), ['wardrobe', 'settings']);
 });
 
 test('visibleSections ignores an unknown id', () => {
-  assert.deepEqual(visibleSections(['shops']), ['wardrobe', 'settings']);
+  assert.deepEqual(visibleSections(['shops']), ['wardrobe', 'combinations', 'settings']);
 });
 
 test('switchModule turns a module off and on', () => {

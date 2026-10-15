@@ -4,8 +4,8 @@ The domain of the app: garments with a colour of the palette of *A Dictionary of
 Combinations* (Sanzo Wada, 1933), the combinations of the book, and the outfits that a wardrobe
 gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`, `src/outfits.js`,
 `tests/palette.test.js`, `tests/garments.test.js`, `tests/outfits.test.js`, the views
-`src/ui/wardrobe.js` and `src/ui/outfit.js`, the `#wardrobe` section and the `#garment-sheet` of
-`index.html`.
+`src/ui/wardrobe.js`, `src/ui/outfit.js` and `src/ui/combinations.js`, the `#wardrobe` and
+`#combinations` sections and the `#garment-sheet` of `index.html`.
 
 ## Palette
 
@@ -76,3 +76,17 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-5** An outfit card shows `outfit.number`, the strip of its combination, `outfit.exact`
   for an exact outfit, and each garment with its colour, name and slot. The season filter
   (OUT-7) is shared by the details of the app and is not stored.
+
+## Combinations section
+
+- **CMB-1** The Combinations section, named `nav.combinations` (Palettes) so that its label fits
+  the rail, lists the 348 combinations by number. A row shows
+  `outfit.number`, the strip of its colours and the count of its outfits under the season filter;
+  a count of `MAX_OUTFITS` reads `combinations.countMax`.
+- **CMB-2** The size filter keeps the combinations of 2, 3 or 4 colours, or all of them. The
+  switch **Wearable only** keeps the combinations with at least one outfit. With no combination
+  left, the list shows `combinations.empty`. The filters are not stored.
+- **CMB-3** A tap on a row opens its detail (LAY-3): the number, the colours as equal blocks with
+  their names (PAL-2), and its outfits (OUT-5) under the season filter.
+- **CMB-4** A combination with no outfit names why: `outfits.noColor` with the first colour that
+  no garment matches, or `outfits.noSet` when no set of candidates is wearable (OUT-4).

@@ -44,6 +44,23 @@
         </article>
       </section>
 
+      <section id="combinations" class="pane" hidden>
+        <div class="pane-list">
+          <div id="combination-sizes" class="cluster scroll"></div>
+          <div class="list-group">
+            <label class="switch"><span data-i18n="combinations.wearable"></span><input id="combination-wearable" class="switch-input" type="checkbox" role="switch"></label>
+          </div>
+          <ul id="combination-list" class="item-list"></ul>
+          <p id="combinations-empty" class="empty-state" data-i18n="combinations.empty" hidden></p>
+        </div>
+        <article id="combination-detail" class="pane-detail">
+          <button id="combination-back" class="button quiet pane-back" type="button" data-i18n="action.back"></button>
+          <p id="combination-detail-empty" class="empty-state" data-i18n="combinations.pick"></p>
+          <div id="combination-info" class="detail-head"></div>
+          <div id="combination-outfits" class="outfits"></div>
+        </article>
+      </section>
+
       <section id="settings" class="settings" hidden>
         <h2 class="settings-title" data-i18n="settings.backup"></h2>
         <div class="list-group pair">
@@ -87,6 +104,10 @@
       <button class="nav-item" type="button" data-view="wardrobe">
         <svg class="icon" aria-hidden="true"><use href="icons.svg#hanger"/></svg>
         <span data-i18n="nav.wardrobe"></span>
+      </button>
+      <button class="nav-item" type="button" data-view="combinations">
+        <svg class="icon" aria-hidden="true"><use href="icons.svg#palette"/></svg>
+        <span data-i18n="nav.combinations"></span>
       </button>
       <button class="nav-item" type="button" data-view="settings">
         <svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg>
@@ -165,6 +186,7 @@
           "#ui/motion": "./src/ui/motion.js",
           "#ui/nav": "./src/ui/nav.js",
           "#ui/outfit": "./src/ui/outfit.js",
+          "#ui/combinations": "./src/ui/combinations.js",
           "#ui/wardrobe": "./src/ui/wardrobe.js",
           "#ui/settings": "./src/ui/settings.js",
           "#swipe": "./src/swipe.js",

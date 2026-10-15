@@ -32,7 +32,7 @@ the identifier in a commit body or in a test name to point at a rule.
 | `DS` | 04-design-system |
 | `LAY`, `NAV`, `MOD`, `ONB` | 05-layout |
 | `I18N` | 06-i18n |
-| `PAL`, `GAR`, `OUT`, `WAR` | 07-wardrobe |
+| `PAL`, `GAR`, `OUT`, `WAR`, `CMB` | 07-wardrobe |
 
 ## Words
 
@@ -41,7 +41,7 @@ the identifier in a commit body or in a test name to point at a rule.
 | Shell | The files that the service worker keeps for offline use: `SHELL` of `sw.js` |
 | Deploy | A release tag `vX.Y.Z` that GitHub Pages publishes |
 | Size class | compact (below 600px), medium (600px to 839px) or expanded (840px and up) |
-| Section | One of the screens of the navigation: Wardrobe and Settings |
+| Section | One of the screens of the navigation: Wardrobe, Combinations and Settings |
 | Module | A part of the app that Settings turns off, with its sections |
 | Pane | The list and the detail of one entry, side by side in the expanded class |
 | Sheet | A panel that comes up from the bottom of the screen |
