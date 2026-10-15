@@ -17,6 +17,7 @@ The names of the screen are the English ones; `src/locales/es.js` is the source 
 | [05-layout.md](05-layout.md) | Size classes, navigation, sections, modules and the walkthrough |
 | [06-i18n.md](06-i18n.md) | The languages and the rules of the text |
 | [07-notes.md](07-notes.md) | The notes demo: the domain that each app replaces |
+| [07-wardrobe.md](07-wardrobe.md) | The palette, the garments, the outfits and their sections |
 
 ## Rule identifiers
 
@@ -33,6 +34,7 @@ the identifier in a commit body or in a test name to point at a rule.
 | `LAY`, `NAV`, `MOD`, `ONB` | 05-layout |
 | `I18N` | 06-i18n |
 | `NOTE` | 07-notes |
+| `PAL` | 07-wardrobe |
 
 ## Words
 

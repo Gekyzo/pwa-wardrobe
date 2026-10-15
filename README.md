@@ -38,3 +38,10 @@ Set the repository's Pages source to "GitHub Actions" once.
 
 `styles.css` holds the tokens and the components in five layers. Open `/designs/` on the dev
 server for the catalogue. `docs/spec/04-design-system.md` has the rules.
+
+## Credits
+
+The palette and the combinations are those of *A Dictionary of Color Combinations* (Sanzo Wada,
+1933), from `colors.json` of
+[mattdesl/dictionary-of-colour-combinations](https://github.com/mattdesl/dictionary-of-colour-combinations)
+(MIT, © 2020 Matt DesLauriers).
