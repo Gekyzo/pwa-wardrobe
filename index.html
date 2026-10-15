@@ -121,6 +121,8 @@
         <div class="sheet-grab"></div>
         <h2 id="garment-sheet-title" class="sheet-title"></h2>
         <label class="field"><input id="garment-name" class="input field-input" type="text" maxlength="60" required data-i18n-attr="placeholder:wardrobe.name"><span class="field-label" data-i18n="wardrobe.name"></span></label>
+        <label class="field"><input id="garment-brand" class="input field-input" type="text" maxlength="40" list="garment-brands" data-i18n-attr="placeholder:wardrobe.brand"><span class="field-label" data-i18n="wardrobe.brand"></span></label>
+        <datalist id="garment-brands"></datalist>
         <select id="garment-slot" class="select" data-i18n-attr="aria-label:wardrobe.slot"></select>
         <select id="garment-season" class="select" data-i18n-attr="aria-label:wardrobe.season"></select>
         <div class="color-pick">
@@ -128,6 +130,13 @@
           <span id="garment-color-name" class="color-pick-name"></span>
         </div>
         <div id="garment-swatches" class="swatch-grid"></div>
+        <label class="field"><input id="garment-link" class="input field-input" type="url" inputmode="url" data-i18n-attr="placeholder:wardrobe.link"><span class="field-label" data-i18n="wardrobe.link"></span></label>
+        <button id="garment-load" class="button outline wide" type="button" data-i18n="wardrobe.loadImages" disabled></button>
+        <div id="garment-images" class="image-grid" hidden></div>
+        <div class="input-row">
+          <input id="garment-image-url" class="input" type="url" inputmode="url" data-i18n-attr="placeholder:wardrobe.imageUrl;aria-label:wardrobe.imageUrl">
+          <button id="garment-image-add" class="button outline" type="button" data-i18n="action.add"></button>
+        </div>
         <button class="button primary wide" type="submit" data-i18n="action.save"></button>
       </form>
     </div>

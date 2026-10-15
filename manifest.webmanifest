@@ -3,7 +3,7 @@
   "short_name": "Wardrobe",
   "description": "Load my clothes and generate outfits",
   "lang": "en",
-  "id": "./",
+  "id": "/pwa-wardrobe/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

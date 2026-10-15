@@ -114,3 +114,11 @@ test('the test table has each test file', () => {
   const listed = [...section('01-engineering.md', 'Tests').matchAll(/`tests\/([\w-]+\.test\.js)`/g)].map(([, file]) => file);
   assert.deepEqual([...new Set(listed)].sort(), list('tests/', '.test.js'));
 });
+
+// The spec resolves `id` against the origin of `start_url`, so `./` is the root of the origin: two
+// apps of one GitHub Pages origin would be one app to Chrome, and the second one never installs.
+test('the manifest id is the path of the deploy, unique on a shared origin (VER-14)', () => {
+  const manifest = JSON.parse(read('manifest.webmanifest'));
+  assert.equal(manifest.id, '/pwa-wardrobe/');
+  assert.equal(manifest.start_url, './');
+});
