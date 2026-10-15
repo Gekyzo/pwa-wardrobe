@@ -181,7 +181,7 @@ let sources = null;
 try {
   sources = await Promise.all(['../styles.css', '../icons.svg', '../index.html', ...UI.map((name) => `../src/ui/${name}.js`)].map(get));
 } catch (error) {
-  fail(`Could not load ${error.message}. Run npm run serve and open http://localhost:8080/designs/.`);
+  fail(`Could not load ${error.message}. Run npm run serve and open http://localhost:8081/designs/.`);
 }
 if (sources) {
   const [css, sprite, html, ...views] = sources;

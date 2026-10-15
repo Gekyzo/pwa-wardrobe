@@ -17,8 +17,17 @@ of *A Dictionary of Color Combinations*, or around one garment.
 ## Develop
 
 ```sh
-npm run serve   # http://localhost:8080
+npm run serve   # http://localhost:8081
 npm test
+```
+
+The user service `scripts/wardrobe.service` keeps the same server running at
+http://localhost:8081, also after a restart of WSL. While it runs, `npm run serve` finds the port
+in use; stop the service first with `systemctl --user stop wardrobe`.
+
+```sh
+ln -sf ~/code/personal/wardrobe/scripts/wardrobe.service ~/.config/systemd/user/
+systemctl --user daemon-reload && systemctl --user enable --now wardrobe
 ```
 
 ## Install on Android
