@@ -22,21 +22,32 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 
 ## Garments
 
-- **GAR-1** The doc is `{ version: 1, garments: [{ id, name, slot, season, color }] }`, newest
+- **GAR-1** The doc is
+  `{ version: 2, garments: [{ id, name, slot, season, color, brand, link, images }] }`, newest
   garment first, stored as JSON under `wardrobe.garments`. A stored doc that is not valid is kept
   under `wardrobe.garments.corrupt`, and the app starts with no garments.
 - **GAR-2** `slot` is one of `top`, `bottom`, `outer`, `shoes`, `accessory`. `season` is one of
-  `all`, `warm`, `cold`. `color` is the `id` of a palette colour.
+  `all`, `warm`, `cold`. `color` is the `id` of a palette colour. `brand` is a text, `link` is
+  `''` or an `http` or `https` URL, and `images` is a list of `http` or `https` URLs.
 - **GAR-3** `addGarment` puts a garment first; `editGarment` changes the fields of one garment.
   The name is trimmed; a blank name is `error.nameRequired`, a name of more than 60 characters is
   `error.nameTooLong`. Another slot is `error.slotInvalid`, another season is
   `error.seasonInvalid`, and a colour that is not an integer from 0 to 158 is
-  `error.colorInvalid`.
+  `error.colorInvalid`. The brand, the link and the images are optional: a missing one is `''`,
+  `''` or `[]`. The brand and the link are trimmed. A brand of more than 40 characters is
+  `error.brandTooLong`. A link that is not an `http` or `https` URL of at most 2000 characters is
+  `error.linkInvalid`. More than 8 images, an image that is not such a URL, or one image two
+  times is `error.imagesInvalid`.
 - **GAR-4** `deleteGarment` removes one garment. An id that is not in the doc is
   `error.garmentMissing`, and nothing changes.
-- **GAR-5** `normalizeGarments` accepts a doc of version 1 whose garments have a non-empty id, no
-  id two times, and fields that pass GAR-3. It trims each name and drops unknown fields. A new
-  version adds its migration here.
+- **GAR-5** `normalizeGarments` accepts a doc of version 1 or 2 whose garments have a non-empty
+  id, no id two times, and fields that pass GAR-3. It trims each name and drops unknown fields.
+  It gives version 2: a garment of version 1 gets an empty brand, link and images. A new version
+  adds its migration here.
+- **GAR-6** `brandsOf` gives the brands of the garments, each one time, sorted. Two brands that
+  differ only in case are one brand, with the spelling of the first garment.
+- **GAR-7** The main image of a garment is its first image. A garment with no image has no main
+  image.
 
 ## Outfits
 

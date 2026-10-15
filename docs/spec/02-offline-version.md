@@ -14,7 +14,8 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
 - **SW-3** At its install the worker downloads the full shell past the HTTP cache, so the shell is
   never a mix of two deploys. It then takes control at once (`skipWaiting`, `clients.claim`).
 - **SW-4** At its activation the worker deletes each cache that is not the current one or
-  `wardrobe-manifest` (SW-13). The cache name is `wardrobe-shell-v1`.
+  `wardrobe-manifest` (SW-13). The cache name is `wardrobe-shell-v2`; it went
+  up for version 2 of the garments doc (GAR-5).
 - **SW-5** The worker answers only `GET` requests of its own origin.
 - **SW-6** A request is answered stale-while-revalidate: the cached copy at once, and a fresh copy
   goes into the cache in the background for the next start. The query of the URL is ignored for
