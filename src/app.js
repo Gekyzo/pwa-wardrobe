@@ -4,7 +4,6 @@ import { bind as bindNotes, renderNotes, closeNoteSheet } from '#ui/notes';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
-import { bind as bindDrag, endReorder } from '#ui/drag';
 import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onboarding';
 
 const renderAll = () => {
@@ -21,7 +20,6 @@ bindNav();
 bindNotes();
 bindSettings();
 bindInstall();
-bindDrag();
 bindOnboarding();
 
 document.addEventListener(
@@ -42,7 +40,6 @@ document.addEventListener('keydown', (event) => {
     return;
   }
   if (event.key !== 'Escape') return;
-  endReorder(false);
   if (ui.sheetOpen) closeNoteSheet();
   else if (ui.noteId !== null) {
     ui.noteId = null;

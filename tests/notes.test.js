@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { APP_SLUG } from '#config';
-import { NOTES_KEY, MAX_TEXT, emptyNotes, normalizeNotes, addNote, editNote, deleteNote, moveNote, findNote } from '#notes';
+import { NOTES_KEY, MAX_TEXT, emptyNotes, normalizeNotes, addNote, editNote, deleteNote, findNote } from '#notes';
 
 const build = (...texts) => ({ version: 1, notes: texts.map((text, i) => ({ id: `n${i}`, text })) });
 
@@ -59,12 +59,6 @@ test('an id that does not exist is an error for edit, delete and move', () => {
   const missing = { state, error: { key: 'error.noteMissing' } };
   assert.deepEqual(editNote(state, 'zz', 'x'), missing);
   assert.deepEqual(deleteNote(state, 'zz'), missing);
-  assert.deepEqual(moveNote(state, 'zz', 0), missing);
-});
-
-test('a move puts a note at an index, clamped to the list', () => {
-  assert.deepEqual(moveNote(build('a', 'b', 'c'), 'n0', 2).state.notes.map((n) => n.text), ['b', 'c', 'a']);
-  assert.deepEqual(moveNote(build('a', 'b', 'c'), 'n2', -5).state.notes.map((n) => n.text), ['c', 'a', 'b']);
 });
 
 test('findNote returns the note or null', () => {

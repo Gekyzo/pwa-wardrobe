@@ -25,11 +25,6 @@ export const CLICK_GUARD_MS = 350;
 // Width of one swipe-action of a row, the same as in styles.css.
 export const SIDE_BUTTON = 64;
 export const DRAG_START = 10;
-// The hold of a finger that lifts a row for a manual order.
-export const HOLD_MS = 400;
-// The distance from an edge of the list where a lifted row scrolls it, and the scroll of one frame.
-export const EDGE = 56;
-export const EDGE_STEP = 8;
 export const LEAVE_MS = 200;
 // The wait for the service worker to load the new deploy.
 export const REFRESH_MS = 15000;

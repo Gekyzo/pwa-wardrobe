@@ -37,15 +37,6 @@ export const deleteNote = (state, id) => {
   return { state: { ...state, notes: state.notes.filter((note) => note.id !== id) } };
 };
 
-// Puts the note at `index` of the list without it, clamped to the ends.
-export const moveNote = (state, id, index) => {
-  const note = findNote(state, id);
-  if (!note) return missing(state);
-  const rest = state.notes.filter((other) => other.id !== id);
-  const at = Math.min(Math.max(index, 0), rest.length);
-  return { state: { ...state, notes: [...rest.slice(0, at), note, ...rest.slice(at)] } };
-};
-
 const validNote = (note) =>
   typeof note === 'object' &&
   note !== null &&

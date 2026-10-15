@@ -2,7 +2,6 @@ import { addNote, editNote, deleteNote, findNote } from '#notes';
 import { settle } from '#swipe';
 import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, apply, render, guardClick } from '#ui/context';
 import { iconButton } from '#ui/controls';
-import { reorder, bindReorder } from '#ui/drag';
 
 const openSheet = (id = null) => {
   ui.sheetOpen = true;
@@ -41,7 +40,7 @@ const bindSwipe = (row, width, id) => {
     drag = { x: event.clientX, y: event.clientY, base: ui.openId === id ? -width : 0, active: false };
   });
   row.addEventListener('pointermove', (event) => {
-    if (!drag || reorder) return;
+    if (!drag) return;
     const dx = event.clientX - drag.x;
     const dy = event.clientY - drag.y;
     if (!drag.active) {
@@ -70,7 +69,7 @@ const bindSwipe = (row, width, id) => {
   row.addEventListener('pointercancel', finish);
 };
 
-// A row slides left to show Delete (swipe), and a hold lifts it to a new place (drag).
+// A row slides left to show Delete (swipe).
 const row = (note) => {
   const open = ui.openId === note.id;
   const actions = [iconButton('trash', t('row.delete', { text: note.text }), () => remove(note.id), { variant: 'danger' })];
@@ -91,8 +90,7 @@ const row = (note) => {
     body,
   ]);
   const node = el('li', { className: 'item-row' }, [box]);
-  Object.assign(node.dataset, { id: note.id, scope: 'notes' });
-  bindReorder(body, node, note.id);
+  node.dataset.id = note.id;
   return node;
 };
 

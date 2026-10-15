@@ -2,7 +2,7 @@
 
 The demo domain of the template: a list of short notes. Replace this document with the domain of
 the app. Its files are `src/notes.js`, `src/ui/notes.js`, `tests/notes.test.js`, the `notes.*`,
-`row.delete`, `toast.noteDeleted`, `toast.order` and `error.*Note*`/`error.text*` keys of the
+`row.delete`, `toast.noteDeleted` and `error.*Note*`/`error.text*` keys of the
 catalogs, the `#notes` section and the `#note-sheet` of `index.html`.
 
 ## Doc
@@ -21,13 +21,11 @@ catalogs, the `#notes` section and the `#note-sheet` of `index.html`.
 - **NOTE-4** `editNote` changes the text of one note, with the checks of NOTE-3.
 - **NOTE-5** `deleteNote` removes one note. The toast `toast.noteDeleted` offers **Undo** for 5
   seconds.
-- **NOTE-6** `moveNote` puts a note at an index of the list, clamped to its ends. The toast
-  `toast.order` offers **Undo**.
+- **NOTE-6** Removed.
 - **NOTE-7** An id that is not in the doc is `error.noteMissing`, and nothing changes.
 
 ## Screen
 
 - **NOTE-8** The Notes section lists the notes. With no note it shows `notes.empty`. **+** opens
   the sheet of a new note; a tap on a row opens its detail (LAY-3), with **Edit** and **Delete**.
-- **NOTE-9** A row slides left to show **Delete**. A hold of a finger, or a vertical drag of the
-  mouse, lifts the row and moves it in the list (NOTE-6).
+- **NOTE-9** A row slides left to show **Delete**.

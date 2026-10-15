@@ -879,7 +879,6 @@
      @state done      A ticked entry: its name is struck out.
      @state flash     A row that has just come back: its body flashes.
      @state gone      A row that the motion code hides at once.
-     @state lifted    A row that the drag code lifts.
      @state leaving   A row that closes before it leaves.
      @state open      On item-row-swipe: the actions show.
      @state armed     On item-row-swipe: a slide far enough to run its action.
@@ -889,15 +888,6 @@
   .item-row {
     border-bottom: 1px solid var(--line);
     background: var(--surface);
-    /* The rows of a scope open a gap for a lifted row. `placeLifted` in drag.js sets the transform. */
-    transition: transform var(--motion-fast) ease-out;
-  }
-
-  .item-row.lifted {
-    position: relative;
-    z-index: 2;
-    box-shadow: var(--shadow-l);
-    transition: none;
   }
 
   .item-row.flash .item-row-body {
