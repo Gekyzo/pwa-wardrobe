@@ -2,8 +2,9 @@
 
 The domain of the app: garments with a colour of the palette of *A Dictionary of Color
 Combinations* (Sanzo Wada, 1933), the combinations of the book, and the outfits that a wardrobe
-gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`, `src/outfits.js`,
-`tests/palette.test.js`, `tests/garments.test.js`, `tests/outfits.test.js`, the views
+gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`, `src/links.js`,
+`src/outfits.js`, `tests/palette.test.js`, `tests/garments.test.js`, `tests/links.test.js`,
+`tests/outfits.test.js`, the views
 `src/ui/wardrobe.js`, `src/ui/outfit.js` and `src/ui/combinations.js`, the `#wardrobe` and
 `#combinations` sections and the `#garment-sheet` of `index.html`.
 
@@ -48,6 +49,21 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   differ only in case are one brand, with the spelling of the first garment.
 - **GAR-7** The main image of a garment is its first image. A garment with no image has no main
   image.
+
+## Links
+
+- **LNK-1** `loadPageImages` reads the page of a link through the public proxy
+  `https://api.allorigins.win/raw?url=`, with the link encoded, and stops after 15 seconds. The
+  browser cannot read the page of another origin directly. The proxy sees each link that the
+  app loads.
+- **LNK-2** `imagesOfPage` gives the images of a page in this order: the `og:image` and
+  `twitter:image` meta, the `image` of a `Product` in `application/ld+json` (also inside
+  `@graph`), then one image for each `<img>`: the widest of its `srcset`, else its `data-src`,
+  else its `src`. Each URL is resolved against the link. It keeps only `http` and `https` URLs,
+  and drops `.svg` files and paths that contain `logo`, `icon`, `sprite`, `pixel` or
+  `placeholder`. Each URL is given one time, and at most 24 are given.
+- **LNK-3** A link that is not an `http` or `https` URL, a failed request, a status that is not
+  OK, or a page with no image gives `error.linkFailed`. `loadPageImages` never throws.
 
 ## Outfits
 

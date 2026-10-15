@@ -32,7 +32,7 @@ the identifier in a commit body or in a test name to point at a rule.
 | `DS` | 04-design-system |
 | `LAY`, `NAV`, `MOD`, `ONB` | 05-layout |
 | `I18N` | 06-i18n |
-| `PAL`, `GAR`, `OUT`, `WAR`, `CMB` | 07-wardrobe |
+| `PAL`, `GAR`, `LNK`, `OUT`, `WAR`, `CMB` | 07-wardrobe |
 
 ## Words
 
