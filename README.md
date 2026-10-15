@@ -11,7 +11,8 @@ no build step and no dependencies. Scaffolded from `pwa-template`, it has:
 - a release script and a GitHub Pages deploy on a version tag;
 - structural tests that keep the layers, the text, the design system and the specification in step.
 
-A small notes list is a placeholder domain. The clothes and outfits domain replaces it.
+Garments carry a colour of Sanzo Wada's palette. The app builds outfits from the 348 combinations
+of *A Dictionary of Color Combinations*, or around one garment.
 
 ## Develop
 
