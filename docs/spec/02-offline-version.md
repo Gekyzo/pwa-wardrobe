@@ -13,10 +13,11 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   first start.
 - **SW-3** At its install the worker downloads the full shell past the HTTP cache, so the shell is
   never a mix of two deploys. It then takes control at once (`skipWaiting`, `clients.claim`).
-- **SW-4** At its activation the worker deletes each cache that is not the current one or
-  `wardrobe-manifest` (SW-13). The cache name is `wardrobe-shell-v2`; it went
-  up for version 2 of the garments doc (GAR-5).
-- **SW-5** The worker answers only `GET` requests of its own origin.
+- **SW-4** At its activation the worker deletes each cache that is not the current one,
+  `wardrobe-manifest` (SW-13) or `wardrobe-images` (SW-14). The cache name is
+  `wardrobe-shell-v2`; it went up for version 2 of the garments doc (GAR-5).
+- **SW-5** The worker answers only `GET` requests of its own origin, and the images of other
+  origins (SW-14). The proxy of the links (LNK-1) goes to the network.
 - **SW-6** A request is answered stale-while-revalidate: the cached copy at once, and a fresh copy
   goes into the cache in the background for the next start. The query of the URL is ignored for
   the match.
@@ -34,6 +35,11 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   three members in place of the ones of the file (`localizeManifest`). A member that is not a
   non-empty string keeps the value of the file. With no stored text, or a manifest that is not
   JSON, the file is answered as it is.
+- **SW-14** An image of another origin, such as the image of a garment, is answered cache first
+  from the cache `wardrobe-images`. With no cached copy it goes to the network, and the answer,
+  opaque since it comes from another origin, is stored. At each start `src/app.js` sends
+  `{ type: 'images', urls }` with the images of every garment, and the worker deletes each cached
+  image that is not in `urls`. An image seen once with a connection shows with no connection.
 
 ### Result for the user
 

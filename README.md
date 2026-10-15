@@ -14,6 +14,11 @@ no build step and no dependencies. Scaffolded from `pwa-template`, it has:
 Garments carry a colour of Sanzo Wada's palette. The app builds outfits from the 348 combinations
 of *A Dictionary of Color Combinations*, or around one garment.
 
+A garment can also carry a brand, a link to its shop page and images. The app cannot read another
+site's page itself (CORS), so **Load images** goes through the public proxy Jina Reader
+(`r.jina.ai`), which sees each link loaded. Some shops refuse it; the **Image URL** field then
+takes an image address by hand. The service worker keeps the images for offline use.
+
 ## Develop
 
 ```sh

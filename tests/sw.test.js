@@ -52,3 +52,28 @@ test('localizeManifest does not change its input', () => {
   localizeManifest(input, { lang: 'en', name: 'Template app', description: 'Template' });
   assert.deepEqual(input, build());
 });
+
+const { isRemoteImage, staleImages, IMAGES } = vm.runInNewContext(`${source}\n;({ isRemoteImage, staleImages, IMAGES })`, {
+  self: { addEventListener: () => {}, location: { origin: 'https://app.example' } },
+  URL,
+});
+
+test('the image cache has a name of its own (SW-14)', () => {
+  assert.equal(IMAGES, 'wardrobe-images');
+});
+
+test('isRemoteImage takes a GET image of another origin only (SW-14)', () => {
+  const request = (url, destination = 'image', method = 'GET') => ({ url, destination, method });
+  assert.equal(isRemoteImage(request('https://cdn.example/a.jpg')), true);
+  assert.equal(isRemoteImage(request('https://app.example/icons/logo.png')), false);
+  assert.equal(isRemoteImage(request('https://cdn.example/a.jpg', '')), false);
+  assert.equal(isRemoteImage(request('https://r.jina.ai/https://shop.example/p', '')), false);
+  assert.equal(isRemoteImage(request('https://cdn.example/a.jpg', 'image', 'POST')), false);
+});
+
+test('staleImages gives the cached URLs that no garment keeps (SW-14)', () => {
+  const cached = ['https://a/1.jpg', 'https://a/2.jpg', 'https://a/3.jpg'];
+  assert.deepEqual(plain(staleImages(cached, ['https://a/2.jpg'])), ['https://a/1.jpg', 'https://a/3.jpg']);
+  assert.deepEqual(plain(staleImages(cached, cached)), []);
+  assert.deepEqual(plain(staleImages([], ['https://a/1.jpg'])), []);
+});

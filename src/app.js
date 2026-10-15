@@ -1,4 +1,4 @@
-import { $, ui, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
+import { $, ui, state, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
 import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
 import { bind as bindCombinations, renderCombinations } from '#ui/combinations';
@@ -61,6 +61,10 @@ if (ui.onboarding !== null) $('onboarding-next').focus();
 if (!storage) showToast(t('error.noStorage'));
 navigator.storage?.persist?.().catch(() => {});
 navigator.serviceWorker?.register('./sw.js').catch(() => {});
+// The worker drops the cached images that no garment keeps any more (SW-14).
+navigator.serviceWorker?.ready
+  .then((registration) => registration.active?.postMessage({ type: 'images', urls: state.garments.flatMap((garment) => garment.images) }))
+  .catch(() => {});
 // Read once at the start: the worker answers from the cache, then stores the file of the next deploy.
 readVersion('./version.json').then((running) => {
   ui.version.running = running;

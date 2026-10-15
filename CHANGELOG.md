@@ -5,6 +5,10 @@ User-visible changes, newest first.
 ## Unreleased
 
 - Chrome now offers to install the app when another app of the same site is installed.
+- A garment can have a brand, a link to its shop page and images. Load images reads the page of
+  the link and offers its images; keep up to 8 and star the main one.
+- The main image shows in the list, the detail and the outfits, also with no connection once
+  seen.
 
 ## 0.1.1 - 2026-10-15
 
