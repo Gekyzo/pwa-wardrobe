@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wardrobe · Design system</title>
+    <link rel="stylesheet" href="../vendor/design-system/design-system.css">
     <link rel="stylesheet" href="../styles.css">
     <style>
-      /* The frame of the catalogue only. The parts inside each example are drawn by ../styles.css. */
+      /* The frame of the catalogue only. The parts inside each example are drawn by the two stylesheets of the app. */
       body { display: block; height: auto; }
       .ds-page { max-width: 1200px; margin: 0 auto; padding: 16px 16px 64px; }
       .ds-page > h1 { margin: 0 0 4px; }
@@ -53,7 +54,7 @@
   <body>
     <div class="ds-page">
       <h1>Wardrobe · Design system</h1>
-      <p class="ds-meta">Built at load from ../styles.css and ../icons.svg. Ask for a screen with these names, such as
+      <p class="ds-meta">Built at load from ../vendor/design-system/design-system.css, ../styles.css and ../icons.svg. Ask for a screen with these names, such as
         "in Menú, put a list-group above a split with a button primary and a button outline".</p>
       <div class="ds-bar">
         <button id="ds-menu-button" class="button outline ds-menu-button" type="button" aria-controls="ds-menu" aria-expanded="false">Menu</button>

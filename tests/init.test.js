@@ -61,6 +61,10 @@ test('init renames the app, resets the version and leaves no trace of the templa
     assert.match(read('docs/spec/02-offline-version.md'), /gym-log-shell-v1/);
     assert.equal(existsSync(join(dir, 'docs/superpowers')), false);
     assert.equal(existsSync(join(dir, 'scripts/init.mjs')), true);
+    // The copy of the design system is not the app's to rename: init keeps it byte for byte.
+    const vendor = readdirSync(join(root, 'vendor/design-system'));
+    assert.ok(vendor.includes('SOURCE.json'));
+    for (const file of vendor) assert.equal(read(`vendor/design-system/${file}`), readFileSync(join(root, 'vendor/design-system', file), 'utf8'), file);
     const leftovers = files(dir).filter((file) => /pwa-template|PWA Template/.test(read(file)) && !ALLOWED.includes(file));
     assert.deepEqual(leftovers, []);
     execFileSync('npm', ['test'], { cwd: dir, stdio: 'pipe' });

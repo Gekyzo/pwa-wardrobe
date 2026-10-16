@@ -3,7 +3,7 @@
 
 export const LAYERS = ['tokens', 'base', 'components', 'layouts', 'screens'];
 
-const TAGS = ['component', 'summary', 'scope', 'part', 'variant', 'state', 'example'];
+const TAGS = ['component', 'extends', 'summary', 'scope', 'part', 'variant', 'state', 'example'];
 
 const SCALES = [
   ['--space-', 'space'],
@@ -103,13 +103,15 @@ const parseBlock = ({ text, line }) => {
       return { name: first, text: rest.join(' ') };
     });
   const one = (tag) => entries.find((entry) => entry.tag === tag)?.text ?? '';
-  const errors = [
+  const extension = entries[0].tag === 'extends';
+  const errors = extension ? [] : [
     ...entries.filter((entry) => !TAGS.includes(entry.tag)).map((entry) => `${name}: unknown tag @${entry.tag}`),
     ...(one('summary') ? [] : [`${name}: no @summary`]),
     ...(entries.some((entry) => entry.tag === 'example') ? [] : [`${name}: no @example`]),
   ];
   return {
     name,
+    extension,
     line,
     summary: one('summary'),
     scope: one('scope') || null,
@@ -122,11 +124,13 @@ const parseBlock = ({ text, line }) => {
 };
 
 export const blocksOf = (css) =>
-  splitComments(css).comments.filter(({ text }) => /^\/\*\s*@component\b/.test(text)).map(parseBlock);
+  splitComments(css).comments.filter(({ text }) => /^\/\*\s*@(component|extends)\b/.test(text)).map(parseBlock);
 
 const scaleOf = (name) => SCALES.find(([prefix]) => name.startsWith(prefix))?.[1] ?? 'colour';
 
-export const parseCatalog = ({ css, sprite }) => {
+// `css` is one string or an array of strings, read in order.
+export const parseCatalog = ({ css: source, sprite }) => {
+  const css = Array.isArray(source) ? source.join('\n') : source;
   const rules = rulesOf(css);
   const { comments } = splitComments(css);
   const notes = new Map(comments.map(({ text, line }) => [line, text.slice(2, -2).trim()]));
@@ -135,12 +139,22 @@ export const parseCatalog = ({ css, sprite }) => {
     .flatMap((rule) => rule.declarations)
     .filter((declaration) => declaration.property.startsWith('--'))
     .map(({ property, value, line }) => ({ name: property, value, note: notes.get(line) ?? '', scale: scaleOf(property) }));
-  const blocks = blocksOf(css);
-  const components = blocks.map((block) => ({ ...block, layer: rules.find((rule) => rule.line > block.line)?.layer ?? null }));
+  const all = blocksOf(css);
+  const blocks = all.filter((block) => !block.extension);
+  // The first line of each sheet in the joined text, to tell the sheet of a block.
+  const starts = [1];
+  for (const text of (Array.isArray(source) ? source : [source]).slice(0, -1)) starts.push(starts.at(-1) + text.split('\n').length);
+  const components = blocks.map((block) => ({ ...block, sheet: starts.filter((start) => start <= block.line).length - 1, layer: rules.find((rule) => rule.line > block.line)?.layer ?? null }));
+  const unknown = [];
+  for (const extension of all.filter((block) => block.extension)) {
+    const target = components.find(({ name }) => name === extension.name);
+    if (!target) unknown.push(`${extension.name}: @extends of an unknown component`);
+    else for (const key of ['parts', 'variants', 'states']) target[key] = [...target[key], ...extension[key]];
+  }
   const seen = new Set();
   const twice = blocks.filter(({ name }) => seen.has(name) || !seen.add(name)).map(({ name }) => `${name}: documented twice`);
   const icons = [...sprite.matchAll(/<symbol\b[^>]*\bid="([^"]+)"/g)].map(([, id]) => id);
-  return { tokens, components, icons, errors: [...blocks.flatMap((block) => block.errors), ...twice] };
+  return { tokens, components, icons, errors: [...blocks.flatMap((block) => block.errors), ...twice, ...unknown] };
 };
 
 export const classesOf = (html) =>

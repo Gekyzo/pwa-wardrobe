@@ -12,7 +12,8 @@ const HEX = /^#[0-9a-fA-F]{6}$/;
 const UNSAFE = /[<>&'"`\\]/;
 const USAGE = 'usage: npm run init -- <slug> "<Name>" [--short <short>] [--theme <#hex>]';
 const TEXT = /\.(js|mjs|json|webmanifest|html|css|md|yml)$/;
-const SKIP = /^(\.git|node_modules|\.superpowers|docs\/superpowers)(\/|$)/;
+// vendor/ is a copy of another repository, checked by its hashes: it goes over as it is.
+const SKIP = /^(\.git|node_modules|\.superpowers|docs\/superpowers|vendor)(\/|$)/;
 // They name the template on purpose: to find it, and to test it.
 const OWN = ['scripts/init.mjs', 'tests/init.test.js'];
 

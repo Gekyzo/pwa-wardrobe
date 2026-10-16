@@ -7,10 +7,10 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
 
 - **SW-1** `src/app.js` registers `sw.js` at each start. With no service worker the app works with
   a connection only.
-- **SW-2** The app shell is the list `SHELL` of `sw.js`: the page, the styles, the manifest, each
-  module of `src/`, each catalog, `version.json`, the icons of the app and the icon sprite
-  `icons.svg`. A file that the app loads and that is not in `SHELL` does not work offline at the
-  first start.
+- **SW-2** The app shell is the list `SHELL` of `sw.js`: the page, the two stylesheets (DSV-2),
+  the manifest, each module of `src/`, each catalog, `version.json`, the icons of the app and the
+  icon sprite `icons.svg`. A file that the app loads and that is not in `SHELL` does not work
+  offline at the first start.
 - **SW-3** At its install the worker downloads the full shell past the HTTP cache, so the shell is
   never a mix of two deploys. It then takes control at once (`skipWaiting`, `clients.claim`).
 - **SW-4** At its activation the worker deletes each cache that is not the current one,

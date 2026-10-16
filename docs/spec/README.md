@@ -13,8 +13,8 @@ The names of the screen are the English ones; `src/locales/es.js` is the source 
 | [01-engineering.md](01-engineering.md) | Modules, code rules, storage keys, tests and checks |
 | [02-offline-version.md](02-offline-version.md) | Service worker, version, update toast, deploy, installation |
 | [03-install.md](03-install.md) | The install offer and the Install button |
-| [04-design-system.md](04-design-system.md) | Layers, tokens, components, icons, breakpoints and the catalogue |
-| [05-layout.md](05-layout.md) | Size classes, navigation, sections, modules and the walkthrough |
+| [04-design-system.md](04-design-system.md) | The copy of the design system, its override, the parts of the app |
+| [05-layout.md](05-layout.md) | Navigation, sections, modules and the walkthrough |
 | [06-i18n.md](06-i18n.md) | The languages and the rules of the text |
 | [07-wardrobe.md](07-wardrobe.md) | The palette, the garments, the outfits and their sections |
 
@@ -24,13 +24,16 @@ Each rule has an identifier, a prefix and a number, such as `GAR-3`. An identifi
 rule that goes away keeps its number, marked as removed, and a new rule gets the next number. Use
 the identifier in a commit body or in a test name to point at a rule.
 
+The rules DS-1 to DS-8 and LAY-1 to LAY-4 belong to the design system, `pwa-design-system`.
+[04-design-system.md](04-design-system.md) says where they are.
+
 | Prefix | Document |
 |---|---|
 | `ENG` | 01-engineering |
 | `SW`, `VER` | 02-offline-version |
 | `INS` | 03-install |
-| `DS` | 04-design-system |
-| `LAY`, `NAV`, `MOD`, `ONB` | 05-layout |
+| `DSV` | 04-design-system |
+| `NAV`, `MOD`, `ONB` | 05-layout |
 | `I18N` | 06-i18n |
 | `PAL`, `GAR`, `LNK`, `OUT`, `WAR`, `CMB` | 07-wardrobe |
 

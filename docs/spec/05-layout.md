@@ -1,27 +1,14 @@
 # Layout and navigation
 
-Rules of `styles.css` for the size classes, `src/sections.js`, `src/modules.js`,
-`src/onboarding.js` and the views `nav`, `dust` and `onboarding` of `src/ui/`.
+Rules of `src/sections.js`, `src/modules.js`, `src/onboarding.js` and the views `nav`, `dust` and
+`onboarding` of `src/ui/`.
 
 ## Size classes
 
-- **LAY-1** The layout follows the Material window size classes:
-
-  | Class | Width | Navigation | Content |
-  |---|---|---|---|
-  | compact | below 600px | bottom bar | full width |
-  | medium | 600px to 839px | rail at the start side | one column, at most `--content-max`, centred |
-  | expanded | 840px and up | rail at the start side | the `pane` layout: list and detail side by side |
-
-- **LAY-2** The navigation is one element, `.nav-bar`. Below 600px it is the bar at the bottom;
-  from 600px the same element is a rail of `--rail-width` at the start side, and the page, the
-  toast and the add button move beside it.
-- **LAY-3** A section with a list and a detail uses the `pane` layout. Below 840px it shows the
-  list, or the detail alone while an entry is open, with a **Back** button (`pane-back`). From
-  840px it shows both; with no entry open the detail says `wardrobe.pick` or `combinations.pick`, and **Back** is hidden.
-- **LAY-4** The safe-area insets of the phone pad the header (top), the bar (bottom), the rail
-  (start side), the sheets and the walkthrough. The page keeps out of a cutout on either side,
-  and so do the toast and the add button, which are fixed.
+The size classes, the navigation element, the `pane` layout and the safe areas are the rules
+LAY-1 to LAY-4 of the design system (04-design-system). In this app the Wardrobe and Combinations
+sections use the `pane` layout (LAY-3). From 840px, with no entry open, the detail says
+`wardrobe.pick` or `combinations.pick`.
 
 ## Navigation
 

@@ -1,0 +1,1316 @@
+@layer tokens, base, components, layouts, screens;
+
+@layer tokens {
+  :root {
+    /* `light-dark()` takes its value from `color-scheme`: the phone, or Theme in Settings. */
+    color-scheme: light dark;
+    --bg: light-dark(#f6f7f5, #111613); /* page */
+    --surface: light-dark(#ffffff, #1a211d); /* rows, header, sheets */
+    --text: light-dark(#17201b, #e8ede9);
+    --muted: light-dark(#667069, #98a39c); /* second text, idle icons */
+    --line: light-dark(#dfe4e0, #2c3530); /* borders and separators */
+    --accent: light-dark(#1f7a4d, #5fc491); /* main action, selection */
+    --accent-text: light-dark(#ffffff, #0c1a12); /* text on --accent */
+    --accent-soft: light-dark(#e2f2ea, #1d3327); /* selected chip, swipe action */
+    --danger: light-dark(#b3261e, #f2b8b5);
+    --warning: light-dark(#9a5b00, #f2b65c);
+    --toast-bg: light-dark(#17201b, #e8ede9);
+    --toast-text: light-dark(#ffffff, #17201b);
+    --knob: #ffffff; /* the knob of a switch, in both themes */
+    --scrim: rgb(0 0 0 / 0.45); /* veil behind a sheet */
+
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace; /* keys of the walkthrough */
+    --text-xs: 0.75rem; /* labels, badges, captions */
+    --text-s: 0.875rem; /* second text, chips */
+    --text-m: 1rem; /* body */
+    --text-l: 1.25rem; /* screen title */
+    --text-xl: 2rem; /* the + of the add button */
+    --weight-normal: 400;
+    --weight-strong: 700;
+
+    --space-half: 2px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+
+    --radius-s: 4px;
+    --radius-m: 10px; /* buttons, inputs */
+    --radius-l: 16px; /* groups, banner, add button */
+    --radius-xl: 22px; /* top of a sheet */
+    --radius-pill: 999px;
+    --radius-round: 50%;
+
+    --tap: 44px; /* least size of a tap target */
+    --tap-l: 56px; /* rows, add button */
+    --icon: 24px;
+    --icon-s: 20px;
+    --arrow: 6px; /* the arrow of a select */
+    --nav-height: 60px;
+    /* The adaptive layout (LAY-1): the rail from 600px, the two panes from 840px. */
+    --rail-width: 80px;
+    --content-max: 640px;
+    --pane-list: 360px;
+    --art-width: 240px; /* the drawings of the walkthrough */
+    --logo: 96px; /* the app icon at the top of the walkthrough */
+
+    --shadow-s: 0 1px 3px rgb(0 0 0 / 0.3);
+    --shadow-l: 0 6px 18px rgb(0 0 0 / 0.25);
+
+    --motion-fast: 150ms;
+    --motion: 200ms;
+    --motion-slow: 1.2s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --motion-fast: 0ms;
+      --motion: 0ms;
+      --motion-slow: 0ms;
+    }
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  button {
+    min-height: 44px;
+    border: 0;
+    border-radius: var(--radius-m);
+    background: none;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* @component main
+     @summary The scrolling area of a section, between the header and the bottom bar.
+     @state enter-next      The content comes in from the right, after a change of section.
+     @state enter-previous  The content comes in from the left.
+     @example <p>The main element holds the sections; it has no example of its own.</p> */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* A horizontal slide changes the section, so the browser must not take it. */
+    touch-action: pan-y;
+    overflow-x: hidden;
+    padding-bottom: calc(var(--tap-l) + var(--space-4) * 2);
+  }
+
+  /* The content of a new section comes in from its side. `main` stays in its place, so its scroll
+     and the bottom padding do not move. */
+  main.enter-next > *,
+  main.enter-previous > * {
+    animation: enter var(--motion) ease-out;
+  }
+
+  main.enter-next {
+    --enter-from: 48px;
+  }
+
+  main.enter-previous {
+    --enter-from: -48px;
+  }
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateX(var(--enter-from));
+    }
+  }
+}
+
+@layer components {
+  /* @component icon
+     @summary A line icon of icons.svg. It takes the colour of the text around it.
+     @variant small  The size --icon-s, for an icon beside a label.
+     @example <svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg>
+     @example <svg class="icon small" aria-hidden="true"><use href="icons.svg#download"/></svg> */
+  .icon {
+    flex: none;
+    width: var(--icon);
+    height: var(--icon);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .icon.small {
+    width: var(--icon-s);
+    height: var(--icon-s);
+  }
+
+  /* @component button
+     @summary Tap target for one action. Min height --tap. The base look has no fill.
+     @variant primary  Main action of a view or a sheet. One for each view.
+     @variant outline  Second action beside a primary, or an action of a row.
+     @variant quiet    Muted text, for an action that steps back, such as Saltar.
+     @variant accent   Accent text and no fill, for an action that is not the main one.
+     @variant danger   Removes data. Combine with outline.
+     @variant strong   Strong text, for the action of a toast.
+     @variant icon     Square, icon or one sign only. Needs an aria-label.
+     @variant toggle   An icon button that is on with aria-pressed="true".
+     @variant wide     Takes the full width of its box.
+     @example <button class="button primary" type="button">Add</button>
+     @example <button class="button outline" type="button">Clear menu</button>
+     @example <button class="button outline danger" type="button">Delete</button>
+     @example <button class="button outline quiet" type="button">Skip</button>
+     @example <button class="button accent" type="button">Update</button>
+     @example <button class="button primary icon" type="button" aria-label="Send"><svg class="icon" aria-hidden="true"><use href="icons.svg#download"/></svg></button>
+     @example <button class="button icon toggle" type="button" aria-pressed="true" aria-label="Always"><svg class="icon" aria-hidden="true"><use href="icons.svg#refresh"/></svg></button>
+     @example <button class="button icon" type="button" aria-label="More">⋯</button>
+     @example <button class="button primary wide" type="button">Save the note</button> */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-m);
+    background: none;
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .button.primary {
+    background: var(--accent);
+    color: var(--accent-text);
+    font-weight: var(--weight-strong);
+  }
+
+  .button.outline {
+    border-color: var(--line);
+  }
+
+  .button.quiet {
+    color: var(--muted);
+  }
+
+  .button.accent {
+    color: var(--accent);
+    font-weight: var(--weight-strong);
+  }
+
+  .button.danger {
+    color: var(--danger);
+  }
+
+  .button.strong {
+    font-weight: var(--weight-strong);
+  }
+
+  .button.icon {
+    flex: none;
+    width: var(--tap);
+    height: var(--tap);
+    padding: 0;
+    font-size: var(--text-l);
+  }
+
+  .button.icon:where(:not(.primary, .accent)) {
+    color: var(--muted);
+  }
+
+  .button.toggle {
+    color: var(--line);
+  }
+
+  .button.toggle[aria-pressed="true"] {
+    color: var(--accent);
+  }
+
+  .button.wide {
+    width: 100%;
+  }
+
+  /* @component chip
+     @summary A choice among several, such as a tag or a filter. Selected with aria-pressed="true".
+     @variant surface  On a --bg background: the chip takes --surface.
+     @part count  A number after the label, in muted text.
+     @example <button class="chip" type="button">Home</button>
+     @example <button class="chip" type="button" aria-pressed="true">Work</button>
+     @example <div class="cluster" style="background: var(--bg)"><button class="chip surface" type="button" aria-pressed="true"><span>All</span><span class="count">4</span></button><button class="chip surface" type="button"><span>Home</span><span class="count">1</span></button></div> */
+  .chip {
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    background: var(--bg);
+    font-size: var(--text-s);
+  }
+
+  .chip.surface {
+    flex: none;
+    background: var(--surface);
+  }
+
+  .chip[aria-pressed="true"] {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: var(--weight-strong);
+  }
+
+  .chip .count {
+    margin-left: var(--space-2);
+    color: var(--muted);
+    font-weight: var(--weight-normal);
+  }
+
+  /* @component pill
+     @summary A small tag beside a name. It is below the tap size: a button pill is a second way to an action.
+     @variant ghost  A dashed outline, for a state that is off.
+     @example <span class="pill">Done today</span>
+     @example <button class="pill ghost" type="button">+ Later</button> */
+  .pill {
+    flex: none;
+    min-height: 0;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+  }
+
+  .pill:is(button) {
+    min-height: calc(var(--tap) - var(--space-3));
+  }
+
+  .pill.ghost {
+    border: 1px dashed var(--muted);
+    background: none;
+    color: var(--muted);
+  }
+
+  /* @component segmented
+     @summary One choice of two or three, side by side. The chosen segment has aria-pressed="true".
+     @part segment  One choice.
+     @example <div class="segmented"><button class="segment" type="button" aria-pressed="true">For today</button><button class="segment" type="button" aria-pressed="false">For later</button></div> */
+  .segmented {
+    display: flex;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 var(--space-1);
+  }
+
+  .segmented .segment {
+    flex: 1;
+    min-height: var(--tap);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    font-size: var(--text-s);
+  }
+
+  .segmented .segment[aria-pressed="true"] {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: var(--weight-strong);
+  }
+
+  /* @component switch
+     @summary A setting that is on or off: its name, then the switch.
+     @part switch-input  The checkbox with role="switch".
+     @example <label class="switch"><span>Later</span><input class="switch-input" type="checkbox" role="switch" checked></label> */
+  .switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: var(--tap-l);
+    padding: 0 var(--space-4);
+  }
+
+  .switch + .switch {
+    border-top: 1px solid var(--line);
+  }
+
+  .switch-input {
+    appearance: none;
+    position: relative;
+    flex: none;
+    width: 44px;
+    height: 26px;
+    margin: 0;
+    border-radius: var(--radius-l);
+    background: var(--line);
+    cursor: pointer;
+    transition: background var(--motion);
+  }
+
+  .switch-input::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--space-1);
+    margin: auto 0;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-round);
+    background: var(--knob);
+    box-shadow: var(--shadow-s);
+    transition: transform var(--motion);
+  }
+
+  .switch-input:checked {
+    background: var(--accent);
+  }
+
+  .switch-input:checked::after {
+    transform: translateX(16px);
+  }
+
+  /* @component input
+     @summary A one-line text box. Height --tap, on --bg.
+     @variant raised  On a --bg page: the box takes --surface.
+     @variant strong  The main box of a sheet, with an accent border.
+     @example <input class="input" type="text" placeholder="New tag">
+     @example <input class="input raised" type="search" placeholder="Search">
+     @example <input class="input strong" type="text" placeholder="Añadir artículo a la lista"> */
+  .input {
+    width: 100%;
+    min-width: 0;
+    height: var(--tap);
+    padding: 0 var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+  }
+
+  .input.raised {
+    background: var(--surface);
+  }
+
+  .input.strong {
+    border: 2px solid var(--accent);
+  }
+
+  /* @component field
+     @summary An input with its name as a label: inside the box while it is empty, on its top border
+       once it has a value or the focus. The placeholder only marks the empty box.
+     @part field-input  The input, with the classes input field-input and a placeholder.
+     @part field-label  The name, after the input.
+     @example <label class="field"><input class="input field-input" type="text" placeholder="Text" value="Call Ana"><span class="field-label">Name</span></label>
+     @example <label class="field"><input class="input field-input" type="text" placeholder="Cantidad"><span class="field-label">Amount</span></label> */
+  .field {
+    position: relative;
+    display: block;
+    margin-top: var(--space-4);
+  }
+
+  .field-input {
+    border: 2px solid var(--line);
+  }
+
+  .field-input:focus {
+    border-color: var(--accent);
+  }
+
+  .field-input::placeholder {
+    color: transparent;
+  }
+
+  .field-label {
+    position: absolute;
+    top: 50%;
+    left: var(--space-3);
+    padding: 0 var(--space-1);
+    border-radius: var(--radius-s);
+    background: var(--bg);
+    color: var(--muted);
+    line-height: 1;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: top var(--motion-fast) ease-out, font-size var(--motion-fast) ease-out, color var(--motion-fast) ease-out;
+  }
+
+  .field-input:focus + .field-label,
+  .field-input:not(:placeholder-shown) + .field-label {
+    top: 0;
+    background: linear-gradient(var(--surface) 50%, var(--bg) 50%);
+    font-size: var(--text-xs);
+  }
+
+  .field-input:focus + .field-label {
+    color: var(--accent);
+  }
+
+  /* @component select
+     @summary A choice from a list, full width, with its own arrow.
+     @example <select class="select" aria-label="Language"><option>English</option></select> */
+  .select {
+    appearance: none;
+    display: block;
+    width: 100%;
+    min-height: var(--tap-l);
+    padding: 0 var(--tap) 0 var(--space-4);
+    border: 0;
+    background:
+      linear-gradient(45deg, transparent 50%, var(--muted) 50%) right calc(var(--space-4) + var(--space-half) + var(--arrow)) center / var(--arrow) var(--arrow) no-repeat,
+      linear-gradient(135deg, var(--muted) 50%, transparent 50%) right calc(var(--space-4) + var(--space-half)) center / var(--arrow) var(--arrow) no-repeat;
+    color: inherit;
+    font: inherit;
+  }
+
+  /* List */
+
+  /* @component app-header
+     @summary The top of each section: the ring, the title and its summary, and up to three tool buttons.
+     @part app-header-text      The title and the summary, which take the free width.
+     @part app-header-title     The name of the section.
+     @part app-header-subtitle  The summary of the section.
+     @example <header class="app-header" style="border: 0"><div class="ring" style="--pct: 33%"><span class="ring-text">2/6</span></div><div class="app-header-text"><h1 class="app-header-title">Today</h1><p class="app-header-subtitle">4 notes left</p></div><button class="button icon" type="button" aria-label="Search"><svg class="icon" aria-hidden="true"><use href="icons.svg#help"/></svg></button></header> */
+  .app-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: calc(var(--space-4) + env(safe-area-inset-top)) var(--space-4) var(--space-3);
+    position: relative;
+    border-bottom: 1px solid var(--line);
+    touch-action: pan-y;
+  }
+
+  .app-header-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* The tools stand closer to each other than to the title, so that three leave room for it. */
+  .app-header .button.icon:not([hidden]) ~ .button.icon:not([hidden]) {
+    margin-left: calc(var(--space-2) * -1);
+  }
+
+  .app-header .button.icon[aria-expanded="true"] {
+    color: var(--accent);
+  }
+
+  .app-header-title {
+    margin: 0;
+    font-size: var(--text-l);
+    line-height: 1.2;
+  }
+
+  .app-header-subtitle {
+    margin: var(--space-half) 0 0;
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  /* @component ring
+     @summary The progress of a section, as a ring around a short text. --pct sets the arc.
+     @part ring-text  The text in the middle.
+     @example <div class="ring" style="--pct: 66%"><span class="ring-text">4/6</span></div> */
+  .ring {
+    --pct: 0%;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-round);
+    background: conic-gradient(var(--accent) var(--pct), var(--line) 0);
+  }
+
+  .ring-text {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-round);
+    background: var(--bg);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-strong);
+  }
+
+  /* @component nav-bar
+     @summary The bottom bar below 600px, a rail at the start side from 600px: one item for each section that is on.
+     @part nav-item  A section: its icon and its name. The current one has aria-current="page".
+     @example <nav class="nav-bar" style="width: 100%"><button class="nav-item" type="button" aria-current="page"><svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg><span>Notes</span></button><button class="nav-item" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg><span>Later</span><em class="badge">2</em></button></nav> */
+  .nav-bar {
+    display: flex;
+    flex: none;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .nav-item {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-half);
+    height: var(--nav-height);
+    border-radius: 0;
+    color: var(--muted);
+    font-size: var(--text-xs);
+  }
+
+  .nav-item[aria-current="page"] {
+    color: var(--accent);
+    font-weight: var(--weight-strong);
+  }
+
+  /* From 600px the bar is a rail at the start side, so a tablet or a phone on its side keeps its
+     height for the content (LAY-2). */
+  @media (min-width: 600px) {
+    .nav-bar {
+      position: fixed;
+      inset-block: 0;
+      inset-inline-start: 0;
+      z-index: 10;
+      flex-direction: column;
+      justify-content: center;
+      width: calc(var(--rail-width) + env(safe-area-inset-left));
+      padding-bottom: 0;
+      padding-inline-start: env(safe-area-inset-left);
+      border-top: 0;
+      border-inline-end: 1px solid var(--line);
+    }
+
+    .nav-item {
+      flex: none;
+    }
+  }
+
+  /* @component badge
+     @summary A count on a nav item. It is hidden while it is empty.
+     @example <span style="position: relative; display: inline-block; width: 48px; height: 32px"><em class="badge">2</em></span> */
+  .badge {
+    position: absolute;
+    top: var(--space-2);
+    left: calc(50% + var(--space-2));
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    color: var(--accent-text);
+    font-size: var(--text-xs);
+    font-style: normal;
+    font-weight: var(--weight-strong);
+  }
+
+  .badge:empty {
+    display: none;
+  }
+
+  /* @component sheet
+     @summary A panel that comes up from the bottom over a veil. The layer is hidden to close it.
+     @part sheet-layer  The fixed layer that holds the veil and the sheet.
+     @part sheet-veil   The dark veil; a tap on it closes the sheet.
+     @part sheet-grab   The handle at the top.
+     @part sheet-title  A title of the sheet or of one of its parts.
+     @variant part      On sheet-title: a title below a line that separates it from the part above.
+     @part entry        A choice of the sheet: a name, with its effect below it.
+     @part entry-note   The effect of an entry.
+     @example <div class="sheet" style="border-radius: var(--radius-xl)"><div class="sheet-grab"></div><h2 class="sheet-title">Group by</h2><button class="entry" type="button"><span>Finish</span><small class="entry-note">Done notes leave the list</small></button><h2 class="sheet-title part">Tags</h2></div> */
+  .sheet-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: display var(--motion) allow-discrete;
+  }
+
+  /* A sheet that leaves stays on the screen for the transition, and takes no tap. */
+  .sheet-layer[hidden] {
+    pointer-events: none;
+  }
+
+  .sheet-veil {
+    position: absolute;
+    inset: 0;
+    background: var(--scrim);
+    transition: opacity var(--motion) ease-out;
+  }
+
+  .sheet-layer[hidden] .sheet-veil {
+    opacity: 0;
+  }
+
+  .sheet-layer[hidden] .sheet {
+    transform: translateY(100%);
+  }
+
+  @starting-style {
+    .sheet-veil {
+      opacity: 0;
+    }
+
+    .sheet {
+      transform: translateY(100%);
+    }
+  }
+
+  .sheet {
+    position: relative;
+    max-height: 85%;
+    overflow-y: auto;
+    padding: var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    background: var(--surface);
+    transition: transform var(--motion) ease-out;
+  }
+
+  .sheet-grab {
+    width: 40px;
+    height: 4px;
+    margin: 0 auto var(--space-3);
+    border-radius: var(--radius-s);
+    background: var(--line);
+  }
+
+  .sheet-title {
+    margin: var(--space-2) 0 0;
+    color: var(--muted);
+    font-size: var(--text-s);
+    font-weight: var(--weight-strong);
+  }
+
+  /* A title below a line that separates its part from the part above. */
+  .sheet-title.part {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .entry {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-half);
+    width: 100%;
+    min-height: 56px;
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg);
+    text-align: left;
+  }
+
+  .entry-note {
+    color: var(--muted);
+    font-size: var(--text-xs);
+  }
+
+  /* @component toast
+     @summary A short message at the bottom, with an optional action. With a sheet open it goes to the top.
+     @part toast-text  The message.
+     @example <div class="toast" role="status" style="position: static"><span class="toast-text">Note deleted</span><button class="button strong" type="button">Undo</button></div> */
+  .toast {
+    position: fixed;
+    /* Above the add button, in reach of the thumb. */
+    bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--tap-l) + var(--space-6));
+    left: calc(var(--space-3) + env(safe-area-inset-left));
+    right: calc(var(--space-3) + env(safe-area-inset-right));
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 48px;
+    padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+    border-radius: var(--radius-m);
+    background: var(--toast-bg);
+    color: var(--toast-text);
+    box-shadow: var(--shadow-l);
+    transition: opacity var(--motion) ease-out, transform var(--motion) ease-out, display var(--motion) allow-discrete;
+  }
+
+  /* The toast leaves to this state, and enters from the same one. */
+  .toast[hidden] {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  @starting-style {
+    .toast {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  /* An open sheet has the bottom of the screen, so the toast goes to the top. */
+  body:has(.sheet-layer:not([hidden])) .toast {
+    top: calc(var(--space-2) + env(safe-area-inset-top));
+    bottom: auto;
+  }
+
+  .toast-text {
+    flex: 1;
+  }
+
+  /* No bar at the bottom from 600px: the toast goes down, and clears the rail. */
+  @media (min-width: 600px) {
+    .toast {
+      bottom: calc(env(safe-area-inset-bottom) + var(--tap-l) + var(--space-6));
+      left: calc(var(--rail-width) + env(safe-area-inset-left) + var(--space-3));
+    }
+  }
+
+  /* @component banner
+     @summary A message in the flow of a list, with its action below it.
+     @part banner-text  The text below the title.
+     @example <section class="banner"><strong>Done?</strong><p class="banner-text">All done.</p><button class="button primary wide" type="button">Finish</button></section> */
+  .banner {
+    margin: var(--space-4) var(--space-3);
+    padding: var(--space-4) var(--space-4);
+    border-radius: var(--radius-l);
+    background: var(--accent-soft);
+  }
+
+  .banner-text {
+    margin: var(--space-1) 0 var(--space-3);
+    font-size: var(--text-s);
+  }
+
+  /* @component empty-state
+     @summary The text of a list or a part with nothing in it, with an optional action.
+     @variant inline  In a sheet: aligned with the content, with less space.
+     @example <div class="empty-state"><p>The list is empty.</p><button class="button primary" type="button">Bring from Later</button></div>
+     @example <p class="empty-state inline">No note matches.</p> */
+  .empty-state {
+    margin: calc(var(--space-6) * 2) var(--space-6);
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .empty-state .button {
+    margin-top: var(--space-2);
+  }
+
+  .empty-state.inline {
+    margin: var(--space-3) 0;
+    text-align: left;
+  }
+
+  /* @component item-list
+     @summary The list of a section: item rows, section heads and group heads.
+     @example <ul class="item-list"><li class="item-row"><div class="item-row-body"><button class="item-row-name" type="button"><span>Call Ana</span></button></div></li></ul> */
+  .item-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A row closes before it leaves the list, and a group head before the list becomes flat. `collapse` in motion.js sets the height. */
+  .item-list > .leaving {
+    overflow: hidden;
+    min-height: 0;
+    opacity: 0;
+    transition: height var(--motion) ease-out, opacity var(--motion) ease-out;
+  }
+
+  /* @component item-row
+     @summary One entry of a list, as a row. Its body slides over its actions.
+     @part item-row-swipe         The box that clips the sliding body.
+     @part item-row-body          The row itself: check, name, then buttons.
+     @part item-row-check         The round checkbox of an entry that can be done.
+     @part item-row-name          The name button, with its quantity and its meta line.
+     @part item-row-qty           The quantity after the name.
+     @part item-row-meta          A muted line below the name, such as its tags.
+     @part item-row-actions       The swipe actions behind the right end.
+     @part item-row-backdrop      The action under a slide to the right.
+     @state done      A ticked entry: its name is struck out.
+     @state flash     A row that has just come back: its body flashes.
+     @state gone      A row that the motion code hides at once.
+     @state lifted    A row that the drag code lifts.
+     @state leaving   A row that closes before it leaves.
+     @state open      On item-row-swipe: the actions show.
+     @state armed     On item-row-swipe: a slide far enough to run its action.
+     @state dragging  On item-row-body: the body follows the finger, with no transition.
+     @example <ul class="item-list" style="width: 100%"><li class="item-row"><div class="item-row-swipe"><div class="item-row-body"><input class="item-row-check" type="checkbox" aria-label="Call Ana"><button class="item-row-name" type="button"><span>Ideas <span class="item-row-qty">1 h</span></span><small class="item-row-meta">Work</small></button><button class="button icon toggle" type="button" aria-pressed="false" aria-label="Repeat"><svg class="icon" aria-hidden="true"><use href="icons.svg#refresh"/></svg></button></div></div></li><li class="item-row done"><div class="item-row-body"><input class="item-row-check" type="checkbox" checked aria-label="Read book"><button class="item-row-name" type="button"><span>Read book</span></button><button class="pill ghost" type="button">+ Later</button></div></li></ul>
+     @example <ul class="item-list" style="width: 100%"><li class="item-row"><div class="item-row-swipe open"><div class="item-row-actions"><button class="swipe-action" type="button" aria-label="Move"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg></button><button class="swipe-action danger" type="button" aria-label="Delete"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg></button></div><div class="item-row-body" style="transform: translateX(-128px)"><button class="item-row-name" type="button"><span>Call Ana</span></button></div></div></li></ul> */
+  .item-row {
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    /* The rows of a scope open a gap for a lifted row. `placeLifted` in drag.js sets the transform. */
+    transition: transform var(--motion-fast) ease-out;
+  }
+
+  .item-row.lifted {
+    position: relative;
+    z-index: 2;
+    box-shadow: var(--shadow-l);
+    transition: none;
+  }
+
+  .item-row.flash .item-row-body {
+    animation: flash var(--motion-slow) ease-out;
+  }
+
+  .item-row.gone {
+    display: none;
+  }
+
+  @keyframes flash {
+    from {
+      background: var(--accent-soft);
+    }
+  }
+
+  .item-row-swipe {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .item-row-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+  }
+
+  /* The slide to the right shows its action below the row. The actions cover it. */
+  .item-row-backdrop {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding-left: var(--space-5);
+    background: var(--accent-soft);
+    color: var(--accent);
+    transition: background var(--motion-fast), color var(--motion-fast);
+  }
+
+  .item-row-swipe.armed .item-row-backdrop {
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .item-row-body {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-l);
+    padding: 0 var(--space-1) 0 var(--space-2);
+    background: var(--surface);
+  }
+
+  .item-row-swipe .item-row-body {
+    padding-right: var(--space-3);
+    touch-action: pan-y;
+    user-select: none;
+    transition: transform var(--motion-fast) ease-out;
+  }
+
+  .item-row-swipe .item-row-body.dragging {
+    transition: none;
+  }
+
+  .item-row-check {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: var(--icon);
+    height: var(--icon);
+    margin: var(--space-3) var(--space-1) var(--space-3) var(--space-2);
+    border: 2px solid var(--muted);
+    border-radius: var(--radius-round);
+    background: none;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .item-row-check:checked {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  /* The tick: two sides of a small box, turned. */
+  .item-row-check:checked::after {
+    content: "";
+    width: 10px;
+    height: 5px;
+    margin-top: calc(var(--space-half) * -1);
+    border: solid var(--accent-text);
+    border-width: 0 0 2px 2px;
+    transform: rotate(-45deg);
+  }
+
+  .item-row-name {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 0;
+    min-height: var(--tap-l);
+    padding: 0 var(--space-1);
+    border-radius: 0;
+    overflow-wrap: anywhere;
+    text-align: left;
+  }
+
+  /* A row with no checkbox: its name keeps the place of one. */
+  .item-row-body > .item-row-name:first-child {
+    padding-left: var(--space-3);
+  }
+
+  .item-row.done .item-row-name {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .item-row-meta {
+    color: var(--muted);
+    font-size: var(--text-xs);
+  }
+
+  .item-row-qty {
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  /* @component swipe-action
+     @summary An action behind the right end of a row, shown by a slide to the left.
+     @variant danger  Removes the item.
+     @example <div style="display: flex; height: 56px"><button class="swipe-action" type="button" aria-label="Move"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg></button><button class="swipe-action danger" type="button" aria-label="Delete"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg></button></div> */
+  .swipe-action {
+    display: grid;
+    place-items: center;
+    width: calc(var(--tap) + var(--space-5));
+    height: 100%;
+    border-radius: 0;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .swipe-action + .swipe-action {
+    border-left: 1px solid var(--surface);
+  }
+
+  .swipe-action.danger {
+    background: var(--danger);
+    color: var(--surface);
+  }
+
+  /* @component section-head
+     @summary The row that opens and closes a part of a list, such as the done entries.
+     @part section-head-button  The full-width button, with aria-expanded.
+     @part chevron              The open or closed sign at its end.
+     @example <ul class="item-list" style="width: 100%"><li class="section-head"><button class="section-head-button" type="button" aria-expanded="false"><span>2 done</span><span class="chevron">▸</span></button></li></ul> */
+  .section-head-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: var(--text-s);
+    font-weight: var(--weight-strong);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .chevron {
+    font-size: var(--text-m);
+  }
+
+  /* @component group-head
+     @summary The title of a group of a list, such as a tag, with its count.
+     @example <ul class="item-list" style="width: 100%"><li class="group-head"><span>Work</span><span>2</span></li></ul> */
+  .group-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-bottom: 1px solid var(--line);
+    color: var(--accent);
+    font-size: var(--text-s);
+    font-weight: var(--weight-strong);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* @component list-group
+     @summary A box of rows on a --bg page, as in Settings.
+     @variant pair   Two rows side by side.
+     @variant plain  No box: rows split by lines, as the suggestions of a search.
+     @part list-row       A row: an icon and a text, or a control.
+     @part list-row-text  The main text of a row that has two.
+     @part list-row-meta  A muted text at the end of a row.
+     @variant accent      On list-row: the row that makes a new thing.
+     @example <div class="list-group" style="width: 100%"><button class="list-row" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#help"/></svg><span>Show the introduction</span></button><select class="select" aria-label="Language"><option>English</option></select></div>
+     @example <div class="list-group pair" style="width: 100%"><button class="list-row" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#export"/></svg><span>Export</span></button><button class="list-row" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#import"/></svg><span>Import</span></button></div>
+     @example <ul class="list-group plain" style="width: 100%"><li><button class="list-row" type="button"><span class="list-row-text">Buy milk</span><span class="list-row-meta">In Notes</span></button></li><li><button class="list-row accent" type="button">Create «Buy»</button></li></ul> */
+  .list-group {
+    margin: 0 var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .list-group.pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .list-group.plain {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    list-style: none;
+  }
+
+  .list-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    min-height: var(--tap-l);
+    padding: 0 var(--space-4);
+    border-radius: 0;
+    text-align: left;
+  }
+
+  .list-row + .list-row {
+    border-top: 1px solid var(--line);
+  }
+
+  .list-group.pair > .list-row + .list-row {
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .list-group.plain .list-row {
+    min-height: var(--tap);
+    padding: 0 var(--space-half);
+    border-top: 1px solid var(--line);
+  }
+
+  .list-row .icon {
+    color: var(--muted);
+  }
+
+  .list-row.accent {
+    color: var(--accent);
+    font-weight: var(--weight-strong);
+  }
+
+  .list-row-text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .list-row-meta {
+    flex: none;
+    color: var(--muted);
+    font-size: var(--text-xs);
+  }
+
+  /* @component fab
+     @summary The add button, fixed above the bottom bar at the side of the hand.
+     @example <button class="fab" type="button" style="position: static">+</button> */
+  .fab {
+    position: fixed;
+    right: calc(var(--space-4) + env(safe-area-inset-right));
+    bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--space-4));
+    z-index: 5;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-l);
+    background: var(--accent);
+    color: var(--accent-text);
+    font-size: var(--text-xl);
+    line-height: 1;
+    box-shadow: var(--shadow-l);
+  }
+
+  /* Left hand: the controls change side. Text stays aligned to the left, and a row slides as before. */
+
+  [data-hand="left"] .app-header {
+    flex-direction: row-reverse;
+  }
+
+  [data-hand="left"] .app-header .button.icon:not([hidden]) ~ .button.icon:not([hidden]) {
+    margin-right: calc(var(--space-2) * -1);
+    margin-left: 0;
+  }
+
+  [data-hand="left"] .item-row-body {
+    flex-direction: row-reverse;
+    padding: 0 var(--space-2) 0 var(--space-1);
+  }
+
+  [data-hand="left"] .item-row-swipe .item-row-body {
+    padding-right: var(--space-2);
+    padding-left: var(--space-3);
+  }
+
+  [data-hand="left"] .item-row-check {
+    margin: var(--space-3) var(--space-2) var(--space-3) var(--space-1);
+  }
+
+  [data-hand="left"] .fab {
+    right: auto;
+    left: calc(var(--space-4) + env(safe-area-inset-left));
+  }
+
+  /* No bar at the bottom from 600px; on the left side the button clears the rail. */
+  @media (min-width: 600px) {
+    .fab {
+      bottom: calc(env(safe-area-inset-bottom) + var(--space-4));
+    }
+
+    [data-hand="left"] .fab {
+      left: calc(var(--rail-width) + env(safe-area-inset-left) + var(--space-4));
+    }
+  }
+}
+
+@layer layouts {
+  /* @component cluster
+     @summary A row of parts that wraps, with a --space-2 gap.
+     @variant scroll  One line that scrolls on its own, with no scroll bar.
+     @example <div class="cluster"><button class="chip" type="button">Home</button><button class="chip" type="button" aria-pressed="true">Work</button></div> */
+  .cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+  }
+
+  .cluster:empty {
+    display: none;
+  }
+
+  .cluster.scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  /* @component input-row
+     @summary An input that grows, and the button that submits it.
+     @example <div class="input-row"><input class="input" type="text" placeholder="New tag"><button class="button primary" type="button">Add</button></div> */
+  .input-row {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .input-row > .input {
+    flex: 1;
+  }
+
+  /* @component split
+     @summary Two equal columns. Each child takes the full width of its column.
+     @part hand-side  The child that stands at the side of the hand: right, or left with the left hand.
+     @example <div class="split" style="width: 100%"><button class="button primary hand-side" type="button">Fill</button><button class="button outline" type="button">Clear all</button></div> */
+  .split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .split > * {
+    width: 100%;
+  }
+
+  .split > .hand-side {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  [data-hand="left"] .split > .hand-side {
+    grid-column: 1;
+  }
+
+  /* @component pane
+     @summary A list and the detail of one entry. Below 840px one of them shows at a time, in one centred column; from 840px they stand side by side.
+     @part pane-list  The list. Hidden below 840px while a detail is open.
+     @part pane-detail  The detail. Hidden below 840px while no entry is open.
+     @part pane-back  The button of the detail that goes back to the list. Hidden from 840px, where the list stays in sight.
+     @state data-detail  An entry is open.
+     @example <div class="pane" data-detail style="width: 100%"><div class="pane-list"><p>List</p></div><div class="pane-detail"><button class="button quiet pane-back" type="button">Back</button><p>Detail</p></div></div> */
+  .pane {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+  }
+
+  .pane-detail {
+    display: none;
+    padding: var(--space-4);
+  }
+
+  .pane[data-detail] > .pane-list {
+    display: none;
+  }
+
+  .pane[data-detail] > .pane-detail {
+    display: block;
+  }
+
+  @media (min-width: 840px) {
+    .pane {
+      display: grid;
+      grid-template-columns: var(--pane-list) minmax(0, 1fr);
+      max-width: none;
+      min-height: 100%;
+    }
+
+    .pane > .pane-list,
+    .pane[data-detail] > .pane-list,
+    .pane > .pane-detail {
+      display: block;
+    }
+
+    .pane > .pane-detail {
+      border-inline-start: 1px solid var(--line);
+    }
+
+    .pane-back {
+      display: none;
+    }
+  }
+}

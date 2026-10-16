@@ -3,6 +3,7 @@ const CACHE = 'wardrobe-shell-v2';
 const SHELL = [
   './',
   './index.html',
+  './vendor/design-system/design-system.css',
   './styles.css',
   './icons.svg',
   './manifest.webmanifest',

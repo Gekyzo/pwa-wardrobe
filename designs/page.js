@@ -1,8 +1,11 @@
-import { parseCatalog, classesInScript, menuOf } from './catalog.js';
+import { parseCatalog, classesInScript, menuOf } from '../vendor/design-system/catalog.js';
 
 // A browser cannot list a directory, so the views are named here. tests/design.test.js keeps the
 // list equal to src/ui/.
 const UI = ['combinations', 'context', 'controls', 'dust', 'install', 'motion', 'nav', 'onboarding', 'outfit', 'settings', 'update', 'wardrobe'];
+
+// The shared stylesheet first, then the app's: the order of index.html.
+const SHEETS = ['../vendor/design-system/design-system.css', '../styles.css'];
 
 const $ = (id) => document.getElementById(id);
 
@@ -55,7 +58,7 @@ const scaleRow = (token) =>
 
 const example = (html) => {
   const box = el('div', { className: 'ds-example' });
-  // The examples are the markup of styles.css itself, written by its author, so they go in as HTML.
+  // The examples are the markup of the stylesheets, written by their authors, so they go in as HTML.
   box.innerHTML = html.replaceAll('icons.svg#', '../icons.svg#');
   const copy = el('button', { className: 'button outline', type: 'button', textContent: 'Copy' });
   copy.addEventListener('click', async () => {
@@ -179,13 +182,13 @@ const fail = (text) => $('out').replaceChildren(el('p', { className: 'ds-error',
 
 let sources = null;
 try {
-  sources = await Promise.all(['../styles.css', '../icons.svg', '../index.html', ...UI.map((name) => `../src/ui/${name}.js`)].map(get));
+  sources = await Promise.all([...SHEETS, '../icons.svg', '../index.html', ...UI.map((name) => `../src/ui/${name}.js`)].map(get));
 } catch (error) {
   fail(`Could not load ${error.message}. Run npm run serve and open http://localhost:8081/designs/.`);
 }
 if (sources) {
-  const [css, sprite, html, ...views] = sources;
-  const catalog = parseCatalog({ css, sprite });
+  const [shared, own, sprite, html, ...views] = sources;
+  const catalog = parseCatalog({ css: [shared, own], sprite });
   render({
     catalog,
     page: new DOMParser().parseFromString(html, 'text/html'),

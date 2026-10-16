@@ -57,7 +57,8 @@
   through its import and changes them only through a setter. `tests/layers.test.js` checks this.
 - **ENG-17** `npm run init -- <slug> "<Name>"` turns a copy of the template into a new app, one
   time: it renames each literal of the template, starts the version at `0.1.0`, resets
-  `CHANGELOG.md` and deletes `docs/superpowers/`. It changes no file when it fails.
+  `CHANGELOG.md` and deletes `docs/superpowers/`. It changes no file when it fails. It leaves
+  `vendor/` as it is (DSV-4).
 
 ## Storage keys
 
@@ -100,12 +101,12 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/markup.test.js` | `index.html` holds no text of its own; the sheet and the walkthrough markup |
 | `tests/aliases.test.js` | The import map against `package.json` |
 | `tests/layers.test.js` | The layer rules and `SHELL` (ENG-16) |
-| `tests/design.test.js` | The rules of the design system over `styles.css`, `index.html`, `icons.svg` and `src/ui/` (DS-1 … DS-8) |
-| `tests/catalog.test.js` | The parser of the design system catalogue, `designs/catalog.js` |
+| `tests/design.test.js` | Each rule of `vendor/design-system/rules.js` over the two stylesheets, `index.html`, `icons.svg`, `src/ui/` and `designs/`; the components of the app |
+| `tests/vendor.test.js` | The copy of the design system: its files and hashes, its place in `index.html`, `designs/index.html` and `SHELL`, no copied rule in `styles.css` (DSV-1 to DSV-3) |
 | `tests/png.test.js` | The PNG encoder and decoder of `scripts/png.mjs`, which `npm run icons` uses |
 | `tests/release.test.js` | The release of `scripts/release.mjs`: the bump commit, the tag and the refusals (VER-10 to VER-12) |
 | `tests/changelog.test.js` | The release of `CHANGELOG.md` by `scripts/changelog.mjs` (VER-17) |
-| `tests/init.test.js` | The arguments of `scripts/init.mjs`, and a run of it in a copy: the new names, no trace of the template, its refusal of a second run (ENG-17) |
+| `tests/init.test.js` | The arguments of `scripts/init.mjs`, and a run of it in a copy: the new names, no trace of the template, `vendor/` kept as it is, its refusal of a second run (ENG-17) |
 | `tests/spec.test.js` | The facts of this specification that the code can prove (ENG-12) |
 
 A unit test uses `node:test` with `node:assert/strict`, one behaviour for each test, and checks

@@ -24,6 +24,7 @@ takes an image address by hand. The service worker keeps the images for offline 
 ```sh
 npm run serve   # http://localhost:8081
 npm test
+npm run ds      # copy the design system again from ../pwa-design-system
 ```
 
 The user service `scripts/wardrobe.service` keeps the same server running at
@@ -51,8 +52,12 @@ Set the repository's Pages source to "GitHub Actions" once.
 
 ## Design system
 
-`styles.css` holds the tokens and the components in five layers. Open `/designs/` on the dev
-server for the catalogue. `docs/spec/04-design-system.md` has the rules.
+The shared tokens, components and layouts come from `pwa-design-system`, copied into
+`vendor/design-system/` by `npm run ds`; `SOURCE.json` there names the version and the commit.
+`index.html` loads `vendor/design-system/design-system.css`, then `styles.css`, which holds the
+parts of the app only. Change a shared part in `pwa-design-system`, then run `npm run ds`; never
+edit `vendor/` by hand. Open `/designs/` on the dev server for the catalogue.
+`docs/spec/04-design-system.md` has the rules of the app and points to the shared ones.
 
 ## Credits
 

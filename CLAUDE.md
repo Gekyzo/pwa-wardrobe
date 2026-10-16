@@ -11,6 +11,7 @@ npm run serve                      # http://localhost:8081
 npm run icons                      # write the PNG icons again from icons/source.png
 npm run init -- <slug> "<Name>"    # turn a copy into a new app (once)
 npm run release                    # bump, commit and tag vX.Y.Z; git push --follow-tags deploys
+npm run ds                         # copy the design system again from ../pwa-design-system
 ```
 
 ## Conventions
