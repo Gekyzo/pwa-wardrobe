@@ -113,7 +113,7 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   `start_url`, so `./` would be the root of `gekyzo.github.io`, the same id as each other app
   there, and Chrome would offer no install.
 - **VER-15** The icons are `icons/icon-192.png`, `icon-512.png` and `icon-maskable-512.png`,
-  written by `npm run icons` from the art of `icons/source.png`: a placeholder note on white, which each app replaces.
+  written by `npm run icons` from the art of `icons/source.png`: a hanger of clothes over colour swatches, on white.
   The tab shows `icon-192.png`. The art of the maskable icon stays in the safe zone, a circle
   of radius 0.4 of the side. `icons/logo.png`, 288 px, is the same art with its white background
   made transparent: the white that touches the edge goes, a white inside the art stays.
