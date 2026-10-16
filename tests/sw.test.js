@@ -13,8 +13,8 @@ const { localizeManifest } = vm.runInNewContext(`${source}\n;({ localizeManifest
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 const build = () => ({
-  name: 'Wardrobe',
-  short_name: 'Wardrobe',
+  name: 'Attire',
+  short_name: 'Attire',
   description: 'Plantilla',
   lang: 'es',
   id: './',
@@ -30,7 +30,7 @@ test('localizeManifest takes the language, the name and the description of the t
 
 test('localizeManifest keeps the short name and the other members', () => {
   const manifest = localizeManifest(build(), { lang: 'en', name: 'Template app', description: 'Template' });
-  assert.equal(manifest.short_name, 'Wardrobe');
+  assert.equal(manifest.short_name, 'Attire');
   assert.equal(manifest.id, build().id);
   assert.deepEqual(manifest.icons, build().icons);
 });
@@ -44,7 +44,7 @@ test('localizeManifest ignores a member of the text that is not a non-empty stri
   assert.equal(manifest.lang, 'en');
   assert.equal(manifest.name, build().name);
   assert.equal(manifest.description, build().description);
-  assert.equal(manifest.short_name, 'Wardrobe');
+  assert.equal(manifest.short_name, 'Attire');
 });
 
 test('localizeManifest does not change its input', () => {

@@ -1,6 +1,6 @@
 {
-  "name": "Wardrobe",
-  "short_name": "Wardrobe",
+  "name": "Attire",
+  "short_name": "Attire",
   "description": "Load my clothes and generate outfits",
   "lang": "en",
   "id": "/pwa-wardrobe/",

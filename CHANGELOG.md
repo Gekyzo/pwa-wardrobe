@@ -4,7 +4,7 @@ User-visible changes, newest first.
 
 ## Unreleased
 
-No change.
+- The app is now called **Attire**.
 
 ## 0.1.3 - 2026-10-16
 

@@ -1,6 +1,6 @@
 # Specification
 
-This is the specification of Wardrobe as it is on `main`. It states what the app does, not
+This is the specification of Attire as it is on `main`. It states what the app does, not
 how the work was planned. The code and its tests are the authority: when a rule here and the code
 differ, one of the two has a defect.
 

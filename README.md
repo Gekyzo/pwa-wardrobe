@@ -1,4 +1,4 @@
-# Wardrobe
+# Attire
 
 Load my clothes and generate outfits. An offline Android PWA in plain HTML, CSS and ES modules:
 no build step and no dependencies. Scaffolded from `pwa-template`, it has:
