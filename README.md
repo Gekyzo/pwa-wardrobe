@@ -31,7 +31,7 @@ http://localhost:8081, also after a restart of WSL. While it runs, `npm run serv
 in use; stop the service first with `systemctl --user stop wardrobe`.
 
 ```sh
-ln -sf ~/code/personal/wardrobe/scripts/wardrobe.service ~/.config/systemd/user/
+ln -sf ~/code/personal/pwa-wardrobe/scripts/wardrobe.service ~/.config/systemd/user/
 systemctl --user daemon-reload && systemctl --user enable --now wardrobe
 ```
 

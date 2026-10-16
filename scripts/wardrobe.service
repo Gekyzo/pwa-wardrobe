@@ -1,14 +1,14 @@
 # The dev server of Wardrobe as a systemd user service, so the app is always at
 # http://localhost:8081 without anyone typing `npm run serve`.
 #
-# Install:  ln -sf ~/code/personal/wardrobe/scripts/wardrobe.service ~/.config/systemd/user/
+# Install:  ln -sf ~/code/personal/pwa-wardrobe/scripts/wardrobe.service ~/.config/systemd/user/
 #           systemctl --user daemon-reload && systemctl --user enable --now wardrobe
 # Linger must be on (`loginctl show-user $USER -p Linger`) for it to start with WSL.
 [Unit]
 Description=Wardrobe dev server (http://localhost:8081)
 
 [Service]
-WorkingDirectory=%h/code/personal/wardrobe
+WorkingDirectory=%h/code/personal/pwa-wardrobe
 # The same server as `npm run serve`, without npm in between.
 ExecStart=/usr/bin/python3 -m http.server 8081
 Restart=on-failure
