@@ -1,9 +1,10 @@
-// Reads the design system out of styles.css and icons.svg. No DOM access: the catalogue page and
-// tests/design.test.js both import it.
+// Reads the design system out of its stylesheets (design-system.css, then the sheets of an app) and
+// icons.svg. No DOM access: the catalogue page, rules.js and the tests of each app import it.
 
 export const LAYERS = ['tokens', 'base', 'components', 'layouts', 'screens'];
 
 const TAGS = ['component', 'extends', 'summary', 'scope', 'part', 'variant', 'state', 'example'];
+const EXTENDS_TAGS = ['extends', 'part', 'variant', 'state', 'example'];
 
 const SCALES = [
   ['--space-', 'space'],
@@ -16,6 +17,9 @@ const SCALES = [
   ['--tap', 'size'],
   ['--icon', 'size'],
   ['--nav-', 'size'],
+  ['--rail-', 'size'],
+  ['--content-', 'size'],
+  ['--pane-', 'size'],
   ['--arrow', 'size'],
   ['--art-', 'size'],
 ];
@@ -104,8 +108,9 @@ const parseBlock = ({ text, line }) => {
     });
   const one = (tag) => entries.find((entry) => entry.tag === tag)?.text ?? '';
   const extension = entries[0].tag === 'extends';
-  const errors = extension ? [] : [
-    ...entries.filter((entry) => !TAGS.includes(entry.tag)).map((entry) => `${name}: unknown tag @${entry.tag}`),
+  const unknown = (known) => entries.filter((entry) => !known.includes(entry.tag)).map((entry) => `${name}: unknown tag @${entry.tag}`);
+  const errors = extension ? unknown(EXTENDS_TAGS) : [
+    ...unknown(TAGS),
     ...(one('summary') ? [] : [`${name}: no @summary`]),
     ...(entries.some((entry) => entry.tag === 'example') ? [] : [`${name}: no @example`]),
   ];
@@ -149,12 +154,18 @@ export const parseCatalog = ({ css: source, sprite }) => {
   for (const extension of all.filter((block) => block.extension)) {
     const target = components.find(({ name }) => name === extension.name);
     if (!target) unknown.push(`${extension.name}: @extends of an unknown component`);
-    else for (const key of ['parts', 'variants', 'states']) target[key] = [...target[key], ...extension[key]];
+    else {
+      for (const key of ['parts', 'variants', 'states']) {
+        const names = new Set(target[key].map(({ name }) => name));
+        target[key] = [...target[key], ...extension[key].filter(({ name }) => !names.has(name))];
+      }
+      target.examples = [...target.examples, ...extension.examples];
+    }
   }
   const seen = new Set();
   const twice = blocks.filter(({ name }) => seen.has(name) || !seen.add(name)).map(({ name }) => `${name}: documented twice`);
   const icons = [...sprite.matchAll(/<symbol\b[^>]*\bid="([^"]+)"/g)].map(([, id]) => id);
-  return { tokens, components, icons, errors: [...blocks.flatMap((block) => block.errors), ...twice, ...unknown] };
+  return { tokens, components, icons, errors: [...all.flatMap((block) => block.errors), ...twice, ...unknown] };
 };
 
 export const classesOf = (html) =>

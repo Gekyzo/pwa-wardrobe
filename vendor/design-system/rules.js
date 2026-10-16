@@ -65,7 +65,7 @@ const define = (id, title, reads, check) => ({ id, title, reads, check: (files) 
 
 export const RULES = [
   define('DS-1', 'styles.css declares the five layers first, and each rule is in one of them (DS-1)', ['css'], ({ css, rules }) => [
-    ...css.filter((text) => !/^@layer tokens, base, components, layouts, screens;/.test(text)).map((_, file) => `css[${file}] does not start with the layer statement`),
+    ...css.flatMap((text, file) => (/^@layer tokens, base, components, layouts, screens;/.test(text) ? [] : [`css[${file}] does not start with the layer statement`])),
     ...rules.filter((rule) => !LAYERS.includes(rule.layer)).map((rule) => `${rule.file}:${rule.line}: ${rule.selector}`),
   ]),
 
