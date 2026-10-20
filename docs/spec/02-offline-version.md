@@ -95,7 +95,9 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
 - **VER-11** For a minor or a major step: `npm run release -- minor|major`.
 - **VER-12** `npm run release` stops with an error, and writes nothing, when the current branch is
   not `main`, the working tree has a change, the level is unknown, or the tag of the next
-  version exists.
+  version exists. With a remote `origin`, it fetches `main` first, and it stops when it cannot
+  fetch or when `main` is behind `origin/main` (`git pull --rebase` first). Otherwise the push
+  rebases `main`, and the tag stays on a commit that is never pushed and never deploys.
 - **VER-13** The hook `.githooks/pre-push`, enabled one time in each clone with `npm run hooks`,
   stops the push of a tag `vX.Y.Z` whose commit does not have the version `X.Y.Z` in
   `version.json`. Without it, such a tag deploys a version that Settings cannot show.

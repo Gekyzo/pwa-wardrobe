@@ -91,3 +91,56 @@ test('release refuses a version whose tag exists', (t) => {
   assert.equal(git('log', '-1', '--format=%s'), 'Start');
   assert.equal(git('status', '--porcelain'), '');
 });
+
+// A remote with the start commit, as `origin` of the repository of the test.
+const withOrigin = (t, { dir, git }) => {
+  const remote = mkdtempSync(join(tmpdir(), 'release-origin-'));
+  t.after(() => rmSync(remote, { recursive: true, force: true }));
+  execFileSync('git', ['init', '--quiet', '--bare', '--initial-branch=main', remote], { env: ENV });
+  git('remote', 'add', 'origin', remote);
+  git('push', '--quiet', 'origin', 'main');
+  return remote;
+};
+
+test('release refuses a main that is behind origin and writes nothing', (t) => {
+  const repository = repo(t);
+  const { git, release } = repository;
+  const remote = withOrigin(t, repository);
+  // Another clone pushes a commit, as the app does when it commits ROADMAP.md.
+  const other = mkdtempSync(join(tmpdir(), 'release-other-'));
+  t.after(() => rmSync(other, { recursive: true, force: true }));
+  execFileSync('git', ['clone', '--quiet', remote, other], { env: ENV });
+  writeFileSync(join(other, 'ROADMAP.md'), '# Roadmap\n');
+  execFileSync('git', ['add', '.'], { cwd: other, env: ENV });
+  execFileSync('git', ['commit', '--quiet', '-m', 'Add roadmap item'], { cwd: other, env: ENV });
+  execFileSync('git', ['push', '--quiet', 'origin', 'main'], { cwd: other, env: ENV });
+  const run = release();
+  assert.notEqual(run.status, 0);
+  assert.match(run.stderr, /behind origin\/main/);
+  assert.match(run.stderr, /git pull --rebase/);
+  assert.equal(git('log', '-1', '--format=%s'), 'Start');
+  assert.equal(git('tag'), '');
+  assert.equal(git('status', '--porcelain'), '');
+});
+
+test('release accepts a main that is ahead of origin', (t) => {
+  const repository = repo(t);
+  const { dir, git, release } = repository;
+  withOrigin(t, repository);
+  writeFileSync(join(dir, 'ROADMAP.md'), '# Roadmap\n');
+  git('add', '.');
+  git('commit', '--quiet', '-m', 'Add a roadmap');
+  const run = release();
+  assert.equal(run.status, 0, run.stderr);
+  assert.equal(git('rev-parse', 'v1.0.10^{commit}'), git('rev-parse', 'HEAD'));
+});
+
+test('release refuses an origin that it cannot fetch and writes nothing', (t) => {
+  const { git, release } = repo(t);
+  git('remote', 'add', 'origin', join(tmpdir(), 'release-no-such-remote'));
+  const run = release();
+  assert.notEqual(run.status, 0);
+  assert.match(run.stderr, /fetch origin/);
+  assert.equal(git('log', '-1', '--format=%s'), 'Start');
+  assert.equal(git('tag'), '');
+});
