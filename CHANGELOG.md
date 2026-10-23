@@ -4,6 +4,10 @@ User-visible changes, newest first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.4 - 2026-10-24
+
 - The app is now called **Attire**.
 - The new look of the family of apps: the Geist font, a stone ground, square corners and green
   for the main action.
