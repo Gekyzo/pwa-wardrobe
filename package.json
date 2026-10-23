@@ -1,6 +1,6 @@
 {
   "name": "wardrobe",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Attire: load my clothes and generate outfits. Offline Android PWA, plain HTML, CSS and ES modules, no build step",
   "private": true,
   "type": "module",
