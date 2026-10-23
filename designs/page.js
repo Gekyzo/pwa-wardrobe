@@ -42,8 +42,8 @@ const swatch = (token) =>
   ]);
 
 const SAMPLES = {
-  space: (value) => el('span', { style: `display: block; width: ${value}; height: 12px; background: var(--accent)` }),
-  radius: (value) => el('span', { style: `display: block; width: 48px; height: 48px; border: 2px solid var(--accent); border-radius: ${value}` }),
+  space: (value) => el('span', { style: `display: block; width: ${value}; height: 12px; background: var(--primary)` }),
+  radius: (value) => el('span', { style: `display: block; width: 48px; height: 48px; border: 2px solid var(--primary); border-radius: ${value}` }),
   text: (value) => el('span', { style: `font-size: ${value}`, textContent: 'Leche entera' }),
   weight: (value) => el('span', { style: `font-weight: ${value}`, textContent: 'Leche entera' }),
   shadow: (value) => el('span', { style: `display: block; width: 96px; height: 40px; border-radius: 10px; background: var(--surface); box-shadow: ${value}` }),

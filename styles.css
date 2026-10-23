@@ -1,5 +1,13 @@
 @layer tokens, base, components, layouts, screens;
 
+@layer tokens {
+  :root {
+    /* The colour of Attire: one green for the main action, progress and the checked state. */
+    --primary: var(--done);
+    --on-primary: var(--on-done);
+  }
+}
+
 @layer base {
   body {
     margin: 0;
@@ -10,7 +18,7 @@
     color: var(--text);
     font: var(--text-m)/1.4 var(--font);
     -webkit-tap-highlight-color: transparent;
-    /* A phone on its side keeps the content out of the cutout on either side (LAY-4). */
+    /* The page keeps out of a cutout on either side (LAY-4); from 600px the rail takes its side. */
     padding-inline-start: env(safe-area-inset-left);
     padding-inline-end: env(safe-area-inset-right);
   }
@@ -21,10 +29,15 @@
     color: inherit;
   }
 
-  /* The rail stands at the start side from 600px: the page moves beside it (LAY-2). */
+  /* From 600px the fixed rail stands at the side of the hand (LAY-2): the body pads that side (LAY-4). */
   @media (min-width: 600px) {
     body {
-      padding-inline-start: calc(var(--rail-width) + env(safe-area-inset-left));
+      padding-right: calc(var(--rail-width) + env(safe-area-inset-right));
+    }
+
+    [data-hand="left"] body {
+      padding-right: env(safe-area-inset-right);
+      padding-left: calc(var(--rail-width) + env(safe-area-inset-left));
     }
   }
 }
@@ -123,7 +136,7 @@
   }
 
   .swatch-grid-item[aria-pressed="true"] {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--ink);
     outline-offset: 2px;
   }
 
@@ -184,7 +197,7 @@
   }
 
   .image-strip-item[aria-pressed="true"] {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--ink);
     outline-offset: 2px;
   }
 
@@ -223,7 +236,7 @@
   }
 
   .image-grid-pick[aria-pressed="true"] {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--ink);
     outline-offset: 2px;
     opacity: 1;
   }
@@ -393,7 +406,7 @@
   }
 
   .version-status[data-status='current'] {
-    color: var(--accent);
+    color: var(--done);
   }
 
   .version-status[data-status='outdated'] {
@@ -419,6 +432,14 @@
     to {
       transform: rotate(1turn);
     }
+  }
+
+  /* @component size-filter
+     @scope combinations
+     @summary The chips of the size filter of Combinations: a scroll cluster that keeps the margin of the rows.
+     @example <div class="cluster scroll size-filter" style="width: 100%"><button class="chip surface" type="button" aria-pressed="true">All</button><button class="chip surface" type="button" aria-pressed="false">2 colours</button></div> */
+  .size-filter {
+    padding-inline-start: var(--space-4);
   }
 
   /* @component settings
@@ -608,7 +629,7 @@
   }
 
   .onboarding-dot.on {
-    background: var(--accent);
+    background: var(--ink);
   }
 
   /* Saltar sits beside the next button, on the side away from the thumb. */
@@ -630,9 +651,9 @@
      @scope onboarding
      @summary The line drawing of a walkthrough page, inline in the page. Its shapes take these parts.
      @part art-card     A card shape, filled with --surface.
-     @part art-accent   An accent stroke.
-     @part art-soft     A soft accent fill.
-     @part art-solid    A solid accent fill.
+     @part art-accent   A --primary stroke.
+     @part art-soft     A --done-soft fill with a --primary stroke.
+     @part art-solid    A solid --primary fill.
      @part art-on-solid A stroke on a solid fill.
      @example <div class="onboarding-art"><svg viewBox="0 0 240 160" aria-hidden="true"><rect class="art-card art-accent" x="20" y="20" width="90" height="120" rx="10"/><circle class="art-solid" cx="160" cy="80" r="13"/><path class="art-on-solid" d="M160 74v12M154 80h12"/></svg></div> */
   .onboarding-art > svg {
@@ -651,20 +672,20 @@
   }
 
   .art-accent {
-    stroke: var(--accent);
+    stroke: var(--primary);
   }
 
   .art-soft {
-    fill: var(--accent-soft);
-    stroke: var(--accent);
+    fill: var(--done-soft);
+    stroke: var(--primary);
   }
 
   .art-solid {
-    fill: var(--accent);
+    fill: var(--primary);
     stroke: none;
   }
 
   .art-on-solid {
-    stroke: var(--accent-text);
+    stroke: var(--on-primary);
   }
 }

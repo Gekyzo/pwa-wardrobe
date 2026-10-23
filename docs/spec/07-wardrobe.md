@@ -93,10 +93,12 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-1** The Wardrobe section lists the garments in the order of the slots, then by name. A
   row shows the main image of the garment (GAR-7), if it has one, the colour as a dot, the name,
   and the slot, the season and the brand, if it has one. With no garment it shows
-  `wardrobe.empty`.
+  `wardrobe.empty` and **Add garment**, which opens the sheet of WAR-3.
 - **WAR-2** A row slides left to show **Delete** (GAR-4); the toast `toast.garmentDeleted` offers
   **Undo** for 5 seconds.
-- **WAR-3** **+** opens the sheet of a new garment: the name, the brand, the slot, the season,
+- **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
+  **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
+  sheet holds the name, the brand, the slot, the season,
   the colour, the link and the images. The brand field suggests the brands of the wardrobe
   (GAR-6). The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
@@ -128,7 +130,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   a count of `MAX_OUTFITS` reads `combinations.countMax`.
 - **CMB-2** The size filter keeps the combinations of 2, 3 or 4 colours, or all of them. The
   switch **Wearable only** keeps the combinations with at least one outfit. With no combination
-  left, the list shows `combinations.empty`. The filters are not stored.
+  left, the list shows `combinations.empty` and **Show all**, which clears both filters. The
+  filters are not stored.
 - **CMB-3** A tap on a row opens its detail (LAY-3): the number, the colours as equal blocks with
   their names (PAL-2), and its outfits (OUT-5) under the season filter.
 - **CMB-4** A combination with no outfit names why: `outfits.noColor` with the first colour that

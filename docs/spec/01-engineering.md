@@ -27,7 +27,7 @@
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
 | `src/ui/outfit.js` | The swatch, the image of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
-| `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `garments`, `links`, `palette`, `outfits`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
+| `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `links`, `palette`, `outfits`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
 | `src/ui/settings.js` | Settings, and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
@@ -46,7 +46,8 @@
   `render` of `src/ui/context.js`.
 - **ENG-6** A module of `src/` is imported by its alias, `from '#garments'`, never by a relative
   path. Node resolves `#name` through `imports` of `package.json`; the browser resolves it through
-  the import map of `index.html`. `tests/aliases.test.js` checks that the two agree.
+  the import map of `index.html`. `tests/aliases.test.js` checks that the two agree. An alias
+  `#ds/<name>` names the module `vendor/design-system/<name>.js` (DSV-1).
 - **ENG-7** A new id comes from `crypto.randomUUID()`. An operation that creates a record takes
   the id as an optional parameter, for the tests.
 - **ENG-8** Every storage key is `<slug>.<name>`, from `keyOf` of `src/storage.js` or `APP_SLUG`
@@ -99,7 +100,7 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/version.test.js` | Version rules and the update offer rule |
 | `tests/i18n.test.js` | The language choice, the translator, the parity of the catalogs |
 | `tests/markup.test.js` | `index.html` holds no text of its own; the sheet and the walkthrough markup |
-| `tests/aliases.test.js` | The import map against `package.json` |
+| `tests/aliases.test.js` | The import map against `package.json`; each `#ds/` alias names a vendored module |
 | `tests/layers.test.js` | The layer rules and `SHELL` (ENG-16) |
 | `tests/design.test.js` | Each rule of `vendor/design-system/rules.js` over the two stylesheets, `index.html`, `icons.svg`, `src/ui/` and `designs/`; the components of the app |
 | `tests/vendor.test.js` | The copy of the design system: its files and hashes, its place in `index.html`, `designs/index.html` and `SHELL`, no copied rule in `styles.css` (DSV-1 to DSV-3) |

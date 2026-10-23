@@ -5,6 +5,12 @@ User-visible changes, newest first.
 ## Unreleased
 
 - The app is now called **Attire**.
+- The new look of the family of apps: the Geist font, a stone ground, square corners and green
+  for the main action.
+- The garment sheet has a head with **Close** and keeps **Save** at the bottom. A drag down of its
+  head closes it.
+- An empty wardrobe offers **Add garment**; Palettes with no match offers **Show all**.
+- The size chips of Palettes keep their text on one line and scroll.
 
 ## 0.1.3 - 2026-10-16
 

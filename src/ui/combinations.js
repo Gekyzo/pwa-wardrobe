@@ -31,7 +31,7 @@ const row = ({ number, colors }) => {
 
 const sizeChips = () =>
   SIZES.map((size) => {
-    const chip = el('button', { className: 'chip', type: 'button', textContent: size ? t('combinations.size', { count: size }) : t('combinations.all'), onclick: () => {
+    const chip = el('button', { className: 'chip surface', type: 'button', textContent: size ? t('combinations.size', { count: size }) : t('combinations.all'), onclick: () => {
       ui.size = size;
       render();
     } });
@@ -66,6 +66,12 @@ export const renderCombinations = () => {
 
 export const bind = () => {
   $('combination-back').addEventListener('click', () => openCombination(null));
+  // Show all clears both filters (CMB-2).
+  $('combinations-all').addEventListener('click', () => {
+    ui.size = null;
+    ui.wearable = false;
+    render();
+  });
   $('combination-wearable').addEventListener('change', (event) => {
     ui.wearable = event.target.checked;
     render();

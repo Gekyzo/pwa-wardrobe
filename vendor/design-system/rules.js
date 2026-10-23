@@ -18,6 +18,12 @@ import { LAYERS, rulesOf, iconsOf, parseCatalog, classesOf, classesInScript } fr
 const TOKEN_PROPERTIES = /^(color|background(-color)?|border(-(top|right|bottom|left))?(-color)?|outline(-color)?|fill|stroke|padding(-\w+)?|margin(-\w+)?|gap|row-gap|column-gap|inset|top|right|bottom|left|font-size|font-weight|font-family|font|border-radius|box-shadow|transition|animation)$/;
 // A value part that needs no token: a keyword, a token, env(), a percent, or a small border width.
 const ALLOWED = /^(0|1px|2px|-?\d+(\.\d+)?%|-?\d+deg|var\(--[\w-]+\)|env\([\w-]+\)|[a-zA-Z-]+)$/;
+// The controls that carry the tap size, and the heights a control may have.
+const TAP_CLASSES = ['button', 'chip', 'input', 'swipe-action', 'segment'];
+const TAP_TOKENS = ['--tap', '--tap-l'];
+// The classes of the last compound of each selector of a rule.
+const lastClasses = (selector) =>
+  selector.split(',').flatMap((part) => [...(part.trim().split(/[\s>+~]+/).pop() ?? '').matchAll(/\.([a-z][\w-]*)(?![\w-])/g)].map(([, name]) => name));
 // The drawings of the walkthrough are art: their shapes are bare svg elements.
 const ART = /^\.onboarding-art > svg/;
 
@@ -227,6 +233,12 @@ export const RULES = [
     ];
   }),
 
+  define('LAY-2', 'a rail at the start side has a rail at the end side for the right hand (LAY-2)', ['css'], ({ rules }) => {
+    const rail = rules.some((rule) => rule.selector === '.nav-bar' && rule.declarations.some((d) => d.property === 'inset-inline-start'));
+    const end = rules.some((rule) => rule.selector === ':root[data-hand="right"] .nav-bar');
+    return rail && !end ? ['no [data-hand="right"] .nav-bar'] : [];
+  }),
+
   define('LAY-3', 'the pane layout is documented with its parts (LAY-3)', ['css'], ({ catalog }) => {
     const pane = catalog.components.find((component) => component.name === 'pane');
     if (!pane) return ['pane is not documented'];
@@ -254,5 +266,87 @@ export const RULES = [
     const docs = [...(css[0] ?? '').matchAll(/\/\*[\s\S]*?\*\//g)].map(([comment]) => comment).join('\n');
     const foreign = /\b(Leche|Café|Siempre|Buscar|Nueva tienda|Nombre|Idioma|Borrar|Próxima|Actual|recipes?|shops?|trip|bought|products?|groceries)\b/gi;
     return [...new Set(docs.match(foreign) ?? [])];
+  }),
+
+  // `switch-input` is the checkbox of a switch: it is drawn at 26px inside the 56px row of `.switch`,
+  // which owns the hit area. It is not in TAP_CLASSES, so it is exempt by name.
+  define('TAP-1', 'a height is never 44px, and a control is at least the tap size (TAP-1)', ['css'], ({ rules }) =>
+    rules
+      .filter((rule) => !rule.keyframe && rule.layer !== 'tokens')
+      .flatMap((rule) =>
+        rule.declarations
+          .filter((d) => /^(min-)?height$/.test(d.property))
+          .filter((d) => {
+            if (/(^|[^\d.])44px/.test(d.value)) return true;
+            if (!lastClasses(rule.selector).some((name) => TAP_CLASSES.includes(name))) return false;
+            const tokens = [...d.value.matchAll(/var\((--[\w-]+)\)/g)].map(([, token]) => token);
+            if (tokens.length && tokens.every((token) => TAP_TOKENS.includes(token))) return false;
+            const pixels = [...d.value.matchAll(/(\d+(?:\.\d+)?)px/g)].map(([, px]) => Number(px));
+            return tokens.some((token) => !TAP_TOKENS.includes(token)) || pixels.some((px) => px < 48);
+          })
+          .map((d) => where(rule, d)))),
+
+  define('TAP-2', 'the line colour is a border, never a text colour (TAP-2)', ['css'], ({ rules }) =>
+    rules
+      .filter((rule) => !rule.keyframe && rule.layer !== 'tokens')
+      .flatMap((rule) => rule.declarations.filter((d) => d.property === 'color' && /var\(--line\)/.test(d.value)).map((d) => where(rule, d)))),
+
+  define('TXT-1', 'text is never justified (TXT-1)', ['css'], ({ rules }) =>
+    rules.flatMap((rule) => rule.declarations.filter((d) => d.property === 'text-align' && d.value.replace(/\s*!important$/, '') === 'justify').map((d) => where(rule, d)))),
+
+  // One focus ring: the global :focus-visible outline, and an input that draws a border instead.
+  define('FOCUS-1', 'an input draws its focus as a border, with no outline (FOCUS-1)', ['css'], ({ rules }) => {
+    const outlines = rules.flatMap((rule) => rule.declarations.filter((d) => d.property === 'outline').map((d) => ({ rule, d })));
+    const visible = ({ d }) => !/^(none|0)$/.test(d.value.replace(/\s*!important$/, '').trim());
+    const lastCompound = (selector) => selector.split(',').map((part) => part.trim().split(/[\s>+~]+/).pop() ?? '');
+    const isInput = (compound) => /\.(input|field-input|dock-input)(?![\w-])/.test(compound);
+    const focus = /:focus(-visible)?(?![\w-])/;
+    const onInput = ({ rule }) => lastCompound(rule.selector).some((compound) => isInput(compound) && focus.test(compound));
+    const global = outlines.filter((o) => visible(o) && /:focus-visible(?![\w-])/.test(o.rule.selector) && !onInput(o));
+    const dropped = outlines.some((o) => !visible(o) && lastCompound(o.rule.selector).some((compound) => /\.input(?![\w-])/.test(compound) && focus.test(compound)));
+    return [
+      ...(global.length && !dropped ? ['no .input:focus-visible rule sets outline: none'] : []),
+      ...outlines.filter((o) => onInput(o) && visible(o)).map(({ rule, d }) => where(rule, d)),
+    ];
+  }),
+
+  // A sheet of the app has a head with its close or Done button. The button is inside the head, which ends at </header> or </div>.
+  define('SHEET-1', 'each sheet has a sheet-head with a close or Done button (SHEET-1)', ['html'], ({ html }) => {
+    const opens = [...html.matchAll(/class="([^"]*)"/g)].filter(([, value]) => value.split(/\s+/).includes('sheet'));
+    return opens
+      .map((open, i) => html.slice(open.index, opens[i + 1]?.index ?? html.length))
+      .filter((part) => !/class="[^"]*\bsheet-head\b[^"]*"[^>]*>(?:(?!<\/header>|<\/div>)[\s\S])*?<button\b/.test(part))
+      .map((part) => part.slice(0, 60));
+  }),
+
+  // An empty state of the app holds a button, except an inline one. The part ends at the close tag of its own element.
+  define('STATE-1', 'each empty state holds a button, except an inline one (STATE-1)', ['html'], ({ html }) => {
+    const tags = [...html.matchAll(/<(\/?)([a-zA-Z][\w-]*)\b([^>]*)>/g)];
+    const ends = (start) => {
+      const name = tags[start][2].toLowerCase();
+      let depth = 0;
+      for (let i = start; i < tags.length; i += 1) {
+        if (tags[i][2].toLowerCase() !== name) continue;
+        depth += tags[i][1] ? -1 : tags[i][3].endsWith('/') ? 0 : 1;
+        if (depth === 0) return tags[i].index;
+      }
+      return html.length;
+    };
+    return tags
+      .map((tag, i) => ({ tag, i }))
+      .filter(({ tag }) => !tag[1] && (/\bclass="([^"]*)"/.exec(tag[3])?.[1].split(/\s+/) ?? []).some((name) => name === 'empty-state') && !/\bclass="[^"]*\binline\b/.test(tag[3]))
+      .map(({ tag, i }) => html.slice(tag.index, ends(i)))
+      .filter((part) => !/<button\b/.test(part))
+      .map((part) => part.slice(0, 60));
+  }),
+
+  // The blocks that mirror for the left hand: each one the css defines needs a [data-hand="left"] rule.
+  define('HAND-1', 'each mirrored block that the css defines has a left-hand rule (HAND-1)', ['css'], ({ rules }) => {
+    const parts = rules.flatMap((rule) => rule.selector.split(',').map((part) => part.trim()));
+    const has = (part, name) => new RegExp(`\\.${name}(?![\\w-])`).test(part);
+    return ['app-header', 'input-row', 'sheet-head', 'sheet-foot', 'item-row-end', 'dock']
+      .filter((name) => parts.some((part) => !part.includes('[data-hand="left"]') && has(part, name)))
+      .filter((name) => !parts.some((part) => part.includes('[data-hand="left"]') && has(part, name)))
+      .map((name) => `.${name} has no [data-hand="left"] rule`);
   }),
 ];

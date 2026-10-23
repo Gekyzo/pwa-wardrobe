@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-    <meta name="theme-color" content="#1f7a4d" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f4f3f1" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0f0f0e" media="(prefers-color-scheme: dark)">
     <title>Attire</title>
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icons/icon-192.png" type="image/png">
@@ -31,11 +31,12 @@
           <ul id="garment-list" class="item-list"></ul>
           <div id="wardrobe-empty" class="empty-state" hidden>
             <p data-i18n="wardrobe.empty"></p>
+            <button id="wardrobe-add" class="button primary" type="button" data-i18n="wardrobe.add"></button>
           </div>
         </div>
         <article id="garment-detail" class="pane-detail">
           <button id="garment-back" class="button quiet pane-back" type="button" data-i18n="action.back"></button>
-          <p id="garment-detail-empty" class="empty-state" data-i18n="wardrobe.pick"></p>
+          <p id="garment-detail-empty" class="empty-state inline" data-i18n="wardrobe.pick"></p>
           <div id="garment-info" class="detail-head"></div>
           <div id="garment-actions" class="cluster">
             <button id="garment-edit" class="button outline" type="button" data-i18n="action.edit"></button>
@@ -48,16 +49,19 @@
 
       <section id="combinations" class="pane" hidden>
         <div class="pane-list">
-          <div id="combination-sizes" class="cluster scroll"></div>
+          <div id="combination-sizes" class="cluster scroll size-filter"></div>
           <div class="list-group">
             <label class="switch"><span data-i18n="combinations.wearable"></span><input id="combination-wearable" class="switch-input" type="checkbox" role="switch"></label>
           </div>
           <ul id="combination-list" class="item-list"></ul>
-          <p id="combinations-empty" class="empty-state" data-i18n="combinations.empty" hidden></p>
+          <div id="combinations-empty" class="empty-state" hidden>
+            <p data-i18n="combinations.empty"></p>
+            <button id="combinations-all" class="button primary" type="button" data-i18n="combinations.showAll"></button>
+          </div>
         </div>
         <article id="combination-detail" class="pane-detail">
           <button id="combination-back" class="button quiet pane-back" type="button" data-i18n="action.back"></button>
-          <p id="combination-detail-empty" class="empty-state" data-i18n="combinations.pick"></p>
+          <p id="combination-detail-empty" class="empty-state inline" data-i18n="combinations.pick"></p>
           <div id="combination-info" class="detail-head"></div>
           <div id="combination-outfits" class="outfits"></div>
         </article>
@@ -121,25 +125,27 @@
       <div id="garment-veil" class="sheet-veil"></div>
       <form id="garment-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="garment-sheet-title" autocomplete="off">
         <div class="sheet-grab"></div>
-        <h2 id="garment-sheet-title" class="sheet-title"></h2>
-        <label class="field"><input id="garment-name" class="input field-input" type="text" maxlength="60" required data-i18n-attr="placeholder:wardrobe.name"><span class="field-label" data-i18n="wardrobe.name"></span></label>
-        <label class="field"><input id="garment-brand" class="input field-input" type="text" maxlength="40" list="garment-brands" data-i18n-attr="placeholder:wardrobe.brand"><span class="field-label" data-i18n="wardrobe.brand"></span></label>
-        <datalist id="garment-brands"></datalist>
-        <select id="garment-slot" class="select" data-i18n-attr="aria-label:wardrobe.slot"></select>
-        <select id="garment-season" class="select" data-i18n-attr="aria-label:wardrobe.season"></select>
-        <div class="color-pick">
-          <input id="garment-color-input" class="color-pick-input" type="color" data-i18n-attr="aria-label:wardrobe.color">
-          <span id="garment-color-name" class="color-pick-name"></span>
+        <header class="sheet-head"><h2 id="garment-sheet-title" class="sheet-title main"></h2><button id="garment-close" class="button tonal" type="button" data-i18n="action.close"></button></header>
+        <div class="sheet-body">
+          <label class="field"><input id="garment-name" class="input field-input" type="text" maxlength="60" required data-i18n-attr="placeholder:wardrobe.name"><span class="field-label" data-i18n="wardrobe.name"></span></label>
+          <label class="field"><input id="garment-brand" class="input field-input" type="text" maxlength="40" list="garment-brands" data-i18n-attr="placeholder:wardrobe.brand"><span class="field-label" data-i18n="wardrobe.brand"></span></label>
+          <datalist id="garment-brands"></datalist>
+          <select id="garment-slot" class="select" data-i18n-attr="aria-label:wardrobe.slot"></select>
+          <select id="garment-season" class="select" data-i18n-attr="aria-label:wardrobe.season"></select>
+          <div class="color-pick">
+            <input id="garment-color-input" class="color-pick-input" type="color" data-i18n-attr="aria-label:wardrobe.color">
+            <span id="garment-color-name" class="color-pick-name"></span>
+          </div>
+          <div id="garment-swatches" class="swatch-grid"></div>
+          <label class="field"><input id="garment-link" class="input field-input" type="url" inputmode="url" data-i18n-attr="placeholder:wardrobe.link"><span class="field-label" data-i18n="wardrobe.link"></span></label>
+          <button id="garment-load" class="button outline wide" type="button" data-i18n="wardrobe.loadImages" disabled></button>
+          <div id="garment-images" class="image-grid" hidden></div>
+          <div class="input-row">
+            <input id="garment-image-url" class="input" type="url" inputmode="url" data-i18n-attr="placeholder:wardrobe.imageUrl,aria-label:wardrobe.imageUrl">
+            <button id="garment-image-add" class="button outline" type="button" data-i18n="action.add"></button>
+          </div>
         </div>
-        <div id="garment-swatches" class="swatch-grid"></div>
-        <label class="field"><input id="garment-link" class="input field-input" type="url" inputmode="url" data-i18n-attr="placeholder:wardrobe.link"><span class="field-label" data-i18n="wardrobe.link"></span></label>
-        <button id="garment-load" class="button outline wide" type="button" data-i18n="wardrobe.loadImages" disabled></button>
-        <div id="garment-images" class="image-grid" hidden></div>
-        <div class="input-row">
-          <input id="garment-image-url" class="input" type="url" inputmode="url" data-i18n-attr="placeholder:wardrobe.imageUrl,aria-label:wardrobe.imageUrl">
-          <button id="garment-image-add" class="button outline" type="button" data-i18n="action.add"></button>
-        </div>
-        <button class="button primary wide" type="submit" data-i18n="action.save"></button>
+        <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="action.save"></button></footer>
       </form>
     </div>
 
@@ -178,6 +184,7 @@
       {
         "imports": {
           "#app": "./src/app.js",
+          "#ds/sheet": "./vendor/design-system/sheet.js",
           "#config": "./src/config.js",
           "#wada": "./src/wada.js",
           "#palette": "./src/palette.js",

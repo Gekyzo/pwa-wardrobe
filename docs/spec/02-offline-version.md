@@ -7,7 +7,8 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
 
 - **SW-1** `src/app.js` registers `sw.js` at each start. With no service worker the app works with
   a connection only.
-- **SW-2** The app shell is the list `SHELL` of `sw.js`: the page, the two stylesheets (DSV-2),
+- **SW-2** The app shell is the list `SHELL` of `sw.js`: the page, the two stylesheets, the
+  vendored `sheet.js` and `geist.woff2` (DSV-2),
   the manifest, each module of `src/`, each catalog, `version.json`, the icons of the app and the
   icon sprite `icons.svg`. A file that the app loads and that is not in `SHELL` does not work
   offline at the first start.
@@ -15,7 +16,8 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   never a mix of two deploys. It then takes control at once (`skipWaiting`, `clients.claim`).
 - **SW-4** At its activation the worker deletes each cache that is not the current one,
   `wardrobe-manifest` (SW-13) or `wardrobe-images` (SW-14). The cache name is
-  `wardrobe-shell-v2`; it went up for version 2 of the garments doc (GAR-5).
+  `wardrobe-shell-v3`; it went up for version 2 of the garments doc (GAR-5), then for design
+  system 0.7.1.
 - **SW-5** The worker answers only `GET` requests of its own origin, and the images of other
   origins (SW-14). The proxy of the links (LNK-1) goes to the network.
 - **SW-6** A request is answered stale-while-revalidate: the cached copy at once, and a fresh copy
@@ -69,7 +71,7 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   |---|---|---|---|---|
   | The check runs (VER-5) | Turning arrow, spins | Muted | `Checking…` | Hidden |
   | The deployed version is newer than the running one | Down arrow in a circle | Amber | `Version X.Y.Z available` | Shows |
-  | It is the same or older | Check in a circle | Green (accent) | `Up to date` | Hidden |
+  | It is the same or older | Check in a circle | Green (done) | `Up to date` | Hidden |
   | One of the two is not known | Struck-out cloud | Red (danger) | `Offline` | Hidden |
 
 - **VER-7** Two versions compare by number, part by part: `1.10.0` is newer than `1.9.0`.

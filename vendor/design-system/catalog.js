@@ -18,6 +18,7 @@ const SCALES = [
   ['--icon', 'size'],
   ['--nav-', 'size'],
   ['--rail-', 'size'],
+  ['--side-', 'size'],
   ['--content-', 'size'],
   ['--pane-', 'size'],
   ['--arrow', 'size'],

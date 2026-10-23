@@ -1,9 +1,11 @@
-const CACHE = 'wardrobe-shell-v2';
+const CACHE = 'wardrobe-shell-v3';
 
 const SHELL = [
   './',
   './index.html',
   './vendor/design-system/design-system.css',
+  './vendor/design-system/sheet.js',
+  './vendor/design-system/geist.woff2',
   './styles.css',
   './icons.svg',
   './manifest.webmanifest',

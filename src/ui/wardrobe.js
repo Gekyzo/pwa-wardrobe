@@ -1,4 +1,5 @@
 import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, isWebUrl, SLOTS, SEASONS } from '#garments';
+import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor } from '#palette';
 import { outfitsWith } from '#outfits';
@@ -254,7 +255,10 @@ export const renderWardrobe = () => {
 
 export const bind = () => {
   $('fab').addEventListener('click', () => openSheet());
+  $('wardrobe-add').addEventListener('click', () => openSheet());
   $('garment-veil').addEventListener('click', closeGarmentSheet);
+  $('garment-close').addEventListener('click', closeGarmentSheet);
+  bindSheetDrag($('garment-sheet'), { close: closeGarmentSheet });
   $('garment-back').addEventListener('click', () => openGarment(null));
   $('garment-edit').addEventListener('click', () => openSheet(ui.garmentId));
   $('garment-delete').addEventListener('click', () => remove(ui.garmentId));

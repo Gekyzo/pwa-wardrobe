@@ -8,6 +8,7 @@
     "node": ">=20"
   },
   "imports": {
+    "#ds/*": "./vendor/design-system/*.js",
     "#*": "./src/*.js"
   },
   "scripts": {
