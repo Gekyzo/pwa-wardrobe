@@ -1,4 +1,4 @@
-const CACHE = 'wardrobe-shell-v4';
+const CACHE = 'wardrobe-shell-v5';
 
 const SHELL = [
   './',
@@ -36,6 +36,7 @@ const SHELL = [
   './src/modules.js',
   './src/storage.js',
   './src/version.js',
+  './src/whatsnew.js',
   './src/i18n.js',
   './src/locales/en.js',
   './src/locales/es.js',

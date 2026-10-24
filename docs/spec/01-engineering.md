@@ -6,6 +6,7 @@
 |---|---|---|
 | `src/config.js` | The slug of the app, which `npm run init` rewrites | nothing |
 | `src/version.js` | Version rules and the update offer rule | nothing |
+| `src/whatsnew.js` | The parse of the release notes and the versions that a user has not seen | `version` |
 | `src/i18n.js` | The language choice and the translator | `locales/*` |
 | `src/sections.js` | The order of the sections and the rule of the slide between them | nothing |
 | `src/modules.js` | The modules that Settings turns off, and the visible sections | `sections` |
@@ -98,6 +99,7 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/particles.test.js` | The particles of a picture and their place in time |
 | `tests/onboarding.test.js` | The show rule and the page steps of the walkthrough |
 | `tests/version.test.js` | Version rules and the update offer rule |
+| `tests/whatsnew.test.js` | The parse of the release notes and the unseen versions |
 | `tests/i18n.test.js` | The language choice, the translator, the parity of the catalogs |
 | `tests/markup.test.js` | `index.html` holds no text of its own; the sheet and the walkthrough markup |
 | `tests/aliases.test.js` | The import map against `package.json`; each `#ds/` alias names a vendored module |
