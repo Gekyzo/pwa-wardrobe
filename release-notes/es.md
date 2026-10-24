@@ -4,4 +4,4 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- `Ajustes` › `Ayuda` › `Novedades` muestra lo que cambia en cada versión. Tras una actualización, se abre sola una vez.
