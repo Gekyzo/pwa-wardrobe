@@ -33,8 +33,8 @@
     --accent-soft: var(--done-soft); /* deprecated: use --done-soft */
     --danger: light-dark(#b3261e, #f08a9b);
     --warning: light-dark(#9a5b00, #f2b65c);
-    --toast-bg: var(--ink); /* the toast is an --ink box */
-    --toast-text: var(--on-ink);
+    --toast-bg: light-dark(var(--surface), var(--surface-2)); /* raised: white in light, a step up from the rows in dark */
+    --toast-text: var(--text);
     --knob: #ffffff; /* the knob of a switch, in both themes */
     --scrim: rgb(0 0 0 / 0.45); /* veil behind a sheet */
 
@@ -1095,6 +1095,7 @@
     gap: var(--space-2);
     min-height: 48px;
     padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+    border: 1px solid var(--line);
     border-radius: var(--radius-m);
     background: var(--toast-bg);
     color: var(--toast-text);

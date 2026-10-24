@@ -203,8 +203,9 @@ export const classesInScript = (js) => [...new Set([
 ])];
 
 // The menu of the catalogue page: its fixed sections, then one section for each layer and each
-// screen scope that has a part, with the names of the parts in catalogue order.
-export const menuOf = ({ components }) => {
+// screen scope that has a part, with the names of the parts in catalogue order, then the app
+// screens of shots/index.json when there are any.
+export const menuOf = ({ components }, apps = []) => {
   const of = (test) => components.filter(test).map((part) => part.name);
   const layers = [
     ['components', 'Components'],
@@ -218,5 +219,6 @@ export const menuOf = ({ components }) => {
     { id: 'icons', title: 'Icons', items: [] },
     ...layers.filter((section) => section.items.length),
     ...scopes.map((scope) => ({ id: `screens-${scope}`, title: `Screen parts · ${scope}`, items: of((part) => part.layer === 'screens' && part.scope === scope) })),
+    ...(apps.length ? [{ id: 'apps', title: 'App screens', items: apps.map((app) => app.name) }] : []),
   ];
 };
