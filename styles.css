@@ -472,6 +472,35 @@
     cursor: pointer;
   }
 
+  /* @component whatsnew
+     @scope whatsnew
+     @summary The release notes in a sheet: one block for each version, newest first.
+     @part whatsnew-body     The body of the sheet, with the blocks.
+     @part whatsnew-entry    One version: its line and its notes.
+     @part whatsnew-version  The version and its day.
+     @part whatsnew-notes    The notes of a version, as a list.
+     @example <section class="whatsnew-entry"><h3 class="whatsnew-version">Version 1.2.0 · 20 October 2026</h3><ul class="whatsnew-notes"><li>A new menu.</li></ul></section> */
+  .whatsnew-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .whatsnew-version {
+    margin: 0 0 var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-xs);
+    font-weight: 600;
+  }
+
+  .whatsnew-notes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+
   /* @component about
      @scope settings
      @summary The version lines at the end of Settings.

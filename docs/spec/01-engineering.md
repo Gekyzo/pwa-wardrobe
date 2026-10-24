@@ -32,6 +32,7 @@
 | `src/ui/settings.js` | Settings, and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
+| `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
 | `src/app.js` | Wires the views, the global keys, the service worker and the update check | all of the above |
 
 ## Code rules
@@ -65,7 +66,8 @@
 ## Storage keys
 
 The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are `wardrobe.lang`,
-`wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules` and `wardrobe.onboarded`.
+`wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules`, `wardrobe.onboarded` and
+`wardrobe.seen-version` (VER-21).
 
 ## Change guide
 
@@ -93,7 +95,7 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
 | `tests/install.test.js` | The install offer states (INS-1) |
 | `tests/swipe.test.js` | The settle rule of a row slide |
-| `tests/sw.test.js` | The manifest text that the worker puts in place (SW-13) |
+| `tests/sw.test.js` | The manifest text that the worker puts in place (SW-13), the images (SW-14) and the release notes in `SHELL` (VER-21) |
 | `tests/sections.test.js` | The slide between sections |
 | `tests/modules.test.js` | The visible sections and the switch of a module |
 | `tests/particles.test.js` | The particles of a picture and their place in time |

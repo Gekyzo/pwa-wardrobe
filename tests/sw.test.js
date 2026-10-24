@@ -2,10 +2,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { LANGUAGES } from '#i18n';
 
 // sw.js is a classic script: run it with a stub `self` and return its pure functions.
 const source = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
-const { localizeManifest } = vm.runInNewContext(`${source}\n;({ localizeManifest })`, {
+const { localizeManifest, SHELL } = vm.runInNewContext(`${source}\n;({ localizeManifest, SHELL })`, {
   self: { addEventListener: () => {} },
 });
 
@@ -76,4 +77,8 @@ test('staleImages gives the cached URLs that no garment keeps (SW-14)', () => {
   assert.deepEqual(plain(staleImages(cached, ['https://a/2.jpg'])), ['https://a/1.jpg', 'https://a/3.jpg']);
   assert.deepEqual(plain(staleImages(cached, cached)), []);
   assert.deepEqual(plain(staleImages([], ['https://a/1.jpg'])), []);
+});
+
+test('SHELL has the release notes of each language, so they show offline (VER-21)', () => {
+  for (const lang of LANGUAGES) assert.ok(SHELL.includes(`./release-notes/${lang}.md`), lang);
 });

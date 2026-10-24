@@ -20,3 +20,16 @@ export const parseNotes = (text) =>
 // The entries newer than `seen`. With no seen version there is nothing to show (first start).
 export const unseen = (entries, seen) =>
   seen ? entries.filter(({ version }) => compareVersions(version, seen) > 0) : [];
+
+// The notes to show at a start and the seen version to store (null: store nothing). `store` goes
+// in at once when `show` is empty, else when the sheet closes (VER-21).
+// - A first start: the running version, so that the walkthrough stays the only text.
+// - Notes that could not be read, or a screen covered by another layer: nothing, for a later start.
+// - Otherwise the versions after `seen` up to the running one; `store` is the newest of them, so
+//   a running version whose notes are not cached yet stays unseen, and `seen` never goes down.
+export const nextSeen = ({ entries, seen, running, loaded, blocked }) => {
+  if (seen === null) return { show: [], store: running };
+  if (!loaded || blocked) return { show: [], store: null };
+  const show = unseen(entries, seen).filter(({ version }) => compareVersions(version, running) <= 0);
+  return { show, store: show[0]?.version ?? null };
+};

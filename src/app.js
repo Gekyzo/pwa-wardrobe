@@ -6,6 +6,7 @@ import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
 import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onboarding';
+import { bind as bindWhatsNew, startWhatsNew, isWhatsNewOpen, closeWhatsNew } from '#ui/whatsnew';
 
 const renderAll = () => {
   renderNav();
@@ -24,6 +25,7 @@ bindCombinations();
 bindSettings();
 bindInstall();
 bindOnboarding();
+bindWhatsNew();
 
 document.addEventListener(
   'click',
@@ -43,6 +45,10 @@ document.addEventListener('keydown', (event) => {
     return;
   }
   if (event.key !== 'Escape') return;
+  if (isWhatsNewOpen()) {
+    closeWhatsNew();
+    return;
+  }
   if (ui.sheetOpen) closeGarmentSheet();
   else if (ui.garmentId !== null || ui.combination !== null) {
     Object.assign(ui, { garmentId: null, combination: null });
@@ -69,5 +75,6 @@ navigator.serviceWorker?.ready
 readVersion('./version.json').then((running) => {
   ui.version.running = running;
   renderVersion();
+  startWhatsNew(running);
   navigator.serviceWorker?.ready.then(offerUpdate).catch(() => {});
 });

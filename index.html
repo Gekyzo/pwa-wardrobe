@@ -107,6 +107,7 @@
         <h2 class="list-group-head" data-i18n="settings.help"></h2>
         <div class="list-group">
           <button id="show-onboarding" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.onboarding"></span><span class="chevron" aria-hidden="true">›</span></button>
+          <button id="show-whatsnew" class="settings-row" type="button" hidden><span class="settings-row-label" data-i18n="settings.whatsNew"></span><span class="chevron" aria-hidden="true">›</span></button>
         </div>
         <footer class="about">
           <p class="about-line"><span id="version"></span><span id="version-status" class="version-status" role="status" data-status="checking"><svg data-for="checking" class="icon small" aria-hidden="true"><use href="icons.svg#refresh"/></svg><svg data-for="current" class="icon small" aria-hidden="true"><use href="icons.svg#check-circle"/></svg><svg data-for="outdated" class="icon small" aria-hidden="true"><use href="icons.svg#download"/></svg><svg data-for="unknown" class="icon small" aria-hidden="true"><use href="icons.svg#offline"/></svg><span id="version-status-text" class="version-status-text"></span></span></p>
@@ -131,6 +132,15 @@
         <span data-i18n="nav.settings"></span>
       </button>
     </nav>
+
+    <div id="whatsnew-sheet" class="sheet-layer" hidden>
+      <div id="whatsnew-veil" class="sheet-veil"></div>
+      <section id="whatsnew" class="sheet" role="dialog" aria-modal="true" aria-labelledby="whatsnew-title">
+        <div class="sheet-grab"></div>
+        <header class="sheet-head"><h2 id="whatsnew-title" class="sheet-title main" data-i18n="whatsNew.title"></h2><button id="whatsnew-close" class="button tonal" type="button" data-i18n="whatsNew.close"></button></header>
+        <div id="whatsnew-body" class="sheet-body whatsnew-body"></div>
+      </section>
+    </div>
 
     <div id="garment-sheet" class="sheet-layer" hidden>
       <div id="garment-veil" class="sheet-veil"></div>
@@ -225,6 +235,7 @@
           "#onboarding": "./src/onboarding.js",
           "#ui/dust": "./src/ui/dust.js",
           "#ui/onboarding": "./src/ui/onboarding.js",
+          "#ui/whatsnew": "./src/ui/whatsnew.js",
           "#ui/update": "./src/ui/update.js"
         }
       }
