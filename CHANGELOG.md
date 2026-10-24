@@ -1,6 +1,6 @@
 # Changelog
 
-User-visible changes, newest first.
+Technical changes, newest first. What a user sees of a version goes to `release-notes/`, in each language of the app.
 
 ## Unreleased
 

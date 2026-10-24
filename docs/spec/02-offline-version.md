@@ -55,7 +55,7 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   an ISO date. `package.json` has the same version.
 - **VER-2** `scripts/bump-version.mjs` is the only writer of the two files. With no valid
   `version.json` the next version is `1.0.0`. A bump of a part sets the lower parts to zero.
-  The same run releases `CHANGELOG.md` (VER-17).
+  The same run releases `CHANGELOG.md` (VER-17) and the release notes (VER-20).
 - **VER-3** A value that is not `{ version, date }` with a valid version and a valid date is "no
   version".
 - **VER-4** At the start the app reads `version.json` from the cache: the running version.
@@ -88,9 +88,9 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   `github-pages` environment allows the tags `v*`.
 - **VER-10** Each deploy has a new version. `npm run release` makes a release on `main`:
   1. it adds one to the patch of `version.json`, sets the date, and gives the version to
-     `package.json` and to `CHANGELOG.md` (VER-17);
-  2. it makes the commit `Bump version to X.Y.Z` with `version.json`, `package.json` and
-     `CHANGELOG.md` only;
+     `package.json`, to `CHANGELOG.md` (VER-17) and to the release notes (VER-20);
+  2. it makes the commit `Bump version to X.Y.Z` with `version.json`, `package.json`,
+     `CHANGELOG.md` and `release-notes/*.md` only;
   3. it tags that commit with the annotated tag `vX.Y.Z`.
 
   `git push --follow-tags` then sends the commit and the tag, and the tag deploys.
@@ -108,6 +108,16 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   `## Unreleased` with the text `No change.` goes above it. The file stays as it is when
   `Unreleased` has no change or the file has no such heading. A deployed version with no change
   for the user has no entry.
+- **VER-19** `release-notes/<lang>.md`, one file for each catalog of `src/locales/` and no other,
+  holds what a user sees of each version, in that language. It has the shape of `CHANGELOG.md`:
+  `## Unreleased`, then `## X.Y.Z - YYYY-MM-DD` with one `- ` line for each note, newest first.
+  `## Unreleased` and `No change.` stay in English in each file: they are markers of the release,
+  not text for the user. Each file has the same released versions. `CHANGELOG.md` holds the
+  technical changes.
+- **VER-20** A bump releases each release-notes file as VER-17 releases `CHANGELOG.md`, and the
+  release commit holds them. `npm run release` stops, and writes nothing, when `Unreleased` has
+  notes in some languages and not in the others, or when the files do not have the same released
+  versions; the error names the languages.
 
 ## Installation
 

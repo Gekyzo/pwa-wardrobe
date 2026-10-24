@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { releaseChangelog, localDate } from '../scripts/changelog.mjs';
+import { releaseChangelog, hasUnreleased, localDate } from '../scripts/changelog.mjs';
 
 const INTRO = '# Changelog\n\nThe changes of the app.\n\n';
 const OLD = '## 1.0.8 - 2026-10-13\n\n### Changed\n\n- The icon of the app.\n';
@@ -43,4 +43,12 @@ test('releaseChangelog does not take a subheading or a longer heading for Unrele
 test('localDate gives the day of the date in the local time zone', () => {
   assert.equal(localDate(new Date(2026, 0, 5, 23, 59)), '2026-01-05');
   assert.equal(localDate(new Date(2026, 11, 31, 0, 0)), '2026-12-31');
+});
+
+test('hasUnreleased is true when Unreleased holds a change', () => {
+  assert.equal(hasUnreleased(build('## Unreleased\n\n- A change.\n\n')), true);
+});
+
+test('hasUnreleased is false for no change, an empty Unreleased or no Unreleased heading', () => {
+  for (const unreleased of [EMPTY, '## Unreleased\n\n', '']) assert.equal(hasUnreleased(build(unreleased)), false);
 });

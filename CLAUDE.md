@@ -18,3 +18,10 @@ npm run ds                         # copy the design system again from ../pwa-de
 
 Read `.claude/conventions/` (loaded at session start): GIT, WRITING, CANONICAL,
 WORKFLOW, AUTONOMY, ARCHITECTURE, RELEVANT-FILES.
+
+## Changelog and release notes
+
+- `CHANGELOG.md` is the technical record, in English.
+- `release-notes/<lang>.md` is what a user reads in the app, one file for each catalog of
+  `src/locales/`. A user-visible change adds a bullet under `Unreleased` in every file, in the
+  same commit. `npm run release` stops when only some languages have one.
