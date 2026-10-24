@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.9 - 2026-10-24
+
 - The title of the app is in the language of the app, for example in the window and the list of open apps.
 
 ## 0.1.8 - 2026-10-24
