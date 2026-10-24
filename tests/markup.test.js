@@ -27,6 +27,7 @@ test('an element with a text key is empty in the markup', () => {
 test('the markup has no text of its own', () => {
   const visible = body
     .replace(/<svg[\s\S]*?<\/svg>/g, '')
+    .replace(/<span class="chevron"[^>]*>[^<]*<\/span>/g, '')
     .replace(/<[^>]+>/g, ' ')
     .replace(/[+\s]/g, '');
   assert.equal(visible, '');

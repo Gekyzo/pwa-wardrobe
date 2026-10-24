@@ -5,7 +5,7 @@ import { $, ui } from '#ui/context';
 let deferred = null;
 
 export const renderInstall = () => {
-  $('install').hidden = !showInstall(ui.install);
+  $('install-group').hidden = !showInstall(ui.install);
 };
 
 const move = (event) => {

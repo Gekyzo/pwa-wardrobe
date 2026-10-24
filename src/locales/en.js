@@ -65,6 +65,7 @@ export default {
   'onboarding.offline.title': 'Works offline',
   'onboarding.offline.text': 'Install the app from `Settings`. It works with no network, and tells you when a new version is ready.',
   'settings.backup': 'Backup',
+  'settings.preferences': 'Preferences',
   'settings.export': 'Export',
   'settings.import': 'Import',
   'settings.language': 'Language',

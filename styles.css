@@ -444,21 +444,32 @@
 
   /* @component settings
      @scope settings
-     @summary The Settings section: titled list groups, then the about lines. One centred column from 600px.
-     @part settings-title  The title above a list group.
-     @example <section class="settings" style="width: 100%"><h2 class="settings-title">Language</h2><div class="list-group"><select class="select" aria-label="Language"><option>English</option></select></div></section> */
+     @summary The Settings section: groups of settings rows (list-group) under a list-group-head, then the about lines. One centred column from 600px. A row of Preferences holds a real select laid over it, so a tap opens the native picker.
+     @example <section class="settings" style="width: 100%"><h2 class="list-group-head">Preferences</h2><div class="list-group"><div class="settings-row"><span class="settings-row-label">Language</span><span class="settings-row-value">English</span><span class="chevron" aria-hidden="true">›</span><select class="select" aria-label="Language"><option>English</option></select></div></div></section> */
   .settings {
     width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
   }
 
-  .settings-title {
-    margin: var(--space-5) var(--space-4) var(--space-2);
-    color: var(--muted);
-    font-size: var(--text-xs);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  /* @extends list-group */
+  .settings .settings-row {
+    position: relative;
+  }
+
+  /* The select is invisible: the row shows the ring when the select has the keyboard focus. */
+  .settings .settings-row:has(> .select:focus-visible) {
+    outline: 2px solid var(--text);
+    outline-offset: -2px;
+  }
+
+  .settings .settings-row > .select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
   }
 
   /* @component about

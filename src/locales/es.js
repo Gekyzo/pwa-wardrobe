@@ -65,6 +65,7 @@ export default {
   'onboarding.offline.title': 'Funciona sin conexión',
   'onboarding.offline.text': 'Instala la aplicación desde `Ajustes`. Funciona sin red, y te avisa cuando hay una versión nueva.',
   'settings.backup': 'Copia de seguridad',
+  'settings.preferences': 'Preferencias',
   'settings.export': 'Exportar',
   'settings.import': 'Importar',
   'settings.language': 'Idioma',

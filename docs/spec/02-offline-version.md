@@ -112,7 +112,7 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
 ## Installation
 
 - **VER-14** The manifest makes the app installable from Chrome: **Install app**, or the
-  **Install** button of Settings (INS-2). It runs `standalone`, in any orientation, with
+  row **Install the app** of Settings (INS-2). It runs `standalone`, in any orientation, with
   `start_url` and `scope` `./` and `id` `/pwa-wardrobe/`. The `id` resolves against the origin of
   `start_url`, so `./` would be the root of `gekyzo.github.io`, the same id as each other app
   there, and Chrome would offer no install.

@@ -25,7 +25,8 @@ This document holds the rules of the app only.
   `/* @extends <name> */`, in the same layer, so that it wins; the block documents the parts,
   variants and states that the app adds. No other rule of `components` or `layouts` repeats a
   selector of the shared sheet. The app has its own version of `item-row`: no row is lifted, so
-  the row has no transition, and the app sets no `lifted` class.
+  the row has no transition, and the app sets no `lifted` class. It also has a version of
+  `list-group` in `settings`: the select of a row of Preferences lies over the row (SET-1).
 - **DSV-4** A change of a shared part is made in `pwa-design-system`, then `npm run ds` here.
   Nothing edits `vendor/` by hand, and `npm run init` copies it as it is (ENG-17).
 
@@ -37,4 +38,4 @@ The parts of `styles.css`, by layer. The shared parts are in the design system.
 |---|---|
 | tokens | `--primary` and `--on-primary` take `--done` and `--on-done`: one green for the main action, progress and the checked state |
 | components | `swatch`, `strip`, `blocks`, `swatch-grid`, `thumb`, `image-strip`, `image-grid`, `color-pick`, `detail-head`, `outfits`, `outfit` · version of `item-row` (DSV-3) |
-| screens | combinations: `size-filter` · settings: `settings`, `about`, `version-status` · nav: `dust` · onboarding: `onboarding`, `onboarding-art` |
+| screens | combinations: `size-filter` · settings: `settings` (version of `list-group`), `about`, `version-status` · nav: `dust` · onboarding: `onboarding`, `onboarding-art` |
