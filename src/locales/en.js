@@ -1,5 +1,5 @@
 export default {
-  'app.title': 'Attire',
+  'app.title': 'Wardrobe and outfits - Attire',
   'app.description': 'Load my clothes and generate outfits',
   'nav.label': 'Sections',
   'nav.wardrobe': 'Wardrobe',

@@ -117,3 +117,18 @@ test('the Spanish catalog has each message key of the pure modules', () => {
 test('intlTag gives the code of each language that has no regional tag', () => {
   for (const lang of LANGUAGES) assert.equal(intlTag(lang), lang);
 });
+
+test('app.title is a descriptor in each language, then the brand, as the fallbacks show it', () => {
+  const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+  const manifest = JSON.parse(read('manifest.webmanifest'));
+  const titles = LANGUAGES.map((lang) => CATALOGS[lang]['app.title']);
+  for (const title of titles) {
+    assert.ok(title.endsWith(` - ${manifest.short_name}`) && title.length > manifest.short_name.length + 3, title);
+  }
+  assert.equal(new Set(titles).size, titles.length);
+  assert.equal(manifest.name, CATALOGS[manifest.lang]['app.title']);
+  assert.equal(manifest.description, CATALOGS[manifest.lang]['app.description']);
+  const html = read('index.html');
+  const [, lang] = html.match(/<html lang="(\w+)"/);
+  assert.equal(html.match(/<title>(.*)<\/title>/)[1], CATALOGS[lang]['app.title']);
+});

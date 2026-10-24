@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- El título de la aplicación está en el idioma de la aplicación, por ejemplo en la ventana y en la lista de aplicaciones abiertas.
 
 ## 0.1.8 - 2026-10-24
 

@@ -1,5 +1,5 @@
 export default {
-  'app.title': 'Attire',
+  'app.title': 'Armario y conjuntos - Attire',
   'app.description': 'Carga mi ropa y genera conjuntos',
   'nav.label': 'Secciones',
   'nav.wardrobe': 'Armario',

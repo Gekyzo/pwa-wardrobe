@@ -36,7 +36,9 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   in the cache `wardrobe-manifest`, and answers `manifest.webmanifest` as SW-6 and SW-7 with these
   three members in place of the ones of the file (`localizeManifest`). A member that is not a
   non-empty string keeps the value of the file. With no stored text, or a manifest that is not
-  JSON, the file is answered as it is.
+  JSON, the file is answered as it is. `app.title` is a descriptor in the language, then the
+  brand (`<descriptor> - <short_name>`); `short_name` stays the brand. The `<title>` of `index.html`
+  and the `name` and `description` of the file hold the text of their `lang`.
 - **SW-14** An image of another origin, such as the image of a garment, is answered cache first
   from the cache `wardrobe-images`. With no cached copy it goes to the network, and the answer,
   opaque since it comes from another origin, is stored. At each start `src/app.js` sends
