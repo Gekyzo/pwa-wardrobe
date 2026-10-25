@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- Each garment keeps its size, how it fits and its measures, such as the waist or the leg. A new garment gets the measures of the garments of its kind.
 
 ## 0.1.9 - 2026-10-24
 

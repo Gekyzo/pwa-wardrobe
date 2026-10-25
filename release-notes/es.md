@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- Cada prenda guarda su talla, cómo te queda y sus medidas, como la cintura o el largo. Una prenda nueva recibe las medidas de las prendas de su tipo.
 
 ## 0.1.9 - 2026-10-24
 

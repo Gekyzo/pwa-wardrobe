@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- A garment has an optional size, fit and up to 12 measures (`src/measures.js`, the rules of the app Fittings): GAR-8 to GAR-10, WAR-7, WAR-8. The doc goes to version 3; versions 1 and 2 migrate with no size, fit or measures. The shell cache is `wardrobe-shell-v6`.
 
 ## 0.1.9 - 2026-10-24
 

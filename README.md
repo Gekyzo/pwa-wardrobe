@@ -19,6 +19,9 @@ site's page itself (CORS), so **Load images** goes through the public proxy Jina
 (`r.jina.ai`), which sees each link loaded. Some shops refuse it; the **Image URL** field then
 takes an image address by hand. The service worker keeps the images for offline use.
 
+A garment can also keep its size, how it fits and up to 12 measures (name, value, unit). A new
+garment gets the measure names of the garments of its slot.
+
 ## Develop
 
 ```sh
