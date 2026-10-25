@@ -1,10 +1,12 @@
-// The session of the account on the device (ACC-5), the route of the start (ACC-1) and the return
-// from Google (ACC-4). The storage objects are parameters, so a test passes a fake.
+// The session of the account on the device (ACC-5), the offline flag (ACC-10), the route of the
+// start (ACC-1) and the return from Google (ACC-4). The storage objects are parameters, so a test passes a fake.
 import { keyOf } from '#storage';
 
 export const SESSION_KEY = keyOf('session');
 // In sessionStorage, for the time of the Google redirect only: the state and the verifier.
 export const OAUTH_KEY = keyOf('oauth');
+// The device works with no account: Use offline (ACC-10).
+export const OFFLINE_KEY = keyOf('offline');
 
 const isObject = (value) => typeof value === 'object' && value !== null;
 
@@ -46,9 +48,29 @@ export const saveSession = (storage, session) => write(storage, SESSION_KEY, ses
 // ACC-8: only the session goes; the garments and the preferences stay.
 export const dropSession = (storage) => remove(storage, SESSION_KEY);
 
-// It never reads the clock: a saved session opens at once, offline too (ACC-1).
-export const routeAtStart = (session) => {
-  if (!session) return 'login';
+export const loadOffline = (storage) => {
+  try {
+    return storage.getItem(OFFLINE_KEY) === '1';
+  } catch {
+    return false;
+  }
+};
+
+export const saveOffline = (storage) => {
+  try {
+    storage.setItem(OFFLINE_KEY, '1');
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const dropOffline = (storage) => remove(storage, OFFLINE_KEY);
+
+// It never reads the clock: a saved session opens at once, offline too (ACC-1). A session wins over
+// the offline flag.
+export const routeAtStart = (session, offline = false) => {
+  if (!session) return offline ? 'app' : 'login';
   return session.user.approved === true ? 'app' : 'waiting';
 };
 

@@ -10,6 +10,10 @@ import {
   savePending,
   takePending,
   readOAuthReturn,
+  OFFLINE_KEY,
+  loadOffline,
+  saveOffline,
+  dropOffline,
 } from '#session';
 
 // A fake Storage over a Map; `broken` throws on each call, as a blocked storage does.
@@ -63,6 +67,36 @@ test('the start routes by the session (ACC-1)', () => {
   assert.equal(routeAtStart(null), 'login');
   assert.equal(routeAtStart(SESSION), 'app');
   assert.equal(routeAtStart({ ...SESSION, user: { ...SESSION.user, approved: false } }), 'waiting');
+});
+
+test('with no session the offline flag opens the app; a session wins over it (ACC-1)', () => {
+  assert.equal(routeAtStart(null, true), 'app');
+  assert.equal(routeAtStart(null, false), 'login');
+  assert.equal(routeAtStart(SESSION, true), 'app');
+  assert.equal(routeAtStart({ ...SESSION, user: { ...SESSION.user, approved: false } }, true), 'waiting');
+});
+
+test('the offline flag is saved, read and removed (ACC-10)', () => {
+  const storage = memory({ 'wardrobe.garments': '{}' });
+  assert.equal(OFFLINE_KEY, 'wardrobe.offline');
+  assert.equal(loadOffline(storage), false);
+  assert.equal(saveOffline(storage), true);
+  assert.equal(storage.map.get(OFFLINE_KEY), '1');
+  assert.equal(loadOffline(storage), true);
+  dropOffline(storage);
+  assert.equal(loadOffline(storage), false);
+  assert.deepEqual([...storage.map.keys()], ['wardrobe.garments']);
+});
+
+test('only the value 1 counts as the offline flag', () => {
+  for (const text of ['', '0', 'true', '"1"']) assert.equal(loadOffline(memory({ [OFFLINE_KEY]: text })), false, text);
+});
+
+test('a blocked storage reads no offline flag and saves none', () => {
+  const storage = memory({}, { broken: true });
+  assert.equal(loadOffline(storage), false);
+  assert.equal(saveOffline(storage), false);
+  assert.doesNotThrow(() => dropOffline(storage));
 });
 
 test('a pending sign-in is taken one time (ACC-4)', () => {

@@ -2,12 +2,14 @@
 
 The account and the approval gate. The server is the PocketBase server of `pwa-server`: one
 account serves every app, and the administrator approves access per app. The app talks to it
-with `fetch`, with no SDK. The garments stay on the device: nothing syncs.
+with `fetch`, with no SDK. The garments stay on the device: nothing syncs. The user picks one of
+two ways in: **Continue with Google**, or **Use offline** with no account.
 
 ## Rules
 
-- **ACC-1** The start routes by the saved session: none opens **Sign in**; a session that is not
-  approved opens **Waiting for approval**; an approved session opens the app. The route never
+- **ACC-1** The start routes by the saved session, then by the offline flag (ACC-10): a session
+  that is not approved opens **Waiting for approval**; an approved session opens the app; no
+  session and the flag opens the app; no session and no flag opens **Sign in**. The route never
   reads the clock.
 - **ACC-2** **Sign in** has the app icon, the title, one line of text and **Continue with
   Google**. **Waiting for approval** has **Check again** and **Log out**. Both cover the whole
@@ -34,6 +36,9 @@ with `fetch`, with no SDK. The garments stay on the device: nothing syncs.
 - **ACC-8** Settings has the group **Account** while there is a session: the email and **Log
   out**. **Log out** removes the session only; the garments and the preferences stay.
 - **ACC-9** With no `localStorage` the app shows no account screen and works as before.
+- **ACC-10** The offline flag is `wardrobe.offline` = `1` in `localStorage`. **Use offline**
+  writes it; an approved session that opens the app removes it. A storage that refuses the
+  write still opens the app for this start.
 
 ## Set-up outside the app
 
