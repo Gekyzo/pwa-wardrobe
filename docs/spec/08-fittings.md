@@ -2,8 +2,9 @@
 
 For a category of product and, optionally, a brand, the size and the measures that fit the user,
 and how they fit. A category is any kind of product: pants, a T-shirt, a bed sheet, a ring. This
-part of the app was the app Fittings (`pwa-fittings`). Its files are `src/fittings.js` and
-`tests/fittings.test.js`.
+part of the app was the app Fittings (`pwa-fittings`). Its files are `src/fittings.js`,
+`tests/fittings.test.js`, the view `src/ui/fittings.js`, the `#fittings` section and the
+`#fitting-sheet` of `index.html`.
 
 ## Doc
 
@@ -47,3 +48,34 @@ part of the app was the app Fittings (`pwa-fittings`). Its files are `src/fittin
   one share the origin `gekyzo.github.io`, so this app can read it. `adoptFittings` gives the doc
   with the fittings of that doc when the doc of the app has no fitting and that doc passes FIT-3
   with one fitting or more; else the doc does not change. The old key does not change.
+
+## Screen
+
+- **FIT-10** The Fittings section, after Combinations (NAV-1) and a module (MOD-1), lists the fittings in groups (FIT-7), each under a `group-head`
+  with the category and its count. A row shows the brand and the size, or the category when the
+  fitting has neither; below, its measures, or its note when it has no measure; and a pill with
+  its fit, when it has one. A row slides left to show **Delete** (FIT-6). With no fitting the
+  section shows `fittings.empty` and **Add fitting**.
+- **FIT-11** Above the list, while there is a fitting, a search field filters the rows (FIT-9).
+  With two categories or more, a chip for each category and **All** filter the rows by category.
+  The two filters add up. With no row left the list says `fittings.none`.
+- **FIT-12** A tap on a row opens its detail (LAY-3): the title of the row, then the category, the
+  brand, the size, the fit, each measure and the note, each one only when it is set. **Edit** opens
+  the sheet of the fitting. **Duplicate** opens the sheet of a new fitting with the same fields, so
+  that the size of another brand is fast to add. **Delete** removes it (FIT-6).
+- **FIT-13** **+**, while the Fittings section is in view, and **Add fitting** open the sheet of a new fitting, with the category of the
+  chosen chip, if any, and one empty measure line. The sheet has the fields category, brand and
+  size, each with the suggestions of FIT-8; a chip for each fit; the measure lines, each with a
+  name, a value, a unit and a button that removes it, and **Add measure**; and the note. The unit
+  suggests the units in use, then `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the
+  number format of the language. **Save** applies FIT-4.
+- **FIT-14** When the category of a new fitting changes and no measure line has a name or a value,
+  the lines become the measures of that category (FIT-8), with their units and no value. A line
+  left with no value is not saved (FIT-4).
+- **FIT-16** **Import** of Settings takes a backup of this app, which replaces the doc, or a
+  backup of the Fittings app, `{ version: 1, fittings }` (FIT-3), which replaces only the
+  fittings, after a confirmation that names their count. Each import offers **Undo**.
+- **FIT-17** At a start, until the flag `wardrobe.fittings-moved` is stored, the app reads
+  `pwa-fittings.fittings` and applies FIT-15. When fittings come, it saves the doc and shows
+  `toast.fittingsMoved` with their count. Then it stores the flag, so that the move runs once. A
+  doc that it cannot save keeps the flag off, and the move runs again at the next start.

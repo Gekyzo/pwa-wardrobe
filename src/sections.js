@@ -1,5 +1,5 @@
 // The sections, in the order of the bottom bar.
-export const SECTIONS = ['wardrobe', 'combinations', 'settings'];
+export const SECTIONS = ['wardrobe', 'combinations', 'fittings', 'settings'];
 
 // The length of a slide that changes the section or a page.
 const SLIDE_MIN = 60;

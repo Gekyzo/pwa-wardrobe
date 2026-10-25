@@ -45,6 +45,16 @@ export const hasStoredDoc = (storage, key) => {
   }
 };
 
+// The parsed value of `key`, or null when there is none, it is not JSON or the storage throws.
+export const readJson = (storage, key) => {
+  try {
+    const text = storage.getItem(key);
+    return text === null ? null : (parse(text).data ?? null);
+  } catch {
+    return null;
+  }
+};
+
 export const exportJson = (doc) => JSON.stringify(doc, null, 2);
 
 // Local time, to the second, so two exports of one day get two names.
@@ -199,6 +209,28 @@ export const loadSeen = (storage) => {
 export const saveSeen = (storage, version) => {
   try {
     storage.setItem(SEEN_VERSION_KEY, version);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// Set once the app tried to take the fittings of the Fittings app (FIT-17), so that a delete of
+// every fitting does not bring them back.
+export const FITTINGS_MOVED_KEY = keyOf('fittings-moved');
+
+// A storage that cannot be read counts as moved: there is nothing to read.
+export const loadFittingsMoved = (storage) => {
+  try {
+    return storage.getItem(FITTINGS_MOVED_KEY) === '1';
+  } catch {
+    return true;
+  }
+};
+
+export const saveFittingsMoved = (storage) => {
+  try {
+    storage.setItem(FITTINGS_MOVED_KEY, '1');
     return true;
   } catch {
     return false;

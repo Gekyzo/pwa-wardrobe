@@ -1,7 +1,8 @@
-import { $, ui, state, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
+import { $, ui, state, storage, movedFittings, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav } from '#ui/nav';
 import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
 import { bind as bindCombinations, renderCombinations } from '#ui/combinations';
+import { bind as bindFittings, renderFittings, closeFittingSheet } from '#ui/fittings';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -13,6 +14,11 @@ const renderAll = () => {
   $('title').textContent = t(`nav.${ui.view}`);
   renderWardrobe();
   renderCombinations();
+  renderFittings();
+  // One button adds to the list in view: a garment or a fitting.
+  const adds = { wardrobe: 'wardrobe.add', fittings: 'fittings.add' }[ui.view];
+  $('fab').hidden = !adds || ui.sheet !== null;
+  if (adds) $('fab').setAttribute('aria-label', t(adds));
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
@@ -22,6 +28,7 @@ setRender(renderAll);
 bindNav();
 bindWardrobe();
 bindCombinations();
+bindFittings();
 bindSettings();
 bindInstall();
 bindOnboarding();
@@ -49,9 +56,10 @@ document.addEventListener('keydown', (event) => {
     closeWhatsNew();
     return;
   }
-  if (ui.sheetOpen) closeGarmentSheet();
-  else if (ui.garmentId !== null || ui.combination !== null) {
-    Object.assign(ui, { garmentId: null, combination: null });
+  if (ui.sheet === 'garment') closeGarmentSheet();
+  else if (ui.sheet === 'fitting') closeFittingSheet();
+  else if (ui.garmentId !== null || ui.combination !== null || ui.fittingId !== null) {
+    Object.assign(ui, { garmentId: null, combination: null, fittingId: null });
     render();
   }
 });
@@ -65,6 +73,7 @@ $('toast-action').addEventListener('click', () => {
 applyLanguage();
 if (ui.onboarding !== null) $('onboarding-next').focus();
 if (!storage) showToast(t('error.noStorage'));
+else if (movedFittings) showToast(t('toast.fittingsMoved', { count: movedFittings }));
 navigator.storage?.persist?.().catch(() => {});
 navigator.serviceWorker?.register('./sw.js').catch(() => {});
 // The worker drops the cached images that no garment keeps any more (SW-14).

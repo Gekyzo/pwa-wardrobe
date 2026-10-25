@@ -6,7 +6,7 @@ import { SECTIONS, direction, slideDirection, slideTo } from '#sections';
 const FIVE = ['a', 'b', 'c', 'd', 'settings'];
 
 test('SECTIONS has the order of the navigation', () => {
-  assert.deepEqual(SECTIONS, ['wardrobe', 'combinations', 'settings']);
+  assert.deepEqual(SECTIONS, ['wardrobe', 'combinations', 'fittings', 'settings']);
 });
 
 test('slideDirection is 1 for a slide to the left and -1 for a slide to the right', () => {
@@ -28,10 +28,12 @@ test('slideDirection is 0 for a slide that is not horizontal', () => {
   assert.equal(slideDirection(80, -40), -1);
 });
 
-test('slideTo goes between the sections of the app, through the combinations', () => {
+test('slideTo goes between the sections of the app, through the combinations and the fittings', () => {
   assert.equal(slideTo('wardrobe', -80, 0), 'combinations');
-  assert.equal(slideTo('combinations', -80, 0), 'settings');
-  assert.equal(slideTo('settings', 80, 0), 'combinations');
+  assert.equal(slideTo('combinations', -80, 0), 'fittings');
+  assert.equal(slideTo('fittings', -80, 0), 'settings');
+  assert.equal(slideTo('settings', 80, 0), 'fittings');
+  assert.equal(slideTo('fittings', 80, 0), 'combinations');
   assert.equal(slideTo('combinations', 80, 0), 'wardrobe');
   assert.equal(direction('wardrobe', 'combinations'), 1);
 });

@@ -36,6 +36,6 @@ test('the components of the app are documented in styles.css (DSV-3)', () => {
   }
 });
 
-test('styles.css has two versions of a shared component, item-row and list-group in settings (DSV-3)', () => {
-  assert.deepEqual([...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name), ['item-row', 'list-group']);
+test('styles.css has the versions of a shared component: item-row, chip in fittings-filter, list-group in settings (DSV-3)', () => {
+  assert.deepEqual([...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name), ['item-row', 'chip', 'list-group']);
 });
