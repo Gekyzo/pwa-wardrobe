@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.11 - 2026-10-25
+
 - Offline mode: **Use offline** on Sign in opens the app with no account (ACC-1, ACC-2, ACC-8, ACC-10). Key `wardrobe.offline` = `1`; an approved session that opens the app removes it. Settings → Account has **Sign in with Google** with no session; Escape closes Sign in over an open app.
 
 ## 0.1.10 - 2026-10-25
