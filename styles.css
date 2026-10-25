@@ -287,6 +287,16 @@
     font-weight: var(--weight-strong);
   }
 
+  /* @component detail-back
+     @scope wardrobe, combinations
+     @summary The Back button of a detail below 840px: its arrow lines up with the content edge, and a space parts it from the head.
+     @example <button class="button quiet pane-back detail-back" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#back"/></svg><span>Back</span></button> */
+  .detail-back {
+    gap: var(--space-1);
+    margin: 0 0 var(--space-3) calc(-1 * var(--space-2));
+    padding-inline: var(--space-2) var(--space-3);
+  }
+
   /* @component detail-head
      @summary The head of a detail: the colour, the title and a muted line.
      @part detail-head-title  The name of the entry.
