@@ -442,6 +442,48 @@
     padding-inline-start: var(--space-4);
   }
 
+  /* @component fit-pick
+     @scope garment-sheet
+     @summary The fit of the garment sheet: a segmented control of four, each segment an icon over a short label, in one line.
+     @part fit-pick-label  The name of the fit, under its icon.
+     @example <div class="segmented fit-pick" style="width: 100%"><button class="segment" type="button" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="icons.svg#fit-unknown"/></svg><span class="fit-pick-label">Not said</span></button><button class="segment" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="icons.svg#check-circle"/></svg><span class="fit-pick-label">Fits</span></button><button class="segment" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="icons.svg#fit-small"/></svg><span class="fit-pick-label">Too small</span></button><button class="segment" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="icons.svg#fit-large"/></svg><span class="fit-pick-label">Too large</span></button></div> */
+  /* @extends segmented */
+  .fit-pick {
+    border-radius: var(--radius-l);
+  }
+
+  /* The shared control counts up to three segments: the fourth one is this app's. */
+  .fit-pick:has(> .segment:nth-child(4)) {
+    --segment-count: 4;
+  }
+
+  .fit-pick:has(> .segment:nth-child(4)[aria-pressed="true"]) {
+    --segment-index: 3;
+  }
+
+  .fit-pick::before {
+    border-radius: var(--radius-m);
+  }
+
+  .fit-pick .segment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+    padding: var(--space-1) 2px;
+    border-radius: var(--radius-m);
+  }
+
+  .fit-pick-label {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: var(--text-xs);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   /* @component measure-lines
      @scope garment-sheet
      @summary The measures of the garment sheet: one line each, with the name, the value, the unit and a button that removes the line.

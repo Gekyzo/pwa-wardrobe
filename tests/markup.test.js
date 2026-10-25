@@ -52,7 +52,7 @@ test('the garment sheet has a head with its title and Close, a body, and Save in
 test('the garment sheet has the size with its maximum length, the fit, the measures and Add measure (WAR-3)', () => {
   const [layer = ''] = body.match(/<div id="garment-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
   assert.match(layer, /<input id="garment-size"[^>]*maxlength="20"/);
-  assert.match(layer, /<div id="garment-fit" class="cluster" role="group"/);
+  assert.match(layer, /<div id="garment-fit" class="segmented fit-pick" role="group"/);
   assert.match(layer, /<div id="garment-measures" class="measure-lines"><\/div>/);
   assert.match(layer, /<button id="garment-measure-add"[^>]*data-i18n="wardrobe.addMeasure"/);
 });

@@ -116,8 +116,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
   **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
   sheet holds the name, the brand, the slot, the season,
-  the colour, the link, the images and, under `wardrobe.sizing`, the size, a chip for each fit
-  (GAR-8), the measure lines, each with a name, a value, a unit and a button that removes it, and
+  the colour, the link, the images and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
+  in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
   **Add measure**. The measure name suggests the names in use, and the unit the units in use, then
   `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests the brands of the wardrobe
   (GAR-6). The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a

@@ -129,16 +129,23 @@ const readMeasures = () =>
     unit: line.querySelector('.measure-line-unit').value,
   }));
 
+// The icon of each fit: '' is not said.
+const FIT_ICONS = { '': 'fit-unknown', good: 'check-circle', small: 'fit-small', large: 'fit-large' };
+
+// The fits as one segmented control, an icon over a short label (WAR-3).
 const showFit = () => {
   $('garment-fit').replaceChildren(
     ...FITS.map((fit) => {
-      const chip = el('button', { className: 'chip', type: 'button', textContent: t(`fit.${fit || 'unknown'}`) });
-      chip.setAttribute('aria-pressed', String(ui.draftFit === fit));
-      chip.addEventListener('click', () => {
+      const segment = el('button', { className: 'segment', type: 'button' }, [
+        icon(FIT_ICONS[fit]),
+        el('span', { className: 'fit-pick-label', textContent: t(`fit.${fit || 'unknown'}`) }),
+      ]);
+      segment.setAttribute('aria-pressed', String(ui.draftFit === fit));
+      segment.addEventListener('click', () => {
         ui.draftFit = fit;
         showFit();
       });
-      return chip;
+      return segment;
     }),
   );
 };
