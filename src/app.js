@@ -7,6 +7,12 @@ import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
 import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onboarding';
 import { bind as bindWhatsNew, startWhatsNew, isWhatsNewOpen, closeWhatsNew } from '#ui/whatsnew';
+import { bind as bindAccount, renderAccount, startAccount, goOnline, isAccountOpen } from '#ui/account';
+import { readOAuthReturn } from '#session';
+
+// The return of the Google sign-in (ACC-4): `code`, `state` and `error` leave the URL at once.
+const { oauth, clean } = readOAuthReturn(new URL(location.href));
+if (oauth) history.replaceState(history.state, '', clean);
 
 const renderAll = () => {
   renderNav();
@@ -16,6 +22,7 @@ const renderAll = () => {
   $('settings').hidden = ui.view !== 'settings';
   renderVersion();
   renderInstall();
+  renderAccount();
 };
 setRender(renderAll);
 
@@ -26,6 +33,7 @@ bindSettings();
 bindInstall();
 bindOnboarding();
 bindWhatsNew();
+bindAccount();
 
 document.addEventListener(
   'click',
@@ -38,6 +46,8 @@ document.addEventListener(
 );
 
 document.addEventListener('keydown', (event) => {
+  // The account screens cover the app, the walkthrough too, and do not close (ACC-2).
+  if (isAccountOpen()) return;
   if (ui.onboarding !== null) {
     if (event.key === 'Escape') closeOnboarding();
     else if (event.key === 'ArrowRight') turnOnboarding(1);
@@ -64,6 +74,8 @@ $('toast-action').addEventListener('click', () => {
 
 applyLanguage();
 if (ui.onboarding !== null) $('onboarding-next').focus();
+startAccount(oauth);
+window.addEventListener('online', goOnline);
 if (!storage) showToast(t('error.noStorage'));
 navigator.storage?.persist?.().catch(() => {});
 navigator.serviceWorker?.register('./sw.js').catch(() => {});

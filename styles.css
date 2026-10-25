@@ -840,4 +840,75 @@
   .art-on-solid {
     stroke: var(--on-primary);
   }
+
+  /* @component account
+     @scope account
+     @summary The screens of the account over the full app (ACC-2): Sign in and Waiting for approval.
+       One page shows at a time, in the width of the column, centred. Over the walkthrough.
+     @part account-page    One screen.
+     @part account-logo    The app icon, at the top of Sign in.
+     @part account-title   The name of the screen.
+     @part account-text    The line below the title.
+     @part account-wait    The large icon of Waiting for approval.
+     @example <div class="account-page" style="width: 100%"><h2 class="account-title">Iniciar sesión</h2><p class="account-text">El administrador aprueba cada cuenta nueva.</p><button class="button tonal wide" type="button"><svg class="icon small" aria-hidden="true"><use href="icons.svg#google"/></svg>Continuar con Google</button></div> */
+  .account {
+    position: fixed;
+    inset: 0;
+    /* Over the walkthrough and the dust: the sign-in of a first start comes first. */
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    padding: calc(var(--space-5) + env(safe-area-inset-top)) calc(var(--space-5) + env(safe-area-inset-right))
+      calc(var(--space-5) + env(safe-area-inset-bottom)) calc(var(--space-5) + env(safe-area-inset-left));
+    background: var(--bg);
+    overflow: hidden auto;
+  }
+
+  @media (min-width: 600px) {
+    .account {
+      padding-left: max(var(--space-5) + env(safe-area-inset-left), (100% - var(--content-max)) / 2);
+      padding-right: max(var(--space-5) + env(safe-area-inset-right), (100% - var(--content-max)) / 2);
+    }
+  }
+
+  .account-page {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  .account-logo {
+    align-self: center;
+    width: var(--logo);
+    height: var(--logo);
+  }
+
+  .account-title {
+    margin: 0;
+    font-size: var(--text-l);
+    text-align: center;
+  }
+
+  .account-title:focus {
+    outline: none;
+  }
+
+  .account-text {
+    margin: 0 0 var(--space-2);
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .account-wait {
+    align-self: center;
+    width: var(--logo);
+    height: var(--logo);
+    color: var(--muted);
+  }
+
+  .account-page > .button.accent {
+    align-self: center;
+  }
 }

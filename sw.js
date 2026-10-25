@@ -26,6 +26,7 @@ const SHELL = [
   './src/ui/dust.js',
   './src/ui/onboarding.js',
   './src/ui/whatsnew.js',
+  './src/ui/account.js',
   './src/swipe.js',
   './src/particles.js',
   './src/onboarding.js',

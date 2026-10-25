@@ -68,6 +68,13 @@
       </section>
 
       <section id="settings" class="settings" hidden>
+        <div id="account-group" hidden>
+          <h2 class="list-group-head" data-i18n="settings.account"></h2>
+          <div class="list-group">
+            <div class="settings-row"><span id="account-email" class="settings-row-label"></span></div>
+            <button id="logout" class="settings-row" type="button"><span class="settings-row-label" data-i18n="account.logout"></span><span class="chevron" aria-hidden="true">›</span></button>
+          </div>
+        </div>
         <h2 class="list-group-head" data-i18n="settings.backup"></h2>
         <div class="list-group">
           <button id="export" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.export"></span><span class="chevron" aria-hidden="true">›</span></button>
@@ -206,6 +213,23 @@
       </div>
     </div>
 
+    <section id="auth" class="account" role="dialog" aria-modal="true" aria-labelledby="login-title" hidden>
+      <div id="login" class="account-page">
+        <img class="account-logo" src="./icons/logo.png" alt="">
+        <h2 id="login-title" class="account-title" tabindex="-1" data-i18n="account.login.title"></h2>
+        <p class="account-text" data-i18n="account.login.text"></p>
+        <button id="login-google" class="button tonal wide" type="button"><svg class="icon small" aria-hidden="true"><use href="icons.svg#google"/></svg><span data-i18n="account.google"></span></button>
+        <p id="login-error" class="input-help danger" role="alert" hidden></p>
+      </div>
+      <div id="waiting" class="account-page" hidden>
+        <svg class="icon account-wait" aria-hidden="true"><use href="icons.svg#refresh"/></svg>
+        <h2 id="waiting-title" class="account-title" tabindex="-1" data-i18n="account.waiting.title"></h2>
+        <p class="account-text" data-i18n="account.waiting.text"></p>
+        <button id="waiting-check" class="button tonal wide" type="button" data-i18n="account.waiting.check"></button>
+        <button id="waiting-logout" class="button accent" type="button" data-i18n="account.logout"></button>
+      </div>
+    </section>
+
     <input id="import-file" type="file" accept="application/json,.json" hidden>
 
     <script type="importmap">
@@ -246,7 +270,8 @@
           "#ui/dust": "./src/ui/dust.js",
           "#ui/onboarding": "./src/ui/onboarding.js",
           "#ui/whatsnew": "./src/ui/whatsnew.js",
-          "#ui/update": "./src/ui/update.js"
+          "#ui/update": "./src/ui/update.js",
+          "#ui/account": "./src/ui/account.js"
         }
       }
     </script>

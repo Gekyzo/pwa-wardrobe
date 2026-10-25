@@ -4,6 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+- Google sign-in and the approval gate of the PocketBase server, as in `pwa-shopping-list` (ACC-1 to ACC-9, `docs/spec/08-account.md`): `src/pocketbase.js`, `src/session.js`, `src/ui/account.js`. The app opens only for a Google account whose `app_access` row of `wardrobe` is `approved`. Nothing syncs. Keys `wardrobe.session` and `wardrobe.oauth` (`sessionStorage`).
 - A garment has an optional size, fit and up to 12 measures (`src/measures.js`, the rules of the app Fittings): GAR-8 to GAR-10, WAR-7, WAR-8. The doc goes to version 3; versions 1 and 2 migrate with no size, fit or measures. The shell cache is `wardrobe-shell-v6`.
 
 ## 0.1.9 - 2026-10-24
