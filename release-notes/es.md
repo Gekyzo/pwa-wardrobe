@@ -4,7 +4,9 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- Nueva sección Medidas: guarda la talla y las medidas que te quedan bien, por categoría y marca. Era la aplicación Fittings.
+- Las fichas de la aplicación Fittings de este teléfono se traen al primer inicio. Importar también acepta una copia de Fittings.
+- Una sola copia de seguridad guarda ahora tus prendas y tus fichas.
 
 ## 0.1.9 - 2026-10-24
 

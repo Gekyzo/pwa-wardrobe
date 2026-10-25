@@ -1,6 +1,6 @@
 export default {
   'app.title': 'Armario y conjuntos - Attire',
-  'app.description': 'Carga mi ropa y genera conjuntos',
+  'app.description': 'Carga mi ropa, genera conjuntos y guarda mis tallas',
   'nav.label': 'Secciones',
   'nav.wardrobe': 'Armario',
   'nav.combinations': 'Paletas',
@@ -61,7 +61,7 @@ export default {
   'onboarding.start': 'Empezar',
   'onboarding.page': 'Página {page} de {total}',
   'onboarding.welcome.title': 'Tu armario, a mano',
-  'onboarding.welcome.text': 'Pulsa `+` para añadir una prenda con su color.\nDesliza una fila `←` para borrarla.',
+  'onboarding.welcome.text': 'Pulsa `+` para añadir una prenda con su color, o en `Medidas` la talla que te queda bien.\nDesliza una fila `←` para borrarla.',
   'onboarding.offline.title': 'Funciona sin conexión',
   'onboarding.offline.text': 'Instala la aplicación desde `Ajustes`. Funciona sin red, y te avisa cuando hay una versión nueva.',
   'settings.backup': 'Copia de seguridad',

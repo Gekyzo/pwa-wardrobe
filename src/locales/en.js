@@ -1,6 +1,6 @@
 export default {
   'app.title': 'Wardrobe and outfits - Attire',
-  'app.description': 'Load my clothes and generate outfits',
+  'app.description': 'Load my clothes, generate outfits and keep my sizes',
   'nav.label': 'Sections',
   'nav.wardrobe': 'Wardrobe',
   'nav.combinations': 'Palettes',
@@ -61,7 +61,7 @@ export default {
   'onboarding.start': 'Start',
   'onboarding.page': 'Page {page} of {total}',
   'onboarding.welcome.title': 'Your wardrobe, at hand',
-  'onboarding.welcome.text': 'Tap `+` to add a garment with its colour.\nSlide a row `←` to delete it.',
+  'onboarding.welcome.text': 'Tap `+` to add a garment with its colour, or in `Fittings` the size that fits you.\nSlide a row `←` to delete it.',
   'onboarding.offline.title': 'Works offline',
   'onboarding.offline.text': 'Install the app from `Settings`. It works with no network, and tells you when a new version is ready.',
   'settings.backup': 'Backup',

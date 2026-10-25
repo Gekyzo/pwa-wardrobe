@@ -4,7 +4,9 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- New Fittings section: keep the size and the measures that fit you, for each category and brand. It was the Fittings app.
+- The fittings of the Fittings app on this phone come over at the first start. Import also takes a backup of Fittings.
+- One backup now holds your garments and your fittings.
 
 ## 0.1.9 - 2026-10-24
 
