@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- Puedes usar la app sin cuenta: toca **Usar sin conexión** en Iniciar sesión. Tu ropa se queda en este dispositivo. Inicia sesión con Google más tarde desde Ajustes.
 
 ## 0.1.10 - 2026-10-25
 

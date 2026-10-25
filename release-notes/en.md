@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- You can use the app without an account: tap **Use offline** on Sign in. Your clothes stay on this device. Sign in with Google later from Settings.
 
 ## 0.1.10 - 2026-10-25
 

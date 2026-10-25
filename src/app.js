@@ -7,7 +7,7 @@ import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
 import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onboarding';
 import { bind as bindWhatsNew, startWhatsNew, isWhatsNewOpen, closeWhatsNew } from '#ui/whatsnew';
-import { bind as bindAccount, renderAccount, startAccount, goOnline, isAccountOpen } from '#ui/account';
+import { bind as bindAccount, renderAccount, startAccount, goOnline, isAccountOpen, closeAccount } from '#ui/account';
 import { readOAuthReturn } from '#session';
 
 // The return of the Google sign-in (ACC-4): `code`, `state` and `error` leave the URL at once.
@@ -46,8 +46,11 @@ document.addEventListener(
 );
 
 document.addEventListener('keydown', (event) => {
-  // The account screens cover the app, the walkthrough too, and do not close (ACC-2).
-  if (isAccountOpen()) return;
+  // The account screens cover the app, the walkthrough too. Only Sign in over an open app closes (ACC-2).
+  if (isAccountOpen()) {
+    if (event.key === 'Escape') closeAccount();
+    return;
+  }
   if (ui.onboarding !== null) {
     if (event.key === 'Escape') closeOnboarding();
     else if (event.key === 'ArrowRight') turnOnboarding(1);
