@@ -12,6 +12,7 @@ const SHELL = [
   './src/app.js',
   './src/config.js',
   './src/pocketbase.js',
+  './src/session.js',
   './src/ui/context.js',
   './src/ui/controls.js',
   './src/ui/install.js',

@@ -6,6 +6,7 @@
 |---|---|---|
 | `src/config.js` | The slug of the app, which `npm run init` rewrites, and the URL of the account server | nothing |
 | `src/pocketbase.js` | The client of the account server: Google sign-in, refresh, the access row (ACC-3) | `config` |
+| `src/session.js` | The session on the device, the start route and the return from Google (ACC-1, ACC-4, ACC-5) | `storage` |
 | `src/version.js` | Version rules and the update offer rule | nothing |
 | `src/whatsnew.js` | The parse of the release notes and the versions that a user has not seen | `version` |
 | `src/i18n.js` | The language choice and the translator | `locales/*` |
@@ -69,7 +70,8 @@
 
 The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are `wardrobe.lang`,
 `wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules`, `wardrobe.onboarded` and
-`wardrobe.seen-version` (VER-21).
+`wardrobe.seen-version` (VER-21). The account keeps `wardrobe.session` (ACC-5), and
+`wardrobe.oauth` in `sessionStorage` for the time of a Google redirect (ACC-4).
 
 ## Change guide
 
@@ -97,6 +99,7 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |
 | `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6) |
+| `tests/session.test.js` | The session, the start route, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5) |
 | `tests/install.test.js` | The install offer states (INS-1) |
 | `tests/swipe.test.js` | The settle rule of a row slide |
 | `tests/sw.test.js` | The manifest text that the worker puts in place (SW-13), the images (SW-14) and the release notes in `SHELL` (VER-21) |
