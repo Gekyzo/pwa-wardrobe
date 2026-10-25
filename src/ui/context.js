@@ -86,8 +86,9 @@ export const ui = {
   sheetOpen: false,
   // The garment that the sheet edits, or null for a new garment.
   editing: null,
-  // The colour that the sheet holds, or null before a pick.
+  // The colour that the sheet holds, or null before a pick, and the fit that it shows as chosen.
   draftColor: null,
+  draftFit: '',
   // The images that the sheet offers, and those it keeps, the main one first (WAR-6).
   candidates: [],
   draftImages: [],

@@ -108,21 +108,26 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 
 - **WAR-1** The Wardrobe section lists the garments in the order of the slots, then by name. A
   row shows the main image of the garment (GAR-7), if it has one, the colour as a dot, the name,
-  and the slot, the season and the brand, if it has one. With no garment it shows
+  and the slot, the season, and the brand and `wardrobe.sizeShort` with the size, each one if it
+  has one. With no garment it shows
   `wardrobe.empty` and **Add garment**, which opens the sheet of WAR-3.
 - **WAR-2** A row slides left to show **Delete** (GAR-4); the toast `toast.garmentDeleted` offers
   **Undo** for 5 seconds.
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
   **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
   sheet holds the name, the brand, the slot, the season,
-  the colour, the link and the images. The brand field suggests the brands of the wardrobe
+  the colour, the link, the images and, under `wardrobe.sizing`, the size, a chip for each fit
+  (GAR-8), the measure lines, each with a name, a value, a unit and a button that removes it, and
+  **Add measure**. The measure name suggests the names in use, and the unit the units in use, then
+  `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests the brands of the wardrobe
   (GAR-6). The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.
 - **WAR-4** A tap on a row opens its detail (LAY-3): the main image large and, with two or more
   images, all the images in a row below it, where a tap on one shows it large; the colour, the
-  name, the colour name, slot, season and brand, **Edit**, **Open link** when the garment has a
+  name, the colour name, slot, season, brand and size, then the fit and each measure, each one
+  only when it is set, **Edit**, **Open link** when the garment has a
   link, which opens it in a new tab, and **Delete**, and the outfits that contain it (OUT-8)
   under the season filter, or `wardrobe.noOutfits`.
 - **WAR-5** An outfit card shows `outfit.number`, the strip of its combination, `outfit.exact`
@@ -137,6 +142,11 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   unless it is kept. Out of the sheet, a main image that does not load is not shown. The field **Image URL** with **Add** keeps one more image by its URL, for a
   page that the proxy cannot read; a value that is not an `http` or `https` URL is
   `error.imagesInvalid`. **Save** stores the kept images in their order.
+- **WAR-7** A garment with no measure opens the sheet with one empty measure line. A line left
+  with no value is not saved (GAR-8).
+- **WAR-8** While a new garment has no measure line with a name or a value, the lines are the
+  measures of its slot (GAR-10), with their units and no value; a change of the slot changes
+  them.
 
 ## Combinations section
 

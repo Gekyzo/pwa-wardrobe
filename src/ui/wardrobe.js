@@ -3,8 +3,9 @@ import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor } from '#palette';
 import { outfitsWith } from '#outfits';
+import { FITS, measuresOf } from '#measures';
 import { settle } from '#swipe';
-import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, textOf, apply, render, guardClick, showToast } from '#ui/context';
+import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, lang, textOf, apply, render, guardClick, showToast } from '#ui/context';
 import { icon, iconButton } from '#ui/controls';
 import { swatch, thumb, remoteImage, renderOutfits } from '#ui/outfit';
 
@@ -92,6 +93,65 @@ const addImageUrl = () => {
   offer([url]);
 };
 
+// The units that the sheet offers before the wardrobe has its own.
+const UNITS = ['cm', 'mm', 'in', 'EU', 'US', 'UK'];
+
+const number = (value, grouping = true) =>
+  new Intl.NumberFormat(lang, { maximumFractionDigits: 3, useGrouping: grouping }).format(value);
+
+const fitPill = (fit) => el('span', { className: fit === 'good' ? 'pill' : 'pill ghost', textContent: t(`fit.${fit}`) });
+
+const fillList = (id, values) => $(id).replaceChildren(...values.map((value) => el('option', { value })));
+
+// One line of the measures of the sheet: name, value and unit, and a button that removes it.
+const measureLine = ({ name = '', value = '', unit = '' } = {}) => {
+  const input = (props, list, label) => {
+    const node = el('input', { type: 'text', placeholder: t(label), ...props });
+    if (list) node.setAttribute('list', list);
+    node.setAttribute('aria-label', t(label));
+    return node;
+  };
+  const line = el('div', { className: 'measure-line' }, [
+    input({ className: 'input measure-line-name', value: name, maxLength: 30 }, 'garment-measure-names', 'wardrobe.measureName'),
+    input({ className: 'input measure-line-value', value: value === '' ? '' : number(value, false), inputMode: 'decimal' }, null, 'wardrobe.measureValue'),
+    input({ className: 'input measure-line-unit', value: unit, maxLength: 10 }, 'garment-units', 'wardrobe.unit'),
+  ]);
+  const remove = el('button', { className: 'button icon', type: 'button', onclick: () => line.remove() }, [icon('trash')]);
+  remove.setAttribute('aria-label', t('wardrobe.removeMeasure'));
+  line.append(remove);
+  return line;
+};
+
+const readMeasures = () =>
+  [...$('garment-measures').querySelectorAll('.measure-line')].map((line) => ({
+    name: line.querySelector('.measure-line-name').value,
+    value: line.querySelector('.measure-line-value').value,
+    unit: line.querySelector('.measure-line-unit').value,
+  }));
+
+const showFit = () => {
+  $('garment-fit').replaceChildren(
+    ...FITS.map((fit) => {
+      const chip = el('button', { className: 'chip', type: 'button', textContent: t(`fit.${fit || 'unknown'}`) });
+      chip.setAttribute('aria-pressed', String(ui.draftFit === fit));
+      chip.addEventListener('click', () => {
+        ui.draftFit = fit;
+        showFit();
+      });
+      return chip;
+    }),
+  );
+};
+
+// A new garment of a slot in use, with no measure written yet, gets the measure lines of that
+// slot, empty (WAR-8).
+const offerMeasures = () => {
+  if (ui.editing) return;
+  if (readMeasures().some((line) => line.name.trim() || line.value.trim())) return;
+  const known = measuresOf(state.garments, $('garment-slot').value);
+  $('garment-measures').replaceChildren(...(known.length ? known : [{}]).map(measureLine));
+};
+
 const openSheet = (id = null) => {
   const garment = id ? findGarment(state, id) : null;
   ui.sheetOpen = true;
@@ -111,6 +171,14 @@ const openSheet = (id = null) => {
   options($('garment-slot'), SLOTS, 'slot', garment?.slot ?? 'top');
   options($('garment-season'), SEASONS, 'season', garment?.season ?? 'all');
   showColor();
+  $('garment-size').value = garment?.size ?? '';
+  ui.draftFit = garment?.fit ?? '';
+  showFit();
+  $('garment-measures').replaceChildren(...(garment?.measures.length ? garment.measures : [{}]).map(measureLine));
+  const measures = state.garments.flatMap((each) => each.measures);
+  fillList('garment-measure-names', [...new Set(measures.map((measure) => measure.name))].sort());
+  fillList('garment-units', [...new Set([...measures.map((measure) => measure.unit).filter(Boolean), ...UNITS])]);
+  offerMeasures();
   render();
   $('garment-name').focus();
 };
@@ -173,7 +241,21 @@ const bindSwipe = (row, width, id) => {
   row.addEventListener('pointercancel', finish);
 };
 
-const metaOf = (garment) => [t(`slot.${garment.slot}`), t(`season.${garment.season}`), garment.brand].filter(Boolean).join(' · ');
+const metaOf = (garment) =>
+  [t(`slot.${garment.slot}`), t(`season.${garment.season}`), garment.brand, garment.size && t('wardrobe.sizeShort', { size: garment.size })]
+    .filter(Boolean)
+    .join(' · ');
+
+const fact = (term, value) => [el('dt', { textContent: term }), el('dd', {}, [value])];
+
+// The fit and each measure of a garment, when it has one (WAR-4); the size is in the meta.
+const facts = (garment) => {
+  const list = [
+    ...(garment.fit ? fact(t('wardrobe.fit'), fitPill(garment.fit)) : []),
+    ...garment.measures.flatMap(({ name, value, unit }) => fact(name, `${number(value)}${unit ? ` ${unit}` : ''}`)),
+  ];
+  return list.length ? [el('dl', { className: 'garment-facts' }, list)] : [];
+};
 
 // A row slides left to show Delete (WAR-2).
 const row = (garment) => {
@@ -225,6 +307,7 @@ const info = (garment) => [
   swatch(garment.color, 'large'),
   el('h2', { className: 'detail-head-title', textContent: garment.name }),
   el('p', { className: 'detail-head-meta', textContent: `${colorOf(garment.color).name} · ${metaOf(garment)}` }),
+  ...facts(garment),
 ];
 
 export const renderWardrobe = () => {
@@ -280,6 +363,12 @@ export const bind = () => {
     showColor({ fromInput: true });
   });
   $('garment-link').addEventListener('input', showLoad);
+  $('garment-slot').addEventListener('change', offerMeasures);
+  $('garment-measure-add').addEventListener('click', () => {
+    const line = measureLine();
+    $('garment-measures').append(line);
+    line.querySelector('input').focus();
+  });
   $('garment-load').addEventListener('click', loadImages);
   $('garment-image-add').addEventListener('click', addImageUrl);
   $('garment-image-url').addEventListener('keydown', (event) => {
@@ -297,6 +386,9 @@ export const bind = () => {
       brand: $('garment-brand').value,
       link: $('garment-link').value,
       images: ui.draftImages,
+      size: $('garment-size').value,
+      fit: ui.draftFit,
+      measures: readMeasures(),
     };
     const result = ui.editing ? editGarment(state, ui.editing, fields) : addGarment(state, fields);
     if (apply(result)) closeGarmentSheet();

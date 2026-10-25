@@ -165,6 +165,13 @@
             <input id="garment-image-url" class="input" type="url" inputmode="url" data-i18n-attr="placeholder:wardrobe.imageUrl,aria-label:wardrobe.imageUrl">
             <button id="garment-image-add" class="button outline" type="button" data-i18n="action.add"></button>
           </div>
+          <h3 class="sheet-title part" data-i18n="wardrobe.sizing"></h3>
+          <label class="field"><input id="garment-size" class="input field-input" type="text" maxlength="20" data-i18n-attr="placeholder:wardrobe.size"><span class="field-label" data-i18n="wardrobe.size"></span></label>
+          <div id="garment-fit" class="cluster" role="group" data-i18n-attr="aria-label:wardrobe.fit"></div>
+          <div id="garment-measures" class="measure-lines"></div>
+          <button id="garment-measure-add" class="button outline wide" type="button" data-i18n="wardrobe.addMeasure"></button>
+          <datalist id="garment-measure-names"></datalist>
+          <datalist id="garment-units"></datalist>
         </div>
         <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="action.save"></button></footer>
       </form>
