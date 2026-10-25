@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.10 - 2026-10-25
+
 - You sign in with your Google account. The administrator approves each new account; your garments stay on the device.
 - Each garment keeps its size, how it fits and its measures, such as the waist or the leg. A new garment gets the measures of the garments of its kind.
 
