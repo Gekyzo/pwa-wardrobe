@@ -11,6 +11,7 @@ const SHELL = [
   './manifest.webmanifest',
   './src/app.js',
   './src/config.js',
+  './src/pocketbase.js',
   './src/ui/context.js',
   './src/ui/controls.js',
   './src/ui/install.js',

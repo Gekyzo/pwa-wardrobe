@@ -4,7 +4,8 @@
 
 | Module | Responsibility | May import |
 |---|---|---|
-| `src/config.js` | The slug of the app, which `npm run init` rewrites | nothing |
+| `src/config.js` | The slug of the app, which `npm run init` rewrites, and the URL of the account server | nothing |
+| `src/pocketbase.js` | The client of the account server: Google sign-in, refresh, the access row (ACC-3) | `config` |
 | `src/version.js` | Version rules and the update offer rule | nothing |
 | `src/whatsnew.js` | The parse of the release notes and the versions that a user has not seen | `version` |
 | `src/i18n.js` | The language choice and the translator | `locales/*` |
@@ -95,6 +96,7 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |
 | `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
+| `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6) |
 | `tests/install.test.js` | The install offer states (INS-1) |
 | `tests/swipe.test.js` | The settle rule of a row slide |
 | `tests/sw.test.js` | The manifest text that the worker puts in place (SW-13), the images (SW-14) and the release notes in `SHELL` (VER-21) |
