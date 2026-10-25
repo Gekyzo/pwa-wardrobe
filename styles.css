@@ -453,17 +453,33 @@
   .measure-lines {
     display: grid;
     gap: var(--space-2);
+    margin: var(--space-3) 0;
   }
 
+  /* The value and the unit are short: a narrow padding keeps their placeholders whole at 360px. */
   .measure-line {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 4.5rem 5rem auto;
+    grid-template-columns: minmax(0, 1fr) 4rem 5.5rem var(--tap);
     gap: var(--space-2);
     align-items: center;
   }
 
   .measure-line .input {
     min-width: 0;
+    padding-inline: var(--space-2);
+  }
+
+  /* @component garment-form
+     @scope garment-sheet
+     @summary The body of the garment sheet. A wide button and an input row carry no margin of their own, so the form gives them the space between two controls, and the last control keeps a space above the foot.
+     @example <div class="garment-form" style="width: 100%"><label class="field"><input class="input field-input" type="url" placeholder="Link"><span class="field-label">Link</span></label><button class="button outline wide" type="button">Load images</button><div class="input-row"><input class="input" type="url" placeholder="Image URL"><button class="button outline" type="button">Add</button></div></div> */
+  .garment-form {
+    padding-bottom: var(--space-4);
+  }
+
+  .garment-form > .button.wide,
+  .garment-form > .input-row {
+    margin-top: var(--space-3);
   }
 
   /* @component garment-facts

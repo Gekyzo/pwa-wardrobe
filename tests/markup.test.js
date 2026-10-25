@@ -45,7 +45,7 @@ test('the garment sheet has a veil, a dialog, a name field with the maximum leng
 
 test('the garment sheet has a head with its title and Close, a body, and Save in its foot', () => {
   const [layer = ''] = body.match(/<div id="garment-sheet" class="sheet-layer"[\s\S]*?<\/form>\s*<\/div>/) ?? [];
-  assert.match(layer, /<header class="sheet-head"><h2 id="garment-sheet-title" class="sheet-title main"><\/h2><button id="garment-close" class="button tonal" type="button" data-i18n="action.close"><\/button><\/header>\s*<div class="sheet-body">/);
+  assert.match(layer, /<header class="sheet-head"><h2 id="garment-sheet-title" class="sheet-title main"><\/h2><button id="garment-close" class="button tonal" type="button" data-i18n="action.close"><\/button><\/header>\s*<div class="sheet-body garment-form">/);
   assert.match(layer, /<footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="action.save"><\/button><\/footer>\s*<\/form>/);
 });
 
