@@ -12,8 +12,8 @@ sections use the `pane` layout (LAY-3). From 840px, with no entry open, the deta
 
 ## Navigation
 
-- **NAV-1** The sections are `wardrobe`, `combinations`, `fittings` and `settings`, in the
-  order of `SECTIONS`. The navigation shows one item for each section that is on (MOD-1). The current one
+- **NAV-1** The sections are `wardrobe`, `combinations` and `settings`, in the order of
+  `SECTIONS`. The navigation shows one item for each section that is on (MOD-1). The current one
   has `aria-current="page"`, and its title is the title of the header.
 - **NAV-2** A horizontal slide of at least 60 px that starts in the header or the content, out of
   a row and of a field, goes to the next section (slide left) or the previous one (slide right).
@@ -22,7 +22,7 @@ sections use the `pane` layout (LAY-3). From 840px, with no entry open, the deta
 ## Modules
 
 - **MOD-1** `MODULES` lists the parts that Settings turns off: `combinations`, which shows the
-  Combinations section, and `fittings`, which shows the Fittings section. With a module off, its sections leave the navigation, and a view of one
+  Combinations section. With a module off, its sections leave the navigation, and a view of one
   of them goes to the first section that is on.
 - **MOD-2** The modules that are off are a preference of the device under `wardrobe.modules`,
   not part of the doc. No module off removes the key.

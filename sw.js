@@ -1,4 +1,4 @@
-const CACHE = 'wardrobe-shell-v6';
+const CACHE = 'wardrobe-shell-v5';
 
 const SHELL = [
   './',
@@ -18,7 +18,6 @@ const SHELL = [
   './src/ui/nav.js',
   './src/ui/outfit.js',
   './src/ui/combinations.js',
-  './src/ui/fittings.js',
   './src/ui/wardrobe.js',
   './src/ui/settings.js',
   './src/ui/update.js',
@@ -31,7 +30,6 @@ const SHELL = [
   './src/wada.js',
   './src/palette.js',
   './src/garments.js',
-  './src/fittings.js',
   './src/links.js',
   './src/outfits.js',
   './src/install.js',

@@ -14,14 +14,13 @@
 | `src/install.js` | The install offer state machine | nothing |
 | `src/wada.js` | The 159 colours of Sanzo Wada's palette and their combinations (data) | nothing |
 | `src/palette.js` | Lab, ΔE, the nearest colour, the combinations and their index | `wada` |
-| `src/garments.js` | The doc of the app, the garment operations and the validation of the doc | `config`, `wada`, `fittings` |
-| `src/fittings.js` | The fittings of the doc, their operations, their validation and the move from the Fittings app | nothing |
+| `src/garments.js` | The doc of the garments, its operations and its validation | `config`, `wada` |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
-| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit`, `apply` and the move of the fittings | `garments`, `fittings`, `storage`, `i18n`, `onboarding` |
+| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply` | `garments`, `storage`, `i18n`, `onboarding` |
 | `src/ui/controls.js` | The icon builder and the side-action button | `ui/context` |
 | `src/ui/motion.js` | Row collapse, expand and slide animations | `ui/context` |
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
@@ -30,8 +29,7 @@
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
 | `src/ui/outfit.js` | The swatch, the image of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
 | `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `links`, `palette`, `outfits`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
-| `src/ui/fittings.js` | The Fittings section, its filters, its rows, its detail and its sheet | `fittings`, `ds/sheet`, `swipe`, `ui/context`, `ui/controls` |
-| `src/ui/settings.js` | Settings, and the text of the page in its language | `garments`, `fittings`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
+| `src/ui/settings.js` | Settings, and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
@@ -55,8 +53,7 @@
 - **ENG-7** A new id comes from `crypto.randomUUID()`. An operation that creates a record takes
   the id as an optional parameter, for the tests.
 - **ENG-8** Every storage key is `<slug>.<name>`, from `keyOf` of `src/storage.js` or `APP_SLUG`
-  of `src/config.js`, so two apps of one origin do not share data. The one exception is the read
-  of the doc of the Fittings app (FIT-15).
+  of `src/config.js`, so two apps of one origin do not share data.
 - **ENG-16** The screen code is `src/app.js` and the views of `src/ui/`. A view never imports
   `src/app.js`, a pure module never imports a view, and the imports among the views have no
   cycle. `src/ui/context.js` owns the values that the views share; another module reads them
@@ -69,8 +66,8 @@
 ## Storage keys
 
 The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are `wardrobe.lang`,
-`wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules`, `wardrobe.onboarded`,
-`wardrobe.seen-version` (VER-21) and `wardrobe.fittings-moved` (FIT-17).
+`wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules`, `wardrobe.onboarded` and
+`wardrobe.seen-version` (VER-21).
 
 ## Change guide
 
@@ -93,10 +90,9 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 |---|---|
 | `tests/palette.test.js` | The palette, the colour distance and the combinations |
 | `tests/garments.test.js` | The garment operations, their order and the validation of the doc |
-| `tests/fittings.test.js` | The fitting operations, their order, groups and search, and the move from the Fittings app |
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |
-| `tests/storage.test.js` | Load, save, the corrupt copy, export, import, the device preferences and the flag of the move of the fittings |
+| `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
 | `tests/install.test.js` | The install offer states (INS-1) |
 | `tests/swipe.test.js` | The settle rule of a row slide |
 | `tests/sw.test.js` | The manifest text that the worker puts in place (SW-13), the images (SW-14) and the release notes in `SHELL` (VER-21) |

@@ -4,10 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-- Fittings, the app `pwa-fittings`, is now a section of Attire: `src/fittings.js`, `src/ui/fittings.js`, the rules in `docs/spec/08-fittings.md`. It is a module that Settings turns off.
-- The doc goes to version 3, `{ version, garments, fittings }`; versions 1 and 2 migrate with no fittings. The shell cache is `wardrobe-shell-v6`.
-- At the first start the app takes the fittings of `pwa-fittings.fittings` (same origin), once, under the flag `wardrobe.fittings-moved`. Import also takes a Fittings backup, which replaces only the fittings.
-- `ui.sheetOpen` is `ui.sheet` (`garment`, `fitting` or null); `app.js` shows and names the one + button for the list in view.
+No change.
 
 ## 0.1.9 - 2026-10-24
 

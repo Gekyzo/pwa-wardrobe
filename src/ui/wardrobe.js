@@ -73,7 +73,7 @@ const loadImages = async () => {
   showLoad();
   const result = await loadPageImages(link);
   ui.loadingImages = false;
-  if (ui.sheet !== 'garment') return;
+  if (!ui.sheetOpen) return;
   showLoad();
   if (result.error) showToast(textOf(result.error));
   else offer(result.images);
@@ -94,7 +94,7 @@ const addImageUrl = () => {
 
 const openSheet = (id = null) => {
   const garment = id ? findGarment(state, id) : null;
-  ui.sheet = 'garment';
+  ui.sheetOpen = true;
   ui.editing = id;
   ui.draftColor = garment?.color ?? null;
   $('garment-sheet-title').textContent = t(id ? 'wardrobe.editTitle' : 'wardrobe.new');
@@ -116,7 +116,7 @@ const openSheet = (id = null) => {
 };
 
 export const closeGarmentSheet = () => {
-  ui.sheet = null;
+  ui.sheetOpen = false;
   ui.editing = null;
   render();
 };
@@ -230,6 +230,7 @@ const info = (garment) => [
 export const renderWardrobe = () => {
   const visible = ui.view === 'wardrobe';
   $('wardrobe').hidden = !visible;
+  $('fab').hidden = !visible || ui.sheetOpen;
   if (ui.openId && !findGarment(state, ui.openId)) ui.openId = null;
   $('garment-list').replaceChildren(...sortGarments(state.garments).map(row));
   ui.settleFrom = null;
@@ -249,13 +250,11 @@ export const renderWardrobe = () => {
     const outfits = outfitsWith(garment, state.garments, { season: ui.season });
     renderOutfits($('garment-outfits'), t('wardrobe.outfits'), outfits, t('wardrobe.noOutfits'));
   }
-  $('garment-sheet').hidden = ui.sheet !== 'garment';
+  $('garment-sheet').hidden = !ui.sheetOpen;
 };
 
 export const bind = () => {
-  $('fab').addEventListener('click', () => {
-    if (ui.view === 'wardrobe') openSheet();
-  });
+  $('fab').addEventListener('click', () => openSheet());
   $('wardrobe-add').addEventListener('click', () => openSheet());
   $('garment-veil').addEventListener('click', closeGarmentSheet);
   $('garment-close').addEventListener('click', closeGarmentSheet);
@@ -303,7 +302,6 @@ export const bind = () => {
     if (apply(result)) closeGarmentSheet();
   });
   // A tap out of the open row closes it, without a render, so that the tap still does its work.
-  // It serves the rows of each list: Wardrobe and Fittings.
   document.addEventListener(
     'pointerdown',
     (event) => {

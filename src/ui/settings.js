@@ -1,5 +1,4 @@
 import { normalizeGarments } from '#garments';
-import { normalizeFittings } from '#fittings';
 import { exportJson, exportFilename, importJson } from '#storage';
 import { LANGUAGES, LANGUAGE_NAMES } from '#i18n';
 import { switchModule } from '#modules';
@@ -102,23 +101,13 @@ export const bind = () => {
     const [file] = event.target.files;
     event.target.value = '';
     if (!file) return;
-    const text = await file.text();
-    const result = importJson(text, normalizeGarments);
-    if (!result.error) {
-      const { garments, fittings } = result.state;
-      const items = `${t('garments.count', { count: garments.length })}, ${t('fittings.count', { count: fittings.length })}`;
-      if (!window.confirm(t('import.confirm', { items }))) return;
-      apply(result, { undoText: t('toast.imported') });
-      return;
-    }
-    // A backup of the Fittings app replaces only the fittings (FIT-16).
-    const old = importJson(text, normalizeFittings);
-    if (old.error) {
+    const result = importJson(await file.text(), normalizeGarments);
+    if (result.error) {
       showToast(textOf(result.error));
       return;
     }
-    const items = t('fittings.count', { count: old.state.fittings.length });
-    if (!window.confirm(t('import.fittingsConfirm', { items }))) return;
-    apply({ state: { ...state, fittings: old.state.fittings } }, { undoText: t('toast.imported') });
+    const items = t('garments.count', { count: result.state.garments.length });
+    if (!window.confirm(t('import.confirm', { items }))) return;
+    apply(result, { undoText: t('toast.imported') });
   });
 };

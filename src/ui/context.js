@@ -1,5 +1,4 @@
 import { GARMENTS_KEY, emptyGarments, normalizeGarments } from '#garments';
-import { LEGACY_FITTINGS_KEY, adoptFittings } from '#fittings';
 import {
   loadDoc,
   saveDoc,
@@ -13,9 +12,6 @@ import {
   saveModules,
   loadOnboarded,
   hasStoredDoc,
-  readJson,
-  loadFittingsMoved,
-  saveFittingsMoved,
 } from '#storage';
 import { LANGUAGES, resolveLanguage, translator } from '#i18n';
 import { shouldShow } from '#onboarding';
@@ -79,17 +75,6 @@ const firstStart = storage ? shouldShow({ seen: loadOnboarded(storage), hasState
 const DOC = { key: GARMENTS_KEY, normalize: normalizeGarments, empty: emptyGarments };
 export let state = storage ? loadDoc(storage, DOC) : emptyGarments();
 
-// The fittings of the Fittings app come over once (FIT-17): the count of those that came, for a
-// toast. A failed save tries again at the next start.
-export const movedFittings = (() => {
-  if (!storage || loadFittingsMoved(storage)) return 0;
-  const { state: next, moved } = adoptFittings(state, readJson(storage, LEGACY_FITTINGS_KEY));
-  if (moved && !saveDoc(storage, GARMENTS_KEY, next)) return 0;
-  state = next;
-  saveFittingsMoved(storage);
-  return moved;
-})();
-
 export const ui = {
   // The section in view.
   view: 'wardrobe',
@@ -98,16 +83,8 @@ export const ui = {
   detailImage: null,
   // The number of the combination whose detail is open, or null.
   combination: null,
-  // The fitting whose detail is open, or null, and the search text and the chosen category (null
-  // for all) of the Fittings list.
-  fittingId: null,
-  query: '',
-  category: null,
-  // The fit that the fitting sheet shows as chosen.
-  draftFit: '',
-  // The sheet that is open: `garment`, `fitting`, or null.
-  sheet: null,
-  // The garment or the fitting that the sheet edits, or null for a new one.
+  sheetOpen: false,
+  // The garment that the sheet edits, or null for a new garment.
   editing: null,
   // The colour that the sheet holds, or null before a pick.
   draftColor: null,

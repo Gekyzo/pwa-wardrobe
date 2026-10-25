@@ -27,10 +27,6 @@ import {
   saveSeen,
   loadOnboarded,
   saveOnboarded,
-  readJson,
-  FITTINGS_MOVED_KEY,
-  loadFittingsMoved,
-  saveFittingsMoved,
 } from '#storage';
 
 const fakeStorage = (initial = {}) => {
@@ -268,28 +264,4 @@ test('saveSeen stores the version, and is false for a storage that throws', () =
   assert.equal(saveSeen(storage, '1.2.3'), true);
   assert.equal(loadSeen(storage), '1.2.3');
   assert.equal(saveSeen(brokenStorage(), '1.2.3'), false);
-});
-
-test('readJson gives the parsed value of a key, and null for no value, bad JSON or a storage that throws (FIT-17)', () => {
-  assert.deepEqual(readJson(fakeStorage({ k: '{"a":1}' }), 'k'), { a: 1 });
-  assert.equal(readJson(fakeStorage(), 'k'), null);
-  assert.equal(readJson(fakeStorage({ k: '{' }), 'k'), null);
-  assert.equal(readJson(brokenStorage(), 'k'), null);
-});
-
-test('the fittings-moved flag has the slug, and is true only when it is stored (FIT-17)', () => {
-  assert.equal(FITTINGS_MOVED_KEY, `${APP_SLUG}.fittings-moved`);
-  assert.equal(loadFittingsMoved(fakeStorage({ [FITTINGS_MOVED_KEY]: '1' })), true);
-  assert.equal(loadFittingsMoved(fakeStorage()), false);
-});
-
-test('loadFittingsMoved is true for a storage that throws, so nothing moves', () => {
-  assert.equal(loadFittingsMoved(brokenStorage()), true);
-});
-
-test('saveFittingsMoved stores the flag, and is false for a storage that throws', () => {
-  const storage = fakeStorage();
-  assert.equal(saveFittingsMoved(storage), true);
-  assert.equal(loadFittingsMoved(storage), true);
-  assert.equal(saveFittingsMoved(brokenStorage()), false);
 });

@@ -67,31 +67,6 @@
         </article>
       </section>
 
-      <section id="fittings" class="pane" hidden>
-        <div class="pane-list">
-          <div id="fittings-filter" class="fittings-filter">
-            <input id="fittings-search" class="input raised" type="search" autocomplete="off" data-i18n-attr="placeholder:fittings.search,aria-label:fittings.search">
-            <div id="fittings-categories" class="cluster scroll"></div>
-          </div>
-          <ul id="fitting-list" class="item-list"></ul>
-          <p id="fittings-none" class="empty-state inline" data-i18n="fittings.none" hidden></p>
-          <div id="fittings-empty" class="empty-state" hidden>
-            <p data-i18n="fittings.empty"></p>
-            <button id="fittings-add" class="button primary" type="button" data-i18n="fittings.add"></button>
-          </div>
-        </div>
-        <article id="fitting-detail" class="pane-detail">
-          <button id="fitting-back" class="button quiet pane-back" type="button" data-i18n="fittings.back"></button>
-          <p id="fitting-detail-empty" class="empty-state inline" data-i18n="fittings.pick"></p>
-          <div id="fitting-info" class="fitting-info"></div>
-          <div id="fitting-actions" class="cluster">
-            <button id="fitting-edit" class="button outline" type="button" data-i18n="fittings.edit"></button>
-            <button id="fitting-duplicate" class="button outline" type="button" data-i18n="fittings.duplicate"></button>
-            <button id="fitting-delete" class="button danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="fittings.delete"></span></button>
-          </div>
-        </article>
-      </section>
-
       <section id="settings" class="settings" hidden>
         <h2 class="list-group-head" data-i18n="settings.backup"></h2>
         <div class="list-group">
@@ -122,7 +97,6 @@
         <h2 class="list-group-head" data-i18n="settings.modules"></h2>
         <div class="list-group">
           <label class="switch"><span data-i18n="nav.combinations"></span><input class="switch-input" type="checkbox" role="switch" data-module="combinations"></label>
-          <label class="switch"><span data-i18n="nav.fittings"></span><input class="switch-input" type="checkbox" role="switch" data-module="fittings"></label>
         </div>
         <div id="install-group" hidden>
           <h2 class="list-group-head" data-i18n="settings.app"></h2>
@@ -152,10 +126,6 @@
       <button class="nav-item" type="button" data-view="combinations">
         <svg class="icon" aria-hidden="true"><use href="icons.svg#palette"/></svg>
         <span data-i18n="nav.combinations"></span>
-      </button>
-      <button class="nav-item" type="button" data-view="fittings">
-        <svg class="icon" aria-hidden="true"><use href="icons.svg#ruler"/></svg>
-        <span data-i18n="nav.fittings"></span>
       </button>
       <button class="nav-item" type="button" data-view="settings">
         <svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg>
@@ -200,30 +170,6 @@
       </form>
     </div>
 
-    <div id="fitting-sheet" class="sheet-layer" hidden>
-      <div id="fitting-veil" class="sheet-veil"></div>
-      <form id="fitting-form" class="sheet" role="dialog" aria-modal="true" aria-labelledby="fitting-sheet-title" autocomplete="off" novalidate>
-        <div class="sheet-grab"></div>
-        <header class="sheet-head"><h2 id="fitting-sheet-title" class="sheet-title main"></h2><button id="fitting-close" class="button tonal" type="button" data-i18n="fittings.close"></button></header>
-        <div class="sheet-body">
-          <label class="field"><input id="fitting-category" class="input field-input" type="text" maxlength="40" list="fitting-categories" data-i18n-attr="placeholder:fittings.category"><span class="field-label" data-i18n="fittings.category"></span></label>
-          <label class="field"><input id="fitting-brand" class="input field-input" type="text" maxlength="40" list="fitting-brands" data-i18n-attr="placeholder:fittings.brand"><span class="field-label" data-i18n="fittings.brand"></span></label>
-          <label class="field"><input id="fitting-size" class="input field-input" type="text" maxlength="20" data-i18n-attr="placeholder:fittings.size"><span class="field-label" data-i18n="fittings.size"></span></label>
-          <h3 class="sheet-title part" data-i18n="fittings.fit"></h3>
-          <div id="fitting-fit" class="cluster" role="group" data-i18n-attr="aria-label:fittings.fit"></div>
-          <h3 class="sheet-title part" data-i18n="fittings.measures"></h3>
-          <div id="fitting-measures" class="measure-lines"></div>
-          <button id="fitting-measure-add" class="button outline wide" type="button" data-i18n="fittings.addMeasure"></button>
-          <label class="field"><textarea id="fitting-note" class="input field-input" maxlength="200" rows="2" data-i18n-attr="placeholder:fittings.note"></textarea><span class="field-label" data-i18n="fittings.note"></span></label>
-          <datalist id="fitting-categories"></datalist>
-          <datalist id="fitting-brands"></datalist>
-          <datalist id="fitting-measure-names"></datalist>
-          <datalist id="fitting-units"></datalist>
-        </div>
-        <footer class="sheet-foot"><button class="button primary wide" type="submit" data-i18n="fittings.save"></button></footer>
-      </form>
-    </div>
-
     <div id="onboarding" class="onboarding" role="dialog" aria-modal="true" data-i18n-attr="aria-label:onboarding.label" hidden>
       <img class="onboarding-logo" src="./icons/logo.png" alt="">
       <div id="onboarding-page" class="onboarding-page">
@@ -264,7 +210,6 @@
           "#wada": "./src/wada.js",
           "#palette": "./src/palette.js",
           "#garments": "./src/garments.js",
-          "#fittings": "./src/fittings.js",
           "#links": "./src/links.js",
           "#outfits": "./src/outfits.js",
           "#install": "./src/install.js",
@@ -283,7 +228,6 @@
           "#ui/nav": "./src/ui/nav.js",
           "#ui/outfit": "./src/ui/outfit.js",
           "#ui/combinations": "./src/ui/combinations.js",
-          "#ui/fittings": "./src/ui/fittings.js",
           "#ui/wardrobe": "./src/ui/wardrobe.js",
           "#ui/settings": "./src/ui/settings.js",
           "#swipe": "./src/swipe.js",

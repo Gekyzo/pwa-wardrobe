@@ -1,6 +1,6 @@
 # Attire
 
-Load my clothes, generate outfits and keep my sizes. An offline Android PWA in plain HTML, CSS and ES modules:
+Load my clothes and generate outfits. An offline Android PWA in plain HTML, CSS and ES modules:
 no build step and no dependencies. Scaffolded from `pwa-template`, it has:
 
 - an offline service worker, an update check with an update toast, and an install button;
@@ -18,11 +18,6 @@ A garment can also carry a brand, a link to its shop page and images. The app ca
 site's page itself (CORS), so **Load images** goes through the public proxy Jina Reader
 (`r.jina.ai`), which sees each link loaded. Some shops refuse it; the **Image URL** field then
 takes an image address by hand. The service worker keeps the images for offline use.
-
-The **Fittings** section keeps the size and the measures that fit, for each category and brand:
-pants, a T-shirt, a ring. It was the app `pwa-fittings`. Both apps deploy to `gekyzo.github.io`, so
-at the first start Attire takes the fittings that `pwa-fittings` stored on the phone; **Import** also
-takes a Fittings backup. The rules are in [docs/spec/08-fittings.md](docs/spec/08-fittings.md).
 
 ## Develop
 
