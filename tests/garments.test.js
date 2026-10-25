@@ -24,7 +24,7 @@ import {
 
 const shirt = { name: 'Shirt', slot: 'top', season: 'all', color: 3 };
 const extra = { brand: '', link: '', images: [] };
-const build = (...list) => ({ version: 2, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields })) });
+const build = (...list) => ({ version: 3, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields })), fittings: [] });
 
 test('the key of the garments has the slug (GAR-1)', () => {
   assert.equal(GARMENTS_KEY, `${APP_SLUG}.garments`);
@@ -115,18 +115,29 @@ test('sortGarments orders by slot, then by name, without changing its input (WAR
 
 test('normalizeGarments keeps a valid doc, trims names and drops unknown fields (GAR-5)', () => {
   const garment = { id: 'a', ...shirt, name: ' x ', brand: ' Uniqlo ', link: 'https://shop.example/a', images: ['https://cdn.example/1.jpg'], more: 1 };
-  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), {
-    version: 2,
+  const pants = { id: 'f', category: 'Pants', brand: '', size: '32', fit: '', measures: [], note: '' };
+  assert.deepEqual(normalizeGarments({ version: 3, garments: [garment], fittings: [{ ...pants, more: 1 }] }), {
+    version: 3,
     garments: [{ id: 'a', name: 'x', slot: 'top', season: 'all', color: 3, brand: 'Uniqlo', link: 'https://shop.example/a', images: ['https://cdn.example/1.jpg'] }],
+    fittings: [pants],
   });
   assert.deepEqual(normalizeGarments(emptyGarments()), emptyGarments());
 });
 
 test('normalizeGarments migrates a version 1 doc (GAR-5)', () => {
   assert.deepEqual(normalizeGarments({ version: 1, garments: [{ id: 'a', ...shirt }] }), {
-    version: 2,
+    version: 3,
     garments: [{ id: 'a', ...shirt, ...extra }],
+    fittings: [],
   });
+});
+
+test('normalizeGarments migrates a version 2 doc with no fittings (GAR-5)', () => {
+  assert.deepEqual(normalizeGarments({ version: 2, garments: [], fittings: [{ id: 'x' }] }), { version: 3, garments: [], fittings: [] });
+});
+
+test('emptyGarments is a version 3 doc with no garment and no fitting (GAR-1)', () => {
+  assert.deepEqual(emptyGarments(), { version: 3, garments: [], fittings: [] });
 });
 
 test('normalizeGarments refuses a doc that is not a garments doc', () => {
@@ -134,7 +145,9 @@ test('normalizeGarments refuses a doc that is not a garments doc', () => {
     null,
     'x',
     [],
+    { version: 4, garments: [], fittings: [] },
     { version: 3, garments: [] },
+    { version: 3, garments: [], fittings: [{ id: 'f', category: '' }] },
     { version: 2, garments: [{ id: 'a', ...shirt, link: 'ftp://x' }] },
     { version: 2, garments: [{ id: 'a', ...shirt, images: 'x' }] },
     { version: 1 },

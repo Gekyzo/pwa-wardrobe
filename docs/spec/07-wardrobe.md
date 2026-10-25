@@ -24,9 +24,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Garments
 
 - **GAR-1** The doc is
-  `{ version: 2, garments: [{ id, name, slot, season, color, brand, link, images }] }`, newest
-  garment first, stored as JSON under `wardrobe.garments`. A stored doc that is not valid is kept
-  under `wardrobe.garments.corrupt`, and the app starts with no garments.
+  `{ version: 3, garments: [{ id, name, slot, season, color, brand, link, images }], fittings }`,
+  newest garment first, stored as JSON under `wardrobe.garments`. `fittings` is the list of
+  [08-fittings.md](08-fittings.md) (FIT-1). A stored doc that is not valid is kept under
+  `wardrobe.garments.corrupt`, and the app starts with no garments and no fittings.
 - **GAR-2** `slot` is one of `top`, `bottom`, `outer`, `shoes`, `accessory`. `season` is one of
   `all`, `warm`, `cold`. `color` is the `id` of a palette colour. `brand` is a text, `link` is
   `''` or an `http` or `https` URL, and `images` is a list of `http` or `https` URLs.
@@ -41,10 +42,11 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   times is `error.imagesInvalid`.
 - **GAR-4** `deleteGarment` removes one garment. An id that is not in the doc is
   `error.garmentMissing`, and nothing changes.
-- **GAR-5** `normalizeGarments` accepts a doc of version 1 or 2 whose garments have a non-empty
-  id, no id two times, and fields that pass GAR-3. It trims each name and drops unknown fields.
-  It gives version 2: a garment of version 1 gets an empty brand, link and images. A new version
-  adds its migration here.
+- **GAR-5** `normalizeGarments` accepts a doc of version 1, 2 or 3 whose garments have a
+  non-empty id, no id two times, and fields that pass GAR-3, and, in version 3, fittings that pass
+  FIT-3. It trims each name and drops unknown fields. It gives version 3: a garment of version 1
+  gets an empty brand, link and images, and a doc of version 1 or 2 gets no fittings. A new
+  version adds its migration here.
 - **GAR-6** `brandsOf` gives the brands of the garments, each one time, sorted. Two brands that
   differ only in case are one brand, with the spelling of the first garment.
 - **GAR-7** The main image of a garment is its first image. A garment with no image has no main

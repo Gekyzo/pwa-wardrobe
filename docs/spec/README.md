@@ -17,6 +17,7 @@ The names of the screen are the English ones; `src/locales/es.js` is the source 
 | [05-layout.md](05-layout.md) | Navigation, sections, modules, settings and the walkthrough |
 | [06-i18n.md](06-i18n.md) | The languages and the rules of the text |
 | [07-wardrobe.md](07-wardrobe.md) | The palette, the garments, the outfits and their sections |
+| [08-fittings.md](08-fittings.md) | The sizes and measures that fit, and their section |
 
 ## Rule identifiers
 
@@ -36,6 +37,7 @@ The rules DS-1 to DS-8 and LAY-1 to LAY-4 belong to the design system, `pwa-desi
 | `NAV`, `MOD`, `SET`, `ONB` | 05-layout |
 | `I18N` | 06-i18n |
 | `PAL`, `GAR`, `LNK`, `OUT`, `WAR`, `CMB` | 07-wardrobe |
+| `FIT` | 08-fittings |
 
 ## Words
 
@@ -44,7 +46,7 @@ The rules DS-1 to DS-8 and LAY-1 to LAY-4 belong to the design system, `pwa-desi
 | Shell | The files that the service worker keeps for offline use: `SHELL` of `sw.js` |
 | Deploy | A release tag `vX.Y.Z` that GitHub Pages publishes |
 | Size class | compact (below 600px), medium (600px to 839px) or expanded (840px and up) |
-| Section | One of the screens of the navigation: Wardrobe, Combinations and Settings |
+| Section | One of the screens of the navigation: Wardrobe, Combinations, Fittings and Settings |
 | Module | A part of the app that Settings turns off, with its sections |
 | Pane | The list and the detail of one entry, side by side in the expanded class |
 | Sheet | A panel that comes up from the bottom of the screen |

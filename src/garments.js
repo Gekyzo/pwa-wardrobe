@@ -1,5 +1,6 @@
 import { APP_SLUG } from '#config';
 import { COLORS } from '#wada';
+import { normalizeFittingList } from '#fittings';
 
 // The wardrobe: garments with a name, a slot, a season, one colour of the palette and, optionally,
 // a brand, a link to the shop and the URLs of their images, the main one first.
@@ -11,7 +12,7 @@ export const MAX_IMAGES = 8;
 export const SLOTS = ['top', 'bottom', 'outer', 'shoes', 'accessory'];
 export const SEASONS = ['all', 'warm', 'cold'];
 
-export const emptyGarments = () => ({ version: 2, garments: [] });
+export const emptyGarments = () => ({ version: 3, garments: [], fittings: [] });
 
 // True for an absolute http or https URL.
 export const isWebUrl = (text) => {
@@ -84,10 +85,13 @@ export const toggleImage = (images, url) => {
 
 export const makeMain = (images, url) => (images.includes(url) ? [url, ...images.filter((image) => image !== url)] : images);
 
-// A clean version 2 doc, or null. Version 1 had no brand, link or images: checkFields gives
-// them their empty values. Add a migration here when the version goes up.
+// A clean version 3 doc, or null. Version 1 had no brand, link or images: checkFields gives
+// them their empty values. Versions 1 and 2 had no fittings. Add a migration here when the
+// version goes up.
 export const normalizeGarments = (data) => {
-  if (typeof data !== 'object' || data === null || ![1, 2].includes(data.version) || !Array.isArray(data.garments)) return null;
+  if (typeof data !== 'object' || data === null || ![1, 2, 3].includes(data.version) || !Array.isArray(data.garments)) return null;
+  const fittings = data.version === 3 ? normalizeFittingList(data.fittings) : [];
+  if (!fittings) return null;
   const garments = [];
   for (const garment of data.garments) {
     if (typeof garment !== 'object' || garment === null || typeof garment.id !== 'string' || garment.id === '') return null;
@@ -96,5 +100,5 @@ export const normalizeGarments = (data) => {
     garments.push({ id: garment.id, ...fields });
   }
   if (new Set(garments.map((garment) => garment.id)).size !== garments.length) return null;
-  return { version: 2, garments };
+  return { version: 3, garments, fittings };
 };
