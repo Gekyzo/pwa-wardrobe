@@ -115,4 +115,13 @@ export default {
   'error.linkFailed': 'No se pudieron cargar las imágenes del enlace.',
   'outfits.noColor': 'Ninguna prenda cerca de {color}.',
   'outfits.noSet': 'Ningún grupo de estas prendas forma un conjunto.',
+  'error.sizeTooLong': 'La talla tiene como máximo {max} caracteres.',
+  'error.fitInvalid': 'Elige cómo queda.',
+  'error.measuresInvalid': 'Las medidas no son válidas.',
+  'error.measuresFull': 'Como máximo {max} medidas.',
+  'error.measureNameRequired': 'Escribe el nombre de cada medida.',
+  'error.measureNameTooLong': 'El nombre de una medida tiene como máximo {max} caracteres.',
+  'error.measureValueInvalid': 'Escribe un número mayor que 0 en «{name}».',
+  'error.unitTooLong': 'Una unidad tiene como máximo {max} caracteres.',
+  'error.fittingMissing': 'La ficha ya no existe.',
 };

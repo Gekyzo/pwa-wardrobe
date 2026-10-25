@@ -115,4 +115,13 @@ export default {
   'error.linkFailed': 'The images of the link could not be loaded.',
   'outfits.noColor': 'No garment near {color}.',
   'outfits.noSet': 'No set of these garments makes an outfit.',
+  'error.sizeTooLong': 'The size has at most {max} characters.',
+  'error.fitInvalid': 'Pick how it fits.',
+  'error.measuresInvalid': 'The measures are not valid.',
+  'error.measuresFull': 'At most {max} measures.',
+  'error.measureNameRequired': 'Write the name of each measure.',
+  'error.measureNameTooLong': 'A measure name has at most {max} characters.',
+  'error.measureValueInvalid': 'Write a number above 0 for «{name}».',
+  'error.unitTooLong': 'A unit has at most {max} characters.',
+  'error.fittingMissing': 'The fitting no longer exists.',
 };

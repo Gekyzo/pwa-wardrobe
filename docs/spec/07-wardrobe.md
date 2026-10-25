@@ -24,8 +24,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Garments
 
 - **GAR-1** The doc is
-  `{ version: 2, garments: [{ id, name, slot, season, color, brand, link, images }] }`, newest
-  garment first, stored as JSON under `wardrobe.garments`. A stored doc that is not valid is kept
+  `{ version: 3, garments: [{ id, name, slot, season, color, brand, link, images, size, fit, measures }] }`,
+  newest garment first, stored as JSON under `wardrobe.garments`. A stored doc that is not valid is kept
   under `wardrobe.garments.corrupt`, and the app starts with no garments.
 - **GAR-2** `slot` is one of `top`, `bottom`, `outer`, `shoes`, `accessory`. `season` is one of
   `all`, `warm`, `cold`. `color` is the `id` of a palette colour. `brand` is a text, `link` is
@@ -41,14 +41,30 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   times is `error.imagesInvalid`.
 - **GAR-4** `deleteGarment` removes one garment. An id that is not in the doc is
   `error.garmentMissing`, and nothing changes.
-- **GAR-5** `normalizeGarments` accepts a doc of version 1 or 2 whose garments have a non-empty
-  id, no id two times, and fields that pass GAR-3. It trims each name and drops unknown fields.
-  It gives version 2: a garment of version 1 gets an empty brand, link and images. A new version
-  adds its migration here.
+- **GAR-5** `normalizeGarments` accepts a doc of version 1, 2 or 3 whose garments have a
+  non-empty id, no id two times, and fields that pass GAR-3. It trims each name and drops unknown
+  fields. It gives version 3: a garment of version 1 gets an empty brand, link and images, and a
+  garment of version 1 or 2 gets no size, no fit and no measures. A new version adds its migration
+  here.
 - **GAR-6** `brandsOf` gives the brands of the garments, each one time, sorted. Two brands that
   differ only in case are one brand, with the spelling of the first garment.
 - **GAR-7** The main image of a garment is its first image. A garment with no image has no main
   image.
+- **GAR-8** The size, the fit and the measures of a garment are optional (`checkSizing` of
+  `src/measures.js`, which GAR-3 applies). `size` is a text of at most 20 characters, `''` when it
+  is not given; a longer one is `error.sizeTooLong`. `fit` is `''` (not said), `good`, `small` or
+  `large`; another one is `error.fitInvalid`. `measures` is a list of at most 12
+  `{ name, value, unit }`: `name` a text of 1 to 30 characters, `value` a finite number above 0,
+  `unit` a text of at most 10, `''` when it is not given. The texts are trimmed. A measures value
+  that is not a list of objects is `error.measuresInvalid`. A line with no value is dropped, with
+  or without a name. More than 12 lines is `error.measuresFull`, a line with a value and no name
+  is `error.measureNameRequired`, a name over 30 characters is `error.measureNameTooLong`, a value
+  that GAR-9 refuses is `error.measureValueInvalid`, and a unit over 10 characters is
+  `error.unitTooLong`.
+- **GAR-9** `parseValue` takes a number, or a text of digits with one point or one comma as the
+  decimal mark, and gives the number when it is above 0, else null.
+- **GAR-10** `measuresOf` gives the `{ name, unit }` of the measures of the garments of one slot,
+  newest garment first, each name one time, case aside.
 
 ## Links
 

@@ -23,8 +23,8 @@ import {
 } from '#garments';
 
 const shirt = { name: 'Shirt', slot: 'top', season: 'all', color: 3 };
-const extra = { brand: '', link: '', images: [] };
-const build = (...list) => ({ version: 2, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields })) });
+const extra = { brand: '', link: '', images: [], size: '', fit: '', measures: [] };
+const build = (...list) => ({ version: 3, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields })) });
 
 test('the key of the garments has the slug (GAR-1)', () => {
   assert.equal(GARMENTS_KEY, `${APP_SLUG}.garments`);
@@ -115,18 +115,51 @@ test('sortGarments orders by slot, then by name, without changing its input (WAR
 
 test('normalizeGarments keeps a valid doc, trims names and drops unknown fields (GAR-5)', () => {
   const garment = { id: 'a', ...shirt, name: ' x ', brand: ' Uniqlo ', link: 'https://shop.example/a', images: ['https://cdn.example/1.jpg'], more: 1 };
-  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), {
-    version: 2,
-    garments: [{ id: 'a', name: 'x', slot: 'top', season: 'all', color: 3, brand: 'Uniqlo', link: 'https://shop.example/a', images: ['https://cdn.example/1.jpg'] }],
+  assert.deepEqual(normalizeGarments({ version: 3, garments: [{ ...garment, size: ' 32 ', fit: 'small', measures: [{ name: 'Waist', value: 84, unit: 'cm', x: 1 }] }] }), {
+    version: 3,
+    garments: [
+      {
+        id: 'a',
+        name: 'x',
+        slot: 'top',
+        season: 'all',
+        color: 3,
+        brand: 'Uniqlo',
+        link: 'https://shop.example/a',
+        images: ['https://cdn.example/1.jpg'],
+        size: '32',
+        fit: 'small',
+        measures: [{ name: 'Waist', value: 84, unit: 'cm' }],
+      },
+    ],
   });
   assert.deepEqual(normalizeGarments(emptyGarments()), emptyGarments());
 });
 
 test('normalizeGarments migrates a version 1 doc (GAR-5)', () => {
   assert.deepEqual(normalizeGarments({ version: 1, garments: [{ id: 'a', ...shirt }] }), {
-    version: 2,
+    version: 3,
     garments: [{ id: 'a', ...shirt, ...extra }],
   });
+});
+
+test('normalizeGarments migrates a version 2 doc: no size, fit or measures (GAR-5)', () => {
+  const garment = { id: 'a', ...shirt, brand: 'Zara', link: '', images: [] };
+  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), { version: 3, garments: [{ ...garment, size: '', fit: '', measures: [] }] });
+});
+
+test('emptyGarments is a version 3 doc with no garment (GAR-1)', () => {
+  assert.deepEqual(emptyGarments(), { version: 3, garments: [] });
+});
+
+test('a garment keeps its size, fit and measures, and an error of them is the error of the garment (GAR-3)', () => {
+  const sizing = { size: 'M', fit: 'good', measures: [{ name: 'Chest', value: '96', unit: 'cm' }, { name: '', value: '' }] };
+  const { state } = addGarment(emptyGarments(), { ...shirt, ...sizing }, 'x');
+  assert.deepEqual(state.garments[0], { id: 'x', ...shirt, ...extra, size: 'M', fit: 'good', measures: [{ name: 'Chest', value: 96, unit: 'cm' }] });
+  const bad = emptyGarments();
+  assert.deepEqual(addGarment(bad, { ...shirt, fit: 'tight' }), { state: bad, error: { key: 'error.fitInvalid' } });
+  const { state: edited } = editGarment(state, 'x', { ...shirt, size: 'L' });
+  assert.deepEqual(edited.garments[0], { id: 'x', ...shirt, ...extra, size: 'L' });
 });
 
 test('normalizeGarments refuses a doc that is not a garments doc', () => {
@@ -134,7 +167,9 @@ test('normalizeGarments refuses a doc that is not a garments doc', () => {
     null,
     'x',
     [],
-    { version: 3, garments: [] },
+    { version: 4, garments: [] },
+    { version: 3, garments: [{ id: 'a', ...shirt, measures: [{ name: '', value: 3 }] }] },
+    { version: 3, garments: [{ id: 'a', ...shirt, fit: 'tight' }] },
     { version: 2, garments: [{ id: 'a', ...shirt, link: 'ftp://x' }] },
     { version: 2, garments: [{ id: 'a', ...shirt, images: 'x' }] },
     { version: 1 },
@@ -158,7 +193,7 @@ test('brand, link and images are optional, and each is checked (GAR-3)', () => {
   const state = emptyGarments();
   const ok = addGarment(state, { ...shirt, brand: '  Zara ', link: ' https://zara.com/p/1 ', images: ['https://a.example/1.jpg', 'http://a.example/2.png'] }, 'x');
   assert.equal(ok.error, undefined);
-  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'] });
+  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'], size: '', fit: '', measures: [] });
   const url = (n) => `https://a.example/${n}.jpg`;
   const cases = [
     [{ ...shirt, brand: 'b'.repeat(MAX_BRAND + 1) }, { key: 'error.brandTooLong', params: { max: MAX_BRAND } }],
