@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { SECTIONS, direction, slideDirection, slideTo } from '#sections';
+import { SECTIONS, direction, slideDirection, slideTo, slideBack } from '#sections';
 
 // A longer list than the template's, so that a slide has a middle section to pass.
 const FIVE = ['a', 'b', 'c', 'd', 'settings'];
@@ -77,4 +77,16 @@ test('direction is 0 for the same section and for a view that is not a section',
 test('slideTo skips the sections that are not in the given list', () => {
   assert.equal(slideTo('a', -80, 0, ['a', 'c', 'settings']), 'c');
   assert.equal(slideTo('c', 80, 0, ['a', 'c', 'settings']), 'a');
+});
+
+test('slideBack is true for a slide to the right while a detail shows alone (NAV-3)', () => {
+  assert.equal(slideBack(80, 0, true), true);
+  assert.equal(slideBack(80, 10, true), true);
+});
+
+test('slideBack is false for a slide to the left, a short or vertical slide, or a detail beside its list (NAV-3)', () => {
+  assert.equal(slideBack(-80, 0, true), false);
+  assert.equal(slideBack(30, 0, true), false);
+  assert.equal(slideBack(80, 60, true), false);
+  assert.equal(slideBack(80, 0, false), false);
 });

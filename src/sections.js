@@ -21,6 +21,10 @@ export const slideTo = (view, dx, dy, sections = SECTIONS) => {
   return sections[index + way] ?? null;
 };
 
+// True when a slide of `dx`, `dy` px closes a detail that shows alone: a slide to the right
+// (NAV-3).
+export const slideBack = (dx, dy, detailAlone) => detailAlone && slideDirection(dx, dy) === -1;
+
 // The way from `from` to `to` in the order of `sections`: 1 towards a later section, -1 towards
 // an earlier one, 0 when there is no way.
 export const direction = (from, to, sections = SECTIONS) => {

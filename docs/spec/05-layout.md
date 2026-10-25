@@ -18,6 +18,10 @@ sections use the `pane` layout (LAY-3). From 840px, with no entry open, the deta
 - **NAV-2** A horizontal slide of at least 60 px that starts in the header or the content, out of
   a row and of a field, goes to the next section (slide left) or the previous one (slide right).
   It stops at the first and the last section. The content comes in from its side.
+- **NAV-3** Below 840px, where a detail shows alone (LAY-3), a slide to the right of NAV-2 closes
+  the detail of a garment or of a combination and shows its list again, which comes in from the
+  left. A slide to the left still goes to the next section. The **Back** of a detail starts with
+  an arrow that lines up with the content edge.
 
 ## Modules
 

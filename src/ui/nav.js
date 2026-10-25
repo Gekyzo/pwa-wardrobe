@@ -1,4 +1,4 @@
-import { direction, slideTo } from '#sections';
+import { direction, slideTo, slideBack } from '#sections';
 import { visibleSections } from '#modules';
 import { ui, off, render, scroller, guardClick } from '#ui/context';
 import { checkVersion } from '#ui/update';
@@ -53,8 +53,18 @@ export const bind = () => {
   });
   document.addEventListener('pointerup', (event) => {
     if (sectionSlide?.pointerId !== event.pointerId) return;
-    const view = slideTo(ui.view, event.clientX - sectionSlide.x, event.clientY - sectionSlide.y, visibleSections(off));
+    const [dx, dy] = [event.clientX - sectionSlide.x, event.clientY - sectionSlide.y];
     sectionSlide = null;
+    // Below 840px a detail shows alone: a slide to the right goes back to its list (NAV-3).
+    const detail = ui.garmentId !== null || ui.combination !== null;
+    if (slideBack(dx, dy, detail && matchMedia('(max-width: 839px)').matches)) {
+      guardClick();
+      Object.assign(ui, { garmentId: null, detailImage: null, combination: null });
+      render();
+      enter(-1);
+      return;
+    }
+    const view = slideTo(ui.view, dx, dy, visibleSections(off));
     if (!view) return;
     // The click that follows a slide must not press the button below the finger.
     guardClick();
