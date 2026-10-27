@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.12 - 2026-10-27
+
 - New app icon: a pink sweater on a hanger beside three colour swatches. `icons/source.png` is the new art, cropped so that it fills 0.94 of its square, with its off-white background made pure white; `npm run icons` wrote `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` and `logo.png` again.
 
 ## 0.1.11 - 2026-10-25

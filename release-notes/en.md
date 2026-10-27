@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.12 - 2026-10-27
+
 - The app has a new icon: a sweater on a hanger with colour swatches.
 
 ## 0.1.11 - 2026-10-25
