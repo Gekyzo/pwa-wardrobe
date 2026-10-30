@@ -49,7 +49,7 @@ From 840px the detail of the pane is a card beside the list. In this app the War
 ## Settings
 
 - **SET-1** Settings is a column of groups, each a `list-group-head` above a `list-group` of
-  settings rows, as in pwa-shopping-list: **Backup** (**Export**, **Import**), **Preferences**
+  settings rows, as in pwa-shopping-list: **Backup** (**Export**, **Import**, **Delete all data**), **Preferences**
   (**Language**, **Hand**, **Theme**), **Modules** (MOD-1), **App** (INS-2) and **Help** (ONB-3),
   then the version lines (VER-4). A row of Preferences shows its current value and a chevron, and
   a tap on it opens the native picker of its select. A row that opens something ends with a
@@ -57,6 +57,13 @@ From 840px the detail of the pane is a card beside the list. In this app the War
 - **SET-2** **Backup** and **Preferences** have a line of help below their head at every width.
   From 840px Settings takes a column of at most 960px (`--page-max`, LAY-1), and each group is a
   row: its head and its help at the left, its rows at the right, the groups split by a line.
+- **SET-3** **Delete all data** is the last row of Backup, in the colour of danger, with no
+  chevron. It asks `reset.confirm`, or `reset.confirmLocal` with a session, which also says that
+  the session closes. A yes removes each `localStorage` key of the app, `wardrobe.*` (`resetAll`),
+  and no key of another app of the origin, then loads the page again: the app starts as a new
+  install, with the walkthrough (ONB-1), and a device that had a session opens Sign in (ACC-1). It
+  has no Undo. When the removal fails, `error.resetFailed` shows and nothing else changes. The
+  caches of the worker stay, the images of the garments (SW-14) too.
 
 ## Walkthrough
 

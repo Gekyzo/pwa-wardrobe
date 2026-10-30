@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Delete all data** in Settings › Backup, as in pwa-template (SET-3): `resetAll` in `src/storage.js` removes each `localStorage` key `wardrobe.*`, and no key of another app of the origin; the page loads again as a new install. With a session the question says that it also logs out (`signedIn` of `src/ui/account.js`). Keys `settings.reset`, `reset.confirm`, `reset.confirmLocal`, `error.resetFailed`.
 
 ## 0.1.13 - 2026-10-30
 

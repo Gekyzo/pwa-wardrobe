@@ -32,7 +32,7 @@
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
 | `src/ui/outfit.js` | The swatch, the image of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
 | `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `links`, `palette`, `outfits`, `measures`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
-| `src/ui/settings.js` | Settings, and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding` |
+| `src/ui/settings.js` | Settings, Delete all data (SET-3), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
