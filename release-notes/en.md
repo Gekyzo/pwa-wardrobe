@@ -4,6 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- A garment can now have a **buy date** and a **price**, both optional. Its detail also shows when you added it to the app.
 - The **brand** field suggests known brands as you type, your own brands first.
 - **Random outfit** in Wardrobe suggests an outfit of your garments in the colours of a combination. Tap **Another** to see a different one.
 - **Delete all data** in Settings removes the garments and the preferences from this device, and the app starts as new.

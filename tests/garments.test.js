@@ -7,6 +7,8 @@ import {
   MAX_BRAND,
   MAX_LINK,
   MAX_IMAGES,
+  MAX_PRICE,
+  isDay,
   SLOTS,
   SEASONS,
   emptyGarments,
@@ -23,8 +25,9 @@ import {
 } from '#garments';
 
 const shirt = { name: 'Shirt', slot: 'top', season: 'all', color: 3 };
-const extra = { brand: '', link: '', images: [], size: '', fit: '', measures: [] };
-const build = (...list) => ({ version: 3, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields })) });
+const extra = { brand: '', link: '', images: [], size: '', fit: '', measures: [], buy_date: '', price: null };
+const NOW = '2026-10-30T10:00:00.000Z';
+const build = (...list) => ({ version: 4, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields, creation_date: '' })) });
 
 test('the key of the garments has the slug (GAR-1)', () => {
   assert.equal(GARMENTS_KEY, `${APP_SLUG}.garments`);
@@ -38,9 +41,9 @@ test('the slots and the seasons (GAR-2)', () => {
 test('a garment is added first with a trimmed name, and the input state is unchanged', () => {
   const state = build(shirt);
   const before = structuredClone(state);
-  const { state: next, error } = addGarment(state, { ...shirt, name: '  Coat  ', slot: 'outer' }, 'x');
+  const { state: next, error } = addGarment(state, { ...shirt, name: '  Coat  ', slot: 'outer' }, 'x', NOW);
   assert.equal(error, undefined);
-  assert.deepEqual(next.garments[0], { id: 'x', name: 'Coat', slot: 'outer', season: 'all', color: 3, ...extra });
+  assert.deepEqual(next.garments[0], { id: 'x', name: 'Coat', slot: 'outer', season: 'all', color: 3, ...extra, creation_date: NOW });
   assert.equal(next.garments.length, 2);
   assert.deepEqual(state, before);
 });
@@ -75,7 +78,7 @@ test('each field is checked, and an error keeps the same state (GAR-3)', () => {
 
 test('an edit changes the fields of one garment', () => {
   const { state } = editGarment(build(shirt, { ...shirt, name: 'Jeans', slot: 'bottom' }), 'g1', { ...shirt, name: ' Chinos ', slot: 'bottom', color: 9 });
-  assert.deepEqual(state.garments[1], { id: 'g1', name: 'Chinos', slot: 'bottom', season: 'all', color: 9, ...extra });
+  assert.deepEqual(state.garments[1], { id: 'g1', name: 'Chinos', slot: 'bottom', season: 'all', color: 9, ...extra, creation_date: '' });
   assert.equal(state.garments[0].name, 'Shirt');
 });
 
@@ -115,8 +118,8 @@ test('sortGarments orders by slot, then by name, without changing its input (WAR
 
 test('normalizeGarments keeps a valid doc, trims names and drops unknown fields (GAR-5)', () => {
   const garment = { id: 'a', ...shirt, name: ' x ', brand: ' Uniqlo ', link: 'https://shop.example/a', images: ['https://cdn.example/1.jpg'], more: 1 };
-  assert.deepEqual(normalizeGarments({ version: 3, garments: [{ ...garment, size: ' 32 ', fit: 'small', measures: [{ name: 'Waist', value: 84, unit: 'cm', x: 1 }] }] }), {
-    version: 3,
+  assert.deepEqual(normalizeGarments({ version: 4, garments: [{ ...garment, size: ' 32 ', fit: 'small', measures: [{ name: 'Waist', value: 84, unit: 'cm', x: 1 }], buy_date: '2026-09-01', price: '29,95', creation_date: NOW }] }), {
+    version: 4,
     garments: [
       {
         id: 'a',
@@ -130,6 +133,9 @@ test('normalizeGarments keeps a valid doc, trims names and drops unknown fields 
         size: '32',
         fit: 'small',
         measures: [{ name: 'Waist', value: 84, unit: 'cm' }],
+        buy_date: '2026-09-01',
+        price: 29.95,
+        creation_date: NOW,
       },
     ],
   });
@@ -138,28 +144,33 @@ test('normalizeGarments keeps a valid doc, trims names and drops unknown fields 
 
 test('normalizeGarments migrates a version 1 doc (GAR-5)', () => {
   assert.deepEqual(normalizeGarments({ version: 1, garments: [{ id: 'a', ...shirt }] }), {
-    version: 3,
-    garments: [{ id: 'a', ...shirt, ...extra }],
+    version: 4,
+    garments: [{ id: 'a', ...shirt, ...extra, creation_date: '' }],
   });
 });
 
 test('normalizeGarments migrates a version 2 doc: no size, fit or measures (GAR-5)', () => {
   const garment = { id: 'a', ...shirt, brand: 'Zara', link: '', images: [] };
-  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), { version: 3, garments: [{ ...garment, size: '', fit: '', measures: [] }] });
+  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), { version: 4, garments: [{ ...garment, size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: '' }] });
 });
 
-test('emptyGarments is a version 3 doc with no garment (GAR-1)', () => {
-  assert.deepEqual(emptyGarments(), { version: 3, garments: [] });
+test('normalizeGarments migrates a version 3 doc: no buy date, no price, unknown creation date (GAR-5)', () => {
+  const garment = { id: 'a', ...shirt, ...extra, size: 'M', buy_date: 'x', price: 'x', creation_date: 'x' };
+  assert.deepEqual(normalizeGarments({ version: 3, garments: [garment] }), { version: 4, garments: [{ id: 'a', ...shirt, ...extra, size: 'M', creation_date: '' }] });
+});
+
+test('emptyGarments is a version 4 doc with no garment (GAR-1)', () => {
+  assert.deepEqual(emptyGarments(), { version: 4, garments: [] });
 });
 
 test('a garment keeps its size, fit and measures, and an error of them is the error of the garment (GAR-3)', () => {
   const sizing = { size: 'M', fit: 'good', measures: [{ name: 'Chest', value: '96', unit: 'cm' }, { name: '', value: '' }] };
-  const { state } = addGarment(emptyGarments(), { ...shirt, ...sizing }, 'x');
-  assert.deepEqual(state.garments[0], { id: 'x', ...shirt, ...extra, size: 'M', fit: 'good', measures: [{ name: 'Chest', value: 96, unit: 'cm' }] });
+  const { state } = addGarment(emptyGarments(), { ...shirt, ...sizing }, 'x', NOW);
+  assert.deepEqual(state.garments[0], { id: 'x', ...shirt, ...extra, size: 'M', fit: 'good', measures: [{ name: 'Chest', value: 96, unit: 'cm' }], creation_date: NOW });
   const bad = emptyGarments();
   assert.deepEqual(addGarment(bad, { ...shirt, fit: 'tight' }), { state: bad, error: { key: 'error.fitInvalid' } });
   const { state: edited } = editGarment(state, 'x', { ...shirt, size: 'L' });
-  assert.deepEqual(edited.garments[0], { id: 'x', ...shirt, ...extra, size: 'L' });
+  assert.deepEqual(edited.garments[0], { id: 'x', ...shirt, ...extra, size: 'L', creation_date: NOW });
 });
 
 test('normalizeGarments refuses a doc that is not a garments doc', () => {
@@ -167,7 +178,11 @@ test('normalizeGarments refuses a doc that is not a garments doc', () => {
     null,
     'x',
     [],
-    { version: 4, garments: [] },
+    { version: 5, garments: [] },
+    { version: 4, garments: [{ id: 'a', ...shirt }] },
+    { version: 4, garments: [{ id: 'a', ...shirt, creation_date: '2026-10-30' }] },
+    { version: 4, garments: [{ id: 'a', ...shirt, creation_date: '', buy_date: '2026-02-30' }] },
+    { version: 4, garments: [{ id: 'a', ...shirt, creation_date: '', price: -1 }] },
     { version: 3, garments: [{ id: 'a', ...shirt, measures: [{ name: '', value: 3 }] }] },
     { version: 3, garments: [{ id: 'a', ...shirt, fit: 'tight' }] },
     { version: 2, garments: [{ id: 'a', ...shirt, link: 'ftp://x' }] },
@@ -191,9 +206,9 @@ test('normalizeGarments refuses a doc that is not a garments doc', () => {
 
 test('brand, link and images are optional, and each is checked (GAR-3)', () => {
   const state = emptyGarments();
-  const ok = addGarment(state, { ...shirt, brand: '  Zara ', link: ' https://zara.com/p/1 ', images: ['https://a.example/1.jpg', 'http://a.example/2.png'] }, 'x');
+  const ok = addGarment(state, { ...shirt, brand: '  Zara ', link: ' https://zara.com/p/1 ', images: ['https://a.example/1.jpg', 'http://a.example/2.png'] }, 'x', NOW);
   assert.equal(ok.error, undefined);
-  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'], size: '', fit: '', measures: [] });
+  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'], size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: NOW });
   const url = (n) => `https://a.example/${n}.jpg`;
   const cases = [
     [{ ...shirt, brand: 'b'.repeat(MAX_BRAND + 1) }, { key: 'error.brandTooLong', params: { max: MAX_BRAND } }],
@@ -239,4 +254,38 @@ test('makeMain moves a chosen image first, and ignores another one (GAR-7)', () 
   const [a, b, c] = ['https://a/1.jpg', 'https://a/2.jpg', 'https://a/3.jpg'];
   assert.deepEqual(makeMain([a, b, c], c), [c, a, b]);
   assert.deepEqual(makeMain([a, b], 'https://x/y.jpg'), [a, b]);
+});
+
+test('a new garment records its creation date, and an edit keeps it (GAR-12)', () => {
+  const { state } = addGarment(emptyGarments(), shirt, 'x', NOW);
+  assert.equal(state.garments[0].creation_date, NOW);
+  const { state: edited } = editGarment(state, 'x', { ...shirt, name: 'Tee', creation_date: '2020-01-01T00:00:00.000Z' });
+  assert.equal(edited.garments[0].creation_date, NOW);
+  assert.ok(isDay(addGarment(emptyGarments(), shirt).state.garments[0].creation_date.slice(0, 10)));
+});
+
+test('the buy date and the price are optional, and each is checked (GAR-12)', () => {
+  const state = emptyGarments();
+  const garment = (fields) => addGarment(state, { ...shirt, ...fields }, 'x', NOW).state.garments[0];
+  assert.equal(garment({ buy_date: '2024-02-29' }).buy_date, '2024-02-29');
+  assert.equal(garment({ price: '19,99' }).price, 19.99);
+  assert.equal(garment({ price: ' 20.5 ' }).price, 20.5);
+  assert.equal(garment({ price: 12.345 }).price, 12.35);
+  assert.equal(garment({ price: '' }).price, null);
+  assert.equal(garment({ price: null }).price, null);
+  const priceInvalid = { key: 'error.priceInvalid', params: { max: MAX_PRICE } };
+  const cases = [
+    [{ buy_date: '2023-02-29' }, { key: 'error.buyDateInvalid' }],
+    [{ buy_date: '30/10/2026' }, { key: 'error.buyDateInvalid' }],
+    [{ buy_date: null }, { key: 'error.buyDateInvalid' }],
+    [{ price: '0' }, priceInvalid],
+    [{ price: '-5' }, priceInvalid],
+    [{ price: 'ten' }, priceInvalid],
+    [{ price: MAX_PRICE + 1 }, priceInvalid],
+  ];
+  for (const [fields, error] of cases) {
+    const result = addGarment(state, { ...shirt, ...fields }, 'x');
+    assert.equal(result.state, state);
+    assert.deepEqual(result.error, error, JSON.stringify(fields));
+  }
 });

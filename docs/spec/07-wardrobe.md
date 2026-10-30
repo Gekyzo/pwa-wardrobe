@@ -24,7 +24,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Garments
 
 - **GAR-1** The doc is
-  `{ version: 3, garments: [{ id, name, slot, season, color, brand, link, images, size, fit, measures }] }`,
+  `{ version: 4, garments: [{ id, name, slot, season, color, brand, link, images, size, fit, measures, buy_date, price, creation_date }] }`,
   newest garment first, stored as JSON under `wardrobe.garments`. A stored doc that is not valid is kept
   under `wardrobe.garments.corrupt`, and the app starts with no garments.
 - **GAR-2** `slot` is one of `top`, `bottom`, `outer`, `shoes`, `accessory`. `season` is one of
@@ -41,11 +41,12 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   times is `error.imagesInvalid`.
 - **GAR-4** `deleteGarment` removes one garment. An id that is not in the doc is
   `error.garmentMissing`, and nothing changes.
-- **GAR-5** `normalizeGarments` accepts a doc of version 1, 2 or 3 whose garments have a
-  non-empty id, no id two times, and fields that pass GAR-3. It trims each name and drops unknown
-  fields. It gives version 3: a garment of version 1 gets an empty brand, link and images, and a
-  garment of version 1 or 2 gets no size, no fit and no measures. A new version adds its migration
-  here.
+- **GAR-5** `normalizeGarments` accepts a doc of version 1, 2, 3 or 4 whose garments have a
+  non-empty id, no id two times, and fields that pass GAR-3 and GAR-12. It trims each name and
+  drops unknown fields. It gives version 4: a garment of version 1 gets an empty brand, link and
+  images, a garment of version 1 or 2 gets no size, no fit and no measures, and a garment of
+  version 1, 2 or 3 gets no buy date, no price and an unknown creation date `''`. A new version
+  adds its migration here.
 - **GAR-6** `brandsOf` gives the brands of the garments, each one time, sorted. Two brands that
   differ only in case are one brand, with the spelling of the first garment.
 - **GAR-7** The main image of a garment is its first image. A garment with no image has no main
@@ -69,6 +70,12 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   aside: the brands of the wardrobe (GAR-6) first, then the brands of the seed list `BRANDS` of
   `src/brands.js` that the wardrobe does not hold, case and accents aside. An empty text gives
   no brand.
+- **GAR-12** The buy date and the price of a garment are optional. `buy_date` is `''` or a
+  calendar date `YYYY-MM-DD`; another value is `error.buyDateInvalid`. `price` is `null` or a
+  number greater than 0 and at most 1 000 000, rounded to two decimals; a text with a point or a
+  comma is read as GAR-9, and another value is `error.priceInvalid`. `creation_date` is the
+  instant (`toISOString`) when `addGarment` added the garment; `editGarment` keeps it, and it is
+  `''` for a garment of an earlier version (GAR-5).
 
 ## Links
 
@@ -124,7 +131,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
   **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
   sheet holds the name, the brand, the slot, the season,
-  the colour, the link, the images and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
+  the colour, the link, the images, under `wardrobe.purchase` the buy date, which is not after
+  today, and the price in euros (GAR-12) and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
   in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
   **Add measure**. The measure name suggests the names in use, and the unit the units in use, then
   `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests no brand while it is empty, and
@@ -134,8 +142,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   is `error.colorInvalid`.
 - **WAR-4** A tap on a row opens its detail (LAY-3): the main image large and, with two or more
   images, all the images in a row below it, where a tap on one shows it large; the colour, the
-  name, the colour name, slot, season, brand and size, then the fit and each measure, each one
-  only when it is set, **Edit**, **Open link** when the garment has a
+  name, the colour name, slot, season, brand and size, then the fit, each measure, the price in
+  euros, the buy date and `wardrobe.added` with the creation date, in the formats of the language,
+  each one only when it is set, **Edit**, **Open link** when the garment has a
   link, which opens it in a new tab, and **Delete**, and the outfits that contain it (OUT-8)
   under the season filter, or `wardrobe.noOutfits`.
 - **WAR-5** An outfit card shows `outfit.number`, the strip of its combination, `outfit.exact`

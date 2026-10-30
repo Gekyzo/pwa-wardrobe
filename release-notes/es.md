@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- Una prenda puede tener ahora **fecha de compra** y **precio**, ambos opcionales. Su detalle muestra también cuándo la añadiste a la app.
 - El campo **marca** sugiere marcas conocidas mientras escribes, primero las tuyas.
 - **Conjunto al azar** en Armario te propone un conjunto de tus prendas con los colores de una combinación. Toca **Otro** para ver uno distinto.
 - **Borrar todos los datos** en Ajustes borra las prendas y las preferencias de este dispositivo, y la app empieza como nueva.

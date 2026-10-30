@@ -1,4 +1,4 @@
-const CACHE = 'wardrobe-shell-v6';
+const CACHE = 'wardrobe-shell-v7';
 
 const SHELL = [
   './',

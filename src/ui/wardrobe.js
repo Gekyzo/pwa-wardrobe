@@ -100,6 +100,11 @@ const UNITS = ['cm', 'mm', 'in', 'EU', 'US', 'UK'];
 const number = (value, grouping = true) =>
   new Intl.NumberFormat(lang, { maximumFractionDigits: 3, useGrouping: grouping }).format(value);
 
+// The price in euros, and a day or an instant, in the format of the language (WAR-4).
+const money = (value) => new Intl.NumberFormat(lang, { style: 'currency', currency: 'EUR' }).format(value);
+const day = (date) => new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(date);
+const today = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+
 const fitPill = (fit) => el('span', { className: fit === 'good' ? 'pill' : 'pill ghost', textContent: t(`fit.${fit}`) });
 
 const fillList = (id, values) => $(id).replaceChildren(...values.map((value) => el('option', { value })));
@@ -182,6 +187,9 @@ const openSheet = (id = null) => {
   options($('garment-slot'), SLOTS, 'slot', garment?.slot ?? 'top');
   options($('garment-season'), SEASONS, 'season', garment?.season ?? 'all');
   showColor();
+  $('garment-buy-date').value = garment?.buy_date ?? '';
+  $('garment-buy-date').max = today();
+  $('garment-price').value = garment?.price == null ? '' : number(garment.price, false);
   $('garment-size').value = garment?.size ?? '';
   ui.draftFit = garment?.fit ?? '';
   showFit();
@@ -272,11 +280,15 @@ const metaOf = (garment) =>
 
 const fact = (term, value) => [el('dt', { textContent: term }), el('dd', {}, [value])];
 
-// The fit and each measure of a garment, when it has one (WAR-4); the size is in the meta.
+// The fit, each measure, the price, the buy date and the creation date of a garment, when it has
+// one (WAR-4); the size is in the meta.
 const facts = (garment) => {
   const list = [
     ...(garment.fit ? fact(t('wardrobe.fit'), fitPill(garment.fit)) : []),
     ...garment.measures.flatMap(({ name, value, unit }) => fact(name, `${number(value)}${unit ? ` ${unit}` : ''}`)),
+    ...(garment.price != null ? fact(t('wardrobe.price'), money(garment.price)) : []),
+    ...(garment.buy_date ? fact(t('wardrobe.buyDate'), day(new Date(`${garment.buy_date}T12:00:00`))) : []),
+    ...(garment.creation_date ? fact(t('wardrobe.added'), day(new Date(garment.creation_date))) : []),
   ];
   return list.length ? [el('dl', { className: 'garment-facts' }, list)] : [];
 };
@@ -424,6 +436,8 @@ export const bind = () => {
       brand: $('garment-brand').value,
       link: $('garment-link').value,
       images: ui.draftImages,
+      buy_date: $('garment-buy-date').value,
+      price: $('garment-price').value,
       size: $('garment-size').value,
       fit: ui.draftFit,
       measures: readMeasures(),
