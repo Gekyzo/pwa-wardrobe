@@ -325,6 +325,9 @@ export const renderWardrobe = () => {
   $('garment-list').replaceChildren(...sortGarments(state.garments).map(row));
   ui.settleFrom = null;
   $('wardrobe-empty').hidden = state.garments.length > 0;
+  // From 600px the add is the button of the header (NAV-6), and the fab is hidden there. The add of
+  // the empty state replaces it.
+  $('header-add').hidden = $('fab').hidden || !$('wardrobe-empty').hidden;
   const garment = ui.garmentId === null ? null : findGarment(state, ui.garmentId);
   if (!garment) ui.garmentId = null;
   // The pane shows the detail alone below 840px, and beside the list from 840px (LAY-3).
@@ -345,6 +348,7 @@ export const renderWardrobe = () => {
 
 export const bind = () => {
   $('fab').addEventListener('click', () => openSheet());
+  $('header-add').addEventListener('click', () => openSheet());
   $('wardrobe-add').addEventListener('click', () => openSheet());
   $('garment-veil').addEventListener('click', closeGarmentSheet);
   $('garment-close').addEventListener('click', closeGarmentSheet);

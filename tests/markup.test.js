@@ -101,7 +101,7 @@ test('the account screens cover the app: Sign in with Google or offline, and Wai
 });
 
 test('Settings has the Account group: the email and Log out, or Sign in with Google (ACC-8)', () => {
-  const [group = ''] = body.match(/<div id="account-group" hidden>[\s\S]*?<\/div>\s*<\/div>/) ?? [];
+  const [group = ''] = body.match(/<div id="account-group" class="settings-section" hidden>[\s\S]*?<\/div>\s*<\/div>/) ?? [];
   assert.match(group, /data-i18n="settings.account"/);
   assert.match(group, /<span id="account-email" class="settings-row-label"><\/span>/);
   assert.match(group, /<div id="account-row" class="settings-row"><span id="account-email" class="settings-row-label"><\/span><\/div>/);

@@ -6,6 +6,30 @@
     --primary: var(--done);
     --on-primary: var(--on-done);
   }
+
+  /* From 600px (DSV-5) the rail is at the start with either hand; --frame-side is the end margin
+     of the frame, 0 until the desktop frame of 1024px. */
+  @media (min-width: 600px) {
+    :root {
+      --frame-side: 0px;
+      /* The column of Settings from 840px (SET-2). */
+      --settings-max: 960px;
+      /* The height of the header, written by app.js; the side sheets from 840px start below it (DSV-5). */
+      --header-height: 0px;
+    }
+  }
+
+  /* From 1024px (DSV-5) the app stands in one frame of at most --frame-max, centred, and the rail is
+     a labelled sidebar at the start of it. --rail-width is the frame's side margin plus the sidebar,
+     so each part that clears the rail clears both. */
+  @media (min-width: 1024px) {
+    :root {
+      --frame-max: 1280px;
+      --sidebar-width: 232px;
+      --frame-side: max(0px, (100vw - var(--frame-max)) / 2);
+      --rail-width: calc(var(--frame-side) + var(--sidebar-width));
+    }
+  }
 }
 
 @layer base {
@@ -29,20 +53,205 @@
     color: inherit;
   }
 
-  /* From 600px the fixed rail stands at the side of the hand (LAY-2): the body pads that side (LAY-4). */
+  /* From 600px (DSV-5) the fixed rail stands at the start with either hand: the body pads the rail at
+     the start and the frame's margin at the end (LAY-4). */
   @media (min-width: 600px) {
     body {
-      padding-right: calc(var(--rail-width) + env(safe-area-inset-right));
-    }
-
-    [data-hand="left"] body {
-      padding-right: env(safe-area-inset-right);
       padding-left: calc(var(--rail-width) + env(safe-area-inset-left));
+      padding-right: calc(var(--frame-side) + env(safe-area-inset-right));
     }
   }
 }
 
 @layer components {
+  /* @extends nav-bar
+     @part nav-brand  The mark and the name of the app at the top of the sidebar, from 1024px only.
+     @part nav-foot   At the foot of the rail, with no session: the offline icon, and from 1024px the text No account (NAV-5).
+     @part nav-foot-text  The text of nav-foot, shown from 1024px. */
+  /* From 600px the rail is at the start with either hand (DSV-5, NAV-4); the parts that sit at the
+     side of the hand clear the frame's end margin, 0 below 1024px. From 1024px the rail is a sidebar
+     of --sidebar-width at the start of the frame: the brand on top, then one row for each section,
+     the current one on a --secondary pill. */
+  .nav-brand,
+  .nav-foot {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .nav-bar > .nav-foot:not([hidden]) {
+      position: absolute;
+      bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+      inset-inline: 0;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .nav-foot-text {
+      display: none;
+    }
+  }
+
+  @media (min-width: 600px) {
+    :root[data-hand="right"] .nav-bar {
+      inset-inline-start: var(--frame-side);
+      right: auto;
+      width: calc(var(--rail-width) + env(safe-area-inset-left));
+      padding-right: 0;
+      padding-inline-start: env(safe-area-inset-left);
+      border-left: 0;
+      border-inline-end: 1px solid var(--line);
+    }
+
+    .toast {
+      right: calc(var(--frame-side) + env(safe-area-inset-right) + var(--space-3));
+    }
+
+    :root[data-hand="right"] .toast {
+      left: calc(var(--rail-width) + env(safe-area-inset-left) + var(--space-3));
+      right: calc(var(--frame-side) + env(safe-area-inset-right) + var(--space-3));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .nav-bar,
+    :root[data-hand="right"] .nav-bar {
+      inset-inline-start: var(--frame-side);
+      right: auto;
+      width: var(--sidebar-width);
+      justify-content: flex-start;
+      gap: var(--space-half);
+      padding: var(--space-6) var(--space-3);
+      padding-inline-start: calc(var(--space-3) + env(safe-area-inset-left));
+      border: 0;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-2) var(--space-5);
+      font-size: var(--text-h);
+      font-weight: var(--weight-strong);
+    }
+
+    .nav-brand img {
+      border-radius: var(--radius-m);
+    }
+
+    .nav-item {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: var(--space-3);
+      height: var(--tap);
+      padding-inline: var(--space-3);
+      border-radius: var(--radius-m);
+      font-size: var(--text-m);
+    }
+
+    .nav-item:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .nav-item[aria-current="page"] {
+      background: var(--secondary);
+    }
+
+    .nav-item[aria-current="page"] .icon {
+      padding: 0;
+      background: none;
+    }
+
+    .nav-bar > .nav-foot:not([hidden]) {
+      justify-content: flex-start;
+      gap: var(--space-2);
+      padding-inline: var(--space-3) var(--space-3);
+      font-size: var(--text-s);
+    }
+
+    .nav-foot-text {
+      display: inline;
+    }
+  }
+
+  /* @extends app-header
+     @part header-add  The add of the view (Add garment), from 600px (NAV-6). */
+  /* From 600px the add is a button of the header, and the floating + does not show. */
+  .header-add {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .app-header > .header-add:not([hidden]) {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      align-self: center;
+    }
+
+    .fab {
+      display: none;
+    }
+  }
+
+  /* @extends sheet */
+  /* From 600px a sheet keeps the width of the column and stands below it, so a tablet does not show
+     it as wide as the screen. The veil still covers the rail. From 840px (DSV-6) a sheet with a head
+     stands at the end of the frame with either hand, --side-sheet wide, from below the header and as
+     high as its content, over the veil. It comes in with a short slide and a fade. */
+  @media (min-width: 600px) {
+    .sheet-layer {
+      padding-left: calc(var(--rail-width) + env(safe-area-inset-left));
+      padding-right: calc(var(--frame-side) + env(safe-area-inset-right));
+    }
+
+    .sheet {
+      width: 100%;
+      max-width: var(--content-max);
+      margin-inline: auto;
+    }
+  }
+
+  @media (min-width: 840px) {
+    .sheet-layer:has(.sheet-head),
+    :root[data-hand="right"] .sheet-layer:has(.sheet-head) {
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: calc(var(--header-height) + var(--space-4)) calc(var(--frame-side) + var(--space-4) + env(safe-area-inset-right)) calc(var(--space-4) + env(safe-area-inset-bottom)) 0;
+    }
+
+    .sheet-layer:has(.sheet-head) .sheet,
+    :root[data-hand="right"] .sheet-layer:has(.sheet-head) .sheet {
+      width: var(--side-sheet);
+      height: auto;
+      max-height: 100%;
+      margin-inline: 0;
+      border-radius: var(--radius-l);
+      transition: transform var(--motion) var(--ease), opacity var(--motion) var(--ease);
+    }
+
+    .sheet-layer:has(.sheet-head)[hidden] .sheet,
+    :root[data-hand="right"] .sheet-layer:has(.sheet-head)[hidden] .sheet {
+      opacity: 0;
+      transform: translateX(var(--space-7));
+    }
+
+    @starting-style {
+      .sheet-layer:has(.sheet-head) .sheet,
+      :root[data-hand="right"] .sheet-layer:has(.sheet-head) .sheet {
+        opacity: 0;
+        transform: translateX(var(--space-7));
+      }
+    }
+
+    /* With no grab and a gap above it, the head needs no room for the top inset. */
+    .sheet-layer:has(.sheet-head) .sheet-head {
+      padding-top: var(--space-3);
+    }
+  }
+
   /* List */
 
   /* @component swatch
@@ -394,7 +603,9 @@
      @summary The state of the installed version: a sign, and a text for the outdated state only.
      @part version-status-text  The text of the state. With a sign it stays for screen readers only.
      @example <span class="version-status" data-status="current" role="status"><svg data-for="current" class="icon small" aria-hidden="true"><use href="icons.svg#check-circle"/></svg><span class="version-status-text">Up to date</span></span> */
+  /* Relative, so the hidden text stays inside the scrolling main and does not scroll the page. */
   .version-status {
+    position: relative;
     display: flex;
     align-items: center;
     gap: var(--space-1);
@@ -557,11 +768,59 @@
   /* @component settings
      @scope settings
      @summary The Settings section: groups of settings rows (list-group) under a list-group-head, then the about lines. One centred column from 600px. A row of Preferences holds a real select laid over it, so a tap opens the native picker.
+     @part settings-hint    A line of help below a group head.
+     @part settings-section A group head, its hint and its group. From 840px (SET-2) the head and the hint form a column beside the group.
      @example <section class="settings" style="width: 100%"><h2 class="list-group-head">Preferences</h2><div class="list-group"><div class="settings-row"><span class="settings-row-label">Language</span><span class="settings-row-value">English</span><span class="chevron" aria-hidden="true">›</span><select class="select" aria-label="Language"><option>English</option></select></div></div></section> */
   .settings {
     width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
+  }
+
+  .settings-hint {
+    margin: 0;
+    padding: 0 var(--space-4) var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-s);
+    text-align: start;
+    hyphens: auto;
+  }
+
+  /* From 840px (SET-2) Settings takes a wider column, and each section is a row: its head and its
+     hint at the left, its group at the right, sections split by a line. */
+  @media (min-width: 840px) {
+    .settings {
+      max-width: var(--settings-max);
+      padding-inline: var(--space-6);
+    }
+
+    .settings-section {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      grid-template-rows: auto 1fr;
+      column-gap: var(--space-6);
+      align-items: start;
+      padding-block: var(--space-5);
+    }
+
+    .settings-section + .settings-section {
+      border-top: 1px solid var(--line);
+    }
+
+    .settings-section > .list-group-head,
+    .settings-section > .settings-hint {
+      grid-column: 1;
+      padding-inline: 0;
+    }
+
+    .settings-section > .list-group-head {
+      margin: var(--space-4) 0 var(--space-1);
+    }
+
+    .settings-section > .list-group {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
   }
 
   /* @extends list-group */

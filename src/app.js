@@ -25,6 +25,10 @@ const renderAll = () => {
   renderAccount();
 };
 setRender(renderAll);
+// The side sheets from 840px start below the header (DSV-6).
+new ResizeObserver(([entry]) => {
+  document.documentElement.style.setProperty('--header-height', `${Math.round(entry.borderBoxSize[0].blockSize)}px`);
+}).observe(document.querySelector('.app-header'));
 
 bindNav();
 bindWardrobe();

@@ -6,9 +6,10 @@ Rules of `src/sections.js`, `src/modules.js`, `src/onboarding.js` and the views 
 ## Size classes
 
 The size classes, the navigation element, the `pane` layout and the safe areas are the rules
-LAY-1 to LAY-4 of the design system (04-design-system). In this app the Wardrobe and Combinations
-sections use the `pane` layout (LAY-3). From 840px, with no entry open, the detail says
-`wardrobe.pick` or `combinations.pick`.
+LAY-1 to LAY-4 of the design system (04-design-system), with the exception DSV-5: four width
+classes, the rail at the start with either hand from 600px, and from 1024px a centred frame with a
+labelled sidebar. In this app the Wardrobe and Combinations sections use the `pane` layout
+(LAY-3). From 840px, with no entry open, the detail says `wardrobe.pick` or `combinations.pick`.
 
 ## Navigation
 
@@ -22,6 +23,17 @@ sections use the `pane` layout (LAY-3). From 840px, with no entry open, the deta
   the detail of a garment or of a combination and shows its list again, which comes in from the
   left. A slide to the left still goes to the next section. The **Back** of a detail starts with
   an arrow that lines up with the content edge.
+
+- **NAV-4** Below 600px the navigation is the bottom bar. From 600px it is a rail at the left with
+  **Right** and with **Left** (DSV-5). **Left** still puts the `+` of a phone at the left and the
+  buttons of the header before its text.
+- **NAV-5** From 1024px the rail is a sidebar of 232px at the left of a centred frame of at most
+  1280px. It shows the mark and the name of the app (`app.name`) above the sections, one row for
+  each section with its icon and its name, and the current section on a pill. With no session
+  (ACC-10) the foot of the rail shows the offline icon, and from 1024px the text `nav.local`.
+- **NAV-6** Below 600px the add of Wardrobe is the floating `+`. From 600px it is the button
+  **Add garment** of the header, with the same conditions, and the `+` does not float. While the
+  empty state shows its own **Add garment**, the header has no add.
 
 ## Modules
 
@@ -42,6 +54,9 @@ sections use the `pane` layout (LAY-3). From 840px, with no entry open, the deta
   then the version lines (VER-4). A row of Preferences shows its current value and a chevron, and
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.
+- **SET-2** **Backup** and **Preferences** have a line of help below their head at every width.
+  From 840px Settings takes a column of at most 960px, and each group is a row: its head and its
+  help at the left, its rows at the right, the groups split by a line.
 
 ## Walkthrough
 

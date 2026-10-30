@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- On a computer or a tablet, the app uses the wide screen: a side menu with the name of the app, **Add garment** at the top, and Settings in two columns.
 
 ## 0.1.12 - 2026-10-27
 

@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- Desktop layout of `pwa-shopping-list` (DSV-5, DSV-6, NAV-4 to NAV-6, SET-2): four width classes; from 600px the rail at the left with either hand and **Add garment** in the header (`header-add`) in place of the `+`; from 840px side sheets at the end of the frame, below the header (`--header-height` from a `ResizeObserver` in `src/app.js`), and Settings in two columns with help lines for Backup and Preferences; from 1024px a centred frame of at most 1280px with a 232px sidebar: the app mark, labelled sections and, with no session, `nav.local`. `tests/design.test.js` skips DS-8 and runs it again without the 1024px query. `.version-status` is relative, so Settings no longer scrolls the page as well. New keys `app.name`, `nav.local`, `settings.backupHint`, `settings.preferencesHint`; new icon `plus`.
 
 ## 0.1.12 - 2026-10-27
 

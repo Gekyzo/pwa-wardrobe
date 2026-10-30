@@ -18,6 +18,7 @@
         <h1 id="title" class="app-header-title"></h1>
         <p id="subtitle" class="app-header-subtitle"></p>
       </div>
+      <button id="header-add" class="button primary header-add" type="button" hidden><svg class="icon small" aria-hidden="true"><use href="icons.svg#plus"/></svg><span data-i18n="wardrobe.add"></span></button>
     </header>
 
     <div id="toast" class="toast" role="status" aria-live="polite" hidden>
@@ -68,7 +69,7 @@
       </section>
 
       <section id="settings" class="settings" hidden>
-        <div id="account-group" hidden>
+        <div id="account-group" class="settings-section" hidden>
           <h2 class="list-group-head" data-i18n="settings.account"></h2>
           <div class="list-group">
             <div id="account-row" class="settings-row"><span id="account-email" class="settings-row-label"></span></div>
@@ -76,46 +77,56 @@
             <button id="account-login" class="settings-row" type="button"><span class="settings-row-label" data-i18n="account.signIn"></span><span class="chevron" aria-hidden="true">›</span></button>
           </div>
         </div>
-        <h2 class="list-group-head" data-i18n="settings.backup"></h2>
-        <div class="list-group">
-          <button id="export" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.export"></span><span class="chevron" aria-hidden="true">›</span></button>
-          <button id="import" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.import"></span><span class="chevron" aria-hidden="true">›</span></button>
-        </div>
-        <h2 class="list-group-head" data-i18n="settings.preferences"></h2>
-        <div class="list-group">
-          <div class="settings-row">
-            <span class="settings-row-label" data-i18n="settings.language"></span>
-            <span id="language-value" class="settings-row-value"></span>
-            <span class="chevron" aria-hidden="true">›</span>
-            <select id="language" class="select" data-i18n-attr="aria-label:settings.language"></select>
-          </div>
-          <div class="settings-row">
-            <span class="settings-row-label" data-i18n="settings.hand"></span>
-            <span id="hand-value" class="settings-row-value"></span>
-            <span class="chevron" aria-hidden="true">›</span>
-            <select id="hand" class="select" data-i18n-attr="aria-label:settings.hand"></select>
-          </div>
-          <div class="settings-row">
-            <span class="settings-row-label" data-i18n="settings.theme"></span>
-            <span id="theme-value" class="settings-row-value"></span>
-            <span class="chevron" aria-hidden="true">›</span>
-            <select id="theme" class="select" data-i18n-attr="aria-label:settings.theme"></select>
+        <div class="settings-section">
+          <h2 class="list-group-head" data-i18n="settings.backup"></h2>
+          <p class="settings-hint" data-i18n="settings.backupHint"></p>
+          <div class="list-group">
+            <button id="export" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.export"></span><span class="chevron" aria-hidden="true">›</span></button>
+            <button id="import" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.import"></span><span class="chevron" aria-hidden="true">›</span></button>
           </div>
         </div>
-        <h2 class="list-group-head" data-i18n="settings.modules"></h2>
-        <div class="list-group">
-          <label class="switch"><span data-i18n="nav.combinations"></span><input class="switch-input" type="checkbox" role="switch" data-module="combinations"></label>
+        <div class="settings-section">
+          <h2 class="list-group-head" data-i18n="settings.preferences"></h2>
+          <p class="settings-hint" data-i18n="settings.preferencesHint"></p>
+          <div class="list-group">
+            <div class="settings-row">
+              <span class="settings-row-label" data-i18n="settings.language"></span>
+              <span id="language-value" class="settings-row-value"></span>
+              <span class="chevron" aria-hidden="true">›</span>
+              <select id="language" class="select" data-i18n-attr="aria-label:settings.language"></select>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-label" data-i18n="settings.hand"></span>
+              <span id="hand-value" class="settings-row-value"></span>
+              <span class="chevron" aria-hidden="true">›</span>
+              <select id="hand" class="select" data-i18n-attr="aria-label:settings.hand"></select>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-label" data-i18n="settings.theme"></span>
+              <span id="theme-value" class="settings-row-value"></span>
+              <span class="chevron" aria-hidden="true">›</span>
+              <select id="theme" class="select" data-i18n-attr="aria-label:settings.theme"></select>
+            </div>
+          </div>
         </div>
-        <div id="install-group" hidden>
+        <div class="settings-section">
+          <h2 class="list-group-head" data-i18n="settings.modules"></h2>
+          <div class="list-group">
+            <label class="switch"><span data-i18n="nav.combinations"></span><input class="switch-input" type="checkbox" role="switch" data-module="combinations"></label>
+          </div>
+        </div>
+        <div id="install-group" class="settings-section" hidden>
           <h2 class="list-group-head" data-i18n="settings.app"></h2>
           <div class="list-group">
             <button id="install" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.install"></span><span class="chevron" aria-hidden="true">›</span></button>
           </div>
         </div>
-        <h2 class="list-group-head" data-i18n="settings.help"></h2>
-        <div class="list-group">
-          <button id="show-onboarding" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.onboarding"></span><span class="chevron" aria-hidden="true">›</span></button>
-          <button id="show-whatsnew" class="settings-row" type="button" hidden><span class="settings-row-label" data-i18n="settings.whatsNew"></span><span class="chevron" aria-hidden="true">›</span></button>
+        <div class="settings-section">
+          <h2 class="list-group-head" data-i18n="settings.help"></h2>
+          <div class="list-group">
+            <button id="show-onboarding" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.onboarding"></span><span class="chevron" aria-hidden="true">›</span></button>
+            <button id="show-whatsnew" class="settings-row" type="button" hidden><span class="settings-row-label" data-i18n="settings.whatsNew"></span><span class="chevron" aria-hidden="true">›</span></button>
+          </div>
         </div>
         <footer class="about">
           <p class="about-line"><span id="version"></span><span id="version-status" class="version-status" role="status" data-status="checking"><svg data-for="checking" class="icon small" aria-hidden="true"><use href="icons.svg#refresh"/></svg><svg data-for="current" class="icon small" aria-hidden="true"><use href="icons.svg#check-circle"/></svg><svg data-for="outdated" class="icon small" aria-hidden="true"><use href="icons.svg#download"/></svg><svg data-for="unknown" class="icon small" aria-hidden="true"><use href="icons.svg#offline"/></svg><span id="version-status-text" class="version-status-text"></span></span></p>
@@ -127,6 +138,7 @@
     <button id="fab" class="fab" type="button" data-i18n-attr="aria-label:wardrobe.add">+</button>
 
     <nav class="nav-bar" data-i18n-attr="aria-label:nav.label">
+      <div class="nav-brand" aria-hidden="true"><img src="./icons/icon-192.png" alt="" width="28" height="28"><span data-i18n="app.name"></span></div>
       <button class="nav-item" type="button" data-view="wardrobe">
         <svg class="icon" aria-hidden="true"><use href="icons.svg#hanger"/></svg>
         <span data-i18n="nav.wardrobe"></span>
@@ -139,6 +151,7 @@
         <svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg>
         <span data-i18n="nav.settings"></span>
       </button>
+      <p id="nav-account" class="nav-foot" data-i18n-attr="title:nav.local" hidden><svg class="icon small" aria-hidden="true"><use href="icons.svg#offline"/></svg><span class="nav-foot-text" data-i18n="nav.local"></span></p>
     </nav>
 
     <div id="whatsnew-sheet" class="sheet-layer" hidden>

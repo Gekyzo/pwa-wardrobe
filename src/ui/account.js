@@ -38,6 +38,8 @@ export const renderAccount = () => {
   $('logout').hidden = !session;
   $('account-login').hidden = session !== null;
   $('account-email').textContent = session ? session.user.email || session.user.name : '';
+  // The foot of the rail says that the garments stay on this device (NAV-5).
+  $('nav-account').hidden = session !== null;
 };
 
 const show = (name) => {
