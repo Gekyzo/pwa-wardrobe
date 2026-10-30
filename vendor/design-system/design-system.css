@@ -75,10 +75,18 @@
     --arrow: 6px; /* the arrow of a select */
     --nav-height: 64px;
     --dock-height: 56px; /* the bar of the main action above the bottom bar */
-    /* The adaptive layout (LAY-1): the rail from 600px, the two panes from 840px. */
+    /* The adaptive layout (LAY-1): the rail from 600px, the two panes from 840px, the frame and
+       its sidebar from 1024px. --rail-width is the start margin, rail included; --frame-side is the
+       end margin of the frame. */
     --rail-width: 80px;
+    --frame-side: 0px;
+    --frame-max: 1280px;
+    --sidebar-width: 232px;
     --side-sheet: 400px; /* a sheet with a head from 840px */
     --content-max: 640px;
+    --page-max: var(--content-max); /* the widest content column; a layout sets it on body */
+    --gutter: var(--space-4); /* the least side padding of the header and main from 600px */
+    --header-height: 0px; /* the height of the header; the app writes it */
     --pane-list: 360px;
     --art-width: 240px; /* the drawings of the walkthrough */
     --logo: 96px; /* the app icon at the top of the walkthrough */
@@ -90,6 +98,19 @@
     --motion: 250ms;
     --motion-slow: 1.2s;
     --ease: cubic-bezier(0.2, 0.8, 0.2, 1); /* the curve of every move */
+  }
+
+  @media (min-width: 840px) {
+    :root {
+      --gutter: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --frame-side: max(0px, (100vw - var(--frame-max)) / 2);
+      --rail-width: calc(var(--frame-side) + var(--sidebar-width));
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -172,6 +193,15 @@
      the dock only. */
   body:has(.dock:not([hidden]) > .dock-add:not([hidden])) main {
     padding-bottom: calc(var(--dock-height) + var(--space-4));
+  }
+
+  /* From 600px (LAY-1) the header and main share one side padding, so the title lines up with the
+     edge of the content: a column of at most --page-max, centred, at least --gutter from the rail
+     and from the end of the frame. */
+  @media (min-width: 600px) {
+    main {
+      padding-inline: max(var(--gutter), (100% - var(--page-max)) / 2);
+    }
   }
 
   /* No dock from 600px: the floating button is back, and the content clears it. */
@@ -636,6 +666,7 @@
      @part app-header-text      The title and the summary, which take the free width.
      @part app-header-title     The name of the section.
      @part app-header-subtitle  The summary of the section.
+     @part header-add  The add of the view, a "button primary" at the end, from 600px; while the header has one, the fab does not show from 600px.
      @example <header class="app-header" style="border: 0"><div class="ring" style="--pct: 33%"><span class="ring-text">2/6</span></div><div class="app-header-text"><h1 class="app-header-title">Today</h1><p class="app-header-subtitle">4 notes left</p></div><button class="button icon" type="button" aria-label="Search"><svg class="icon" aria-hidden="true"><use href="icons.svg#help"/></svg></button></header> */
   .app-header {
     display: flex;
@@ -650,6 +681,25 @@
   .app-header-text {
     flex: 1;
     min-width: 0;
+  }
+
+  @media (min-width: 600px) {
+    .app-header {
+      padding-inline: max(var(--gutter), (100% - var(--page-max)) / 2);
+    }
+  }
+
+  .header-add {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .app-header > .header-add:not([hidden]) {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      align-self: center;
+    }
   }
 
   /* The tools stand closer to each other than to the title, so that three leave room for it. */
@@ -716,8 +766,13 @@
   }
 
   /* @component nav-bar
-     @summary The bottom bar below 600px, a rail from 600px at the start side, or at the end side with data-hand="right" on the root (the app pads its body on the rail side): one item for each section that is on.
+     @summary The bottom bar below 600px, a rail at the start side from 600px with either hand, and from 1024px a labelled sidebar at the start of the frame (the app pads its body on the rail side): one item for each section that is on.
      @part nav-item  A section: its icon and its name. The current one has aria-current="page".
+     @part nav-brand  The mark (an img of 28px) and the name of the app at the top of the sidebar, from 1024px only.
+     @part nav-count  A count at the end of an item, from 1024px only. It is not part of the name for a screen reader.
+     @part nav-foot   A line at the foot of the rail: its icon from 600px, its icon and its text from 1024px.
+     @part nav-foot-text  The text of nav-foot, shown from 1024px.
+     @example <nav class="nav-bar" style="position: static; width: 232px; min-height: 280px"><div class="nav-brand"><span>App</span></div><button class="nav-item" type="button" aria-current="page"><svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg><span>Notes</span><span class="nav-count">4</span></button><button class="nav-item" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg><span>Settings</span></button><p class="nav-foot"><svg class="icon small" aria-hidden="true"><use href="icons.svg#settings"/></svg><span class="nav-foot-text">On this device</span></p></nav>
      @example <nav class="nav-bar" style="width: 100%"><button class="nav-item" type="button" aria-current="page"><svg class="icon" aria-hidden="true"><use href="icons.svg#note"/></svg><span>Notes</span></button><button class="nav-item" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"/></svg><span>Later</span><em class="badge">2</em></button></nav> */
   .nav-bar {
     display: flex;
@@ -777,17 +832,96 @@
     }
   }
 
-  /* The right hand puts the rail at the end side, where the thumb is. The app pads its body on the
-     rail side. */
+  .nav-brand,
+  .nav-count,
+  .nav-foot {
+    display: none;
+  }
+
   @media (min-width: 600px) {
-    :root[data-hand="right"] .nav-bar {
-      inset-inline-start: auto;
-      right: 0;
-      width: calc(var(--rail-width) + env(safe-area-inset-right));
-      padding-inline-start: 0;
-      padding-right: env(safe-area-inset-right);
-      border-inline-end: 0;
-      border-left: 1px solid var(--line);
+    .nav-bar > .nav-foot:not([hidden]) {
+      position: absolute;
+      bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+      inset-inline: 0;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .nav-foot-text {
+      display: none;
+    }
+  }
+
+  /* From 1024px (LAY-1) the rail is a sidebar of --sidebar-width at the start of the frame: the brand
+     on top, then one row for each section, the current one on a --secondary pill. */
+  @media (min-width: 1024px) {
+    .nav-bar {
+      inset-inline-start: var(--frame-side);
+      width: var(--sidebar-width);
+      justify-content: flex-start;
+      gap: var(--space-half);
+      padding: var(--space-6) var(--space-3);
+      padding-inline-start: calc(var(--space-3) + env(safe-area-inset-left));
+      border: 0;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-2) var(--space-5);
+      font-size: var(--text-h);
+      font-weight: var(--weight-strong);
+    }
+
+    .nav-brand > img {
+      border-radius: var(--radius-m);
+    }
+
+    .nav-item {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: var(--space-3);
+      height: var(--tap);
+      padding-inline: var(--space-3);
+      border-radius: var(--radius-m);
+      font-size: var(--text-m);
+    }
+
+    .nav-item:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .nav-item[aria-current="page"] {
+      background: var(--secondary);
+    }
+
+    .nav-item[aria-current="page"] .icon {
+      padding: 0;
+      background: none;
+    }
+
+    .nav-bar > .nav-foot:not([hidden]) {
+      justify-content: flex-start;
+      gap: var(--space-2);
+      padding-inline: var(--space-3);
+      font-size: var(--text-s);
+    }
+
+    .nav-foot-text {
+      display: inline;
+    }
+
+    .nav-count {
+      display: block;
+      margin-inline-start: auto;
+      color: var(--muted);
+      font-size: var(--text-s);
+      font-weight: var(--weight-normal);
+      font-variant-numeric: tabular-nums;
     }
   }
 
@@ -997,33 +1131,49 @@
     border-top: 1px solid var(--line);
   }
 
-  /* From 840px a sheet with a head is a side sheet, full height, at the start side next to the rail
-     (the end side with data-hand="right" on the root). A sheet without a head keeps the bottom sheet. */
+  /* From 600px a sheet keeps the width of the column and stands beside the rail, so a tablet does
+     not show it as wide as the screen; its veil still covers the rail. From 840px a sheet with a head
+     is a card at the end of the frame with either hand: --side-sheet wide, from below the header, as
+     high as its content, --gutter from the end, over the veil. A sheet without a head keeps the
+     bottom sheet. */
+  @media (min-width: 600px) {
+    .sheet-layer {
+      padding-left: calc(var(--rail-width) + env(safe-area-inset-left));
+      padding-right: calc(var(--frame-side) + env(safe-area-inset-right));
+    }
+
+    .sheet {
+      width: 100%;
+      max-width: var(--content-max);
+      margin-inline: auto;
+    }
+  }
+
   @media (min-width: 840px) {
     .sheet-layer:has(.sheet-head) {
-      flex-direction: row;
-      align-items: stretch;
       justify-content: flex-start;
-      padding-inline-start: calc(var(--rail-width) + env(safe-area-inset-left));
+      align-items: flex-end;
+      padding: calc(var(--header-height) + var(--space-4)) calc(var(--frame-side) + var(--gutter) + env(safe-area-inset-right)) calc(var(--space-4) + env(safe-area-inset-bottom)) 0;
     }
 
     .sheet-layer:has(.sheet-head) .sheet {
       width: var(--side-sheet);
-      height: 100%;
+      height: auto;
       max-height: 100%;
-      border-start-start-radius: 0;
-      border-start-end-radius: var(--radius-xl);
-      border-end-start-radius: 0;
-      border-end-end-radius: var(--radius-xl);
+      margin: 0;
+      border-radius: var(--radius-l);
+      transition: transform var(--motion) var(--ease), opacity var(--motion) var(--ease);
     }
 
     .sheet-layer:has(.sheet-head)[hidden] .sheet {
-      transform: translateX(-100%);
+      opacity: 0;
+      transform: translateX(var(--space-7));
     }
 
     @starting-style {
       .sheet-layer:has(.sheet-head) .sheet {
-        transform: translateX(-100%);
+        opacity: 0;
+        transform: translateX(var(--space-7));
       }
     }
 
@@ -1031,32 +1181,9 @@
       display: none;
     }
 
-    /* With no grab above it, the head clears the top inset. */
+    /* With no grab and a gap above it, the head needs no room for the top inset. */
     .sheet-layer:has(.sheet-head) .sheet-head {
-      padding-top: calc(var(--space-3) + env(safe-area-inset-top));
-    }
-
-    :root[data-hand="right"] .sheet-layer:has(.sheet-head) {
-      justify-content: flex-end;
-      padding-inline-start: 0;
-      padding-inline-end: calc(var(--rail-width) + env(safe-area-inset-right));
-    }
-
-    :root[data-hand="right"] .sheet-layer:has(.sheet-head) .sheet {
-      border-start-start-radius: var(--radius-xl);
-      border-start-end-radius: 0;
-      border-end-start-radius: var(--radius-xl);
-      border-end-end-radius: 0;
-    }
-
-    :root[data-hand="right"] .sheet-layer:has(.sheet-head)[hidden] .sheet {
-      transform: translateX(100%);
-    }
-
-    @starting-style {
-      :root[data-hand="right"] .sheet-layer:has(.sheet-head) .sheet {
-        transform: translateX(100%);
-      }
+      padding-top: var(--space-3);
     }
   }
 
@@ -1125,20 +1252,17 @@
     flex: 1;
   }
 
-  /* No bar at the bottom from 600px: the toast goes down, and clears the rail. */
+  /* No bar at the bottom from 600px: the toast goes down, clears the rail at the start and the
+     frame's end margin at the end. */
   @media (min-width: 600px) {
     .toast {
       bottom: calc(env(safe-area-inset-bottom) + var(--tap-l) + var(--space-6));
       left: calc(var(--rail-width) + env(safe-area-inset-left) + var(--space-3));
+      right: calc(var(--frame-side) + env(safe-area-inset-right) + var(--space-3));
     }
 
     body:has(.dock:not([hidden])) .toast {
       bottom: calc(env(safe-area-inset-bottom) + var(--tap-l) + var(--space-6));
-    }
-
-    :root[data-hand="right"] .toast {
-      left: calc(var(--space-3) + env(safe-area-inset-left));
-      right: calc(var(--rail-width) + env(safe-area-inset-right) + var(--space-3));
     }
   }
 
@@ -1802,18 +1926,16 @@
     left: calc(var(--space-4) + env(safe-area-inset-left));
   }
 
-  /* No bar at the bottom from 600px; on the left side the button clears the rail. */
+  /* No bar at the bottom from 600px; on the left side the button clears the rail, on the right side
+     the frame's end margin. */
   @media (min-width: 600px) {
     .fab {
+      right: calc(var(--frame-side) + env(safe-area-inset-right) + var(--space-4));
       bottom: calc(env(safe-area-inset-bottom) + var(--space-4));
     }
 
     [data-hand="left"] .fab {
       left: calc(var(--rail-width) + env(safe-area-inset-left) + var(--space-4));
-    }
-
-    :root[data-hand="right"] .fab {
-      right: calc(var(--rail-width) + env(safe-area-inset-right) + var(--space-4));
     }
 
     body:has(.dock:not([hidden])) .fab {
@@ -1823,6 +1945,11 @@
     /* The dock does not show from 600px, so the floating button is the add button again. */
     body:has(.dock:not([hidden]) > .dock-add:not([hidden])) .fab {
       display: block;
+    }
+
+    /* A header-add is the add button from 600px (LAY-2). Last, so it wins over the rule above. */
+    body:has(.app-header > .header-add) .fab {
+      display: none;
     }
   }
 
@@ -2010,7 +2137,7 @@
   }
 
   /* @component pane
-     @summary A list and the detail of one entry. Below 840px one of them shows at a time, in one centred column; from 840px they stand side by side.
+     @summary A list and the detail of one entry. Below 840px one of them shows at a time, in one centred column; from 840px they stand side by side, --gutter apart, and fill the content area: the detail is a card on --surface.
      @part pane-list  The list. Hidden below 840px while a detail is open.
      @part pane-detail  The detail. Hidden below 840px while no entry is open.
      @part pane-back  The button of the detail that goes back to the list. Hidden from 840px, where the list stays in sight.
@@ -2036,11 +2163,16 @@
   }
 
   @media (min-width: 840px) {
+    body:has(main > .pane:not([hidden])) {
+      --page-max: 100%;
+    }
+
     .pane {
       display: grid;
       grid-template-columns: var(--pane-list) minmax(0, 1fr);
+      align-items: start;
+      column-gap: var(--gutter);
       max-width: none;
-      min-height: 100%;
     }
 
     .pane > .pane-list,
@@ -2049,8 +2181,14 @@
       display: block;
     }
 
+    /* The detail is a card, --space-4 below the header, that stays in sight while the list scrolls. */
     .pane > .pane-detail {
-      border-inline-start: 1px solid var(--line);
+      position: sticky;
+      top: var(--space-4);
+      margin-block: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border-radius: var(--radius-l);
+      background: var(--surface);
     }
 
     .pane-back {

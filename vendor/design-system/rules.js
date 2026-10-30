@@ -223,21 +223,18 @@ export const RULES = [
       .map((rule) => rule.selector);
   }),
 
-  define('DS-8', 'a width query uses only the breakpoints 600px and 840px, as min-width (DS-8)', ['css'], ({ joined }) => {
+  define('DS-8', 'a width query uses only the breakpoints 600px, 840px and 1024px, as min-width (DS-8)', ['css'], ({ joined }) => {
     const queries = [...joined.matchAll(/@media\s*([^{]+)\{/g)].map(([, query]) => query);
     const widths = queries.flatMap((query) =>
       [...query.matchAll(/\(\s*(min-|max-)?width\s*:\s*([^)]+)\)/g)].map(([, kind = '', value]) => `${kind}${value.trim()}`));
     return [
       ...['min-600px', 'min-840px'].filter((width) => !widths.includes(width)).map((width) => `no ${width} query`),
-      ...widths.filter((width) => !['min-600px', 'min-840px'].includes(width)),
+      ...widths.filter((width) => !['min-600px', 'min-840px', 'min-1024px'].includes(width)),
     ];
   }),
 
-  define('LAY-2', 'a rail at the start side has a rail at the end side for the right hand (LAY-2)', ['css'], ({ rules }) => {
-    const rail = rules.some((rule) => rule.selector === '.nav-bar' && rule.declarations.some((d) => d.property === 'inset-inline-start'));
-    const end = rules.some((rule) => rule.selector === ':root[data-hand="right"] .nav-bar');
-    return rail && !end ? ['no [data-hand="right"] .nav-bar'] : [];
-  }),
+  define('LAY-2', 'the rail stands at the start side with either hand (LAY-2)', ['css'], ({ rules }) =>
+    rules.filter((rule) => /\[data-hand="right"\][^,]*\.nav-bar\b/.test(rule.selector)).map((rule) => rule.selector)),
 
   define('LAY-3', 'the pane layout is documented with its parts (LAY-3)', ['css'], ({ catalog }) => {
     const pane = catalog.components.find((component) => component.name === 'pane');

@@ -6,9 +6,9 @@ Rules of `src/sections.js`, `src/modules.js`, `src/onboarding.js` and the views 
 ## Size classes
 
 The size classes, the navigation element, the `pane` layout and the safe areas are the rules
-LAY-1 to LAY-4 of the design system (04-design-system), with the exception DSV-5: four width
-classes, the rail at the start with either hand from 600px, and from 1024px a centred frame with a
-labelled sidebar. In this app the Wardrobe and Combinations sections use the `pane` layout
+LAY-1 to LAY-5 of the design system (04-design-system, DSV-5): four width classes, the rail at
+the start with either hand from 600px, and from 1024px a centred frame with a labelled sidebar.
+From 840px the detail of the pane is a card beside the list. In this app the Wardrobe and Combinations sections use the `pane` layout
 (LAY-3). From 840px, with no entry open, the detail says `wardrobe.pick` or `combinations.pick`.
 
 ## Navigation
@@ -55,8 +55,8 @@ labelled sidebar. In this app the Wardrobe and Combinations sections use the `pa
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.
 - **SET-2** **Backup** and **Preferences** have a line of help below their head at every width.
-  From 840px Settings takes a column of at most 960px, and each group is a row: its head and its
-  help at the left, its rows at the right, the groups split by a line.
+  From 840px Settings takes a column of at most 960px (`--page-max`, LAY-1), and each group is a
+  row: its head and its help at the left, its rows at the right, the groups split by a line.
 
 ## Walkthrough
 
