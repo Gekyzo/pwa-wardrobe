@@ -35,6 +35,7 @@ const SHELL = [
   './src/garments.js',
   './src/records.js',
   './src/sync.js',
+  './src/syncer.js',
   './src/brands.js',
   './src/measures.js',
   './src/links.js',

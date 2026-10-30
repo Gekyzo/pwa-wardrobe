@@ -20,6 +20,7 @@
 | `src/brands.js` | The seed list of brands and the brands that the brand field suggests | nothing |
 | `src/records.js` | The garments as server records, their order and the diff of two sets of records | nothing |
 | `src/sync.js` | The queue of changes, the merge of pulled records and the check of each record | `records`, `garments` |
+| `src/syncer.js` | The sync driver: the queue of each save, the run, the retries, the token refresh, the stream and the status (SYNC-2 to SYNC-4, SYNC-11) | `records`, `sync`, `session`, `pocketbase`, `garments`, `storage` |
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
@@ -75,7 +76,8 @@
 The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are `wardrobe.lang`,
 `wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules`, `wardrobe.onboarded` and
 `wardrobe.seen-version` (VER-21). The account keeps `wardrobe.session` (ACC-5), and
-`wardrobe.oauth` in `sessionStorage` for the time of a Google redirect (ACC-4).
+`wardrobe.oauth` in `sessionStorage` for the time of a Google redirect (ACC-4). The sync keys are
+in [09-sync.md](09-sync.md).
 
 ## Change guide
 
@@ -101,6 +103,7 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/brands.test.js` | The brands that the brand field suggests and their order (GAR-11) |
 | `tests/records.test.js` | The garments as records, the doc back from them and the diff (SYNC-1) |
 | `tests/sync.test.js` | The queue, the merge of pulled records, tombstones, the cursor and the check of records (SYNC-5 to SYNC-7) |
+| `tests/syncer.test.js` | The sync driver: the queue of a save, the run, the stops and retries, the refresh, the merge, the reset and the stream (SYNC-2 to SYNC-4, SYNC-11) |
 | `tests/measures.test.js` | The size, the fit and the measures of a garment, the parse of a value, the measures of a slot |
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |
