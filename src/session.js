@@ -45,7 +45,8 @@ export const loadSession = (storage) => {
 
 export const saveSession = (storage, session) => write(storage, SESSION_KEY, session);
 
-// ACC-8: only the session goes; the garments and the preferences stay.
+// Only the session goes. The Log out of Settings also clears the garments and the sync state,
+// through the sync driver (ACC-12).
 export const dropSession = (storage) => remove(storage, SESSION_KEY);
 
 export const loadOffline = (storage) => {

@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createSyncer, SYNC_KEY, QUEUE_KEY } from '#syncer';
 import { PocketBaseError } from '#pocketbase';
-import { saveSession, loadSession, SESSION_KEY } from '#session';
+import { saveSession, loadSession, SESSION_KEY, OFFLINE_KEY } from '#session';
+import { LANGUAGE_KEY } from '#storage';
 import { normalizeGarments, emptyGarments } from '#garments';
 import { toRecords } from '#records';
 
@@ -428,36 +429,210 @@ test('reset during a run makes the run save nothing', async () => {
   assert.equal(d.syncer.status().lastSync, null);
 });
 
-test('login saves the session, takes the owner and sends the garments of the device (SYNC-2)', async () => {
+const ids = (doc) => doc.garments.map(({ id }) => id).sort();
+const liveKeys = (server, owner) => server.rows.filter((row) => row.owner === owner && !row.deleted).map(({ key }) => key).sort();
+
+test('a first login queues the garments of the device and merges the account; a garment on both sides keeps the copy of the device (SYNC-8)', async () => {
+  const server = fakeServer();
+  server.add('u1', docOf(garment('b', 'Old hat')).garments[0]);
+  server.add('u1', docOf(garment('c', 'Scarf')).garments[0]);
   const storage = fakeStorage();
-  const d = device({ storage, doc: docOf(garment('a')) });
+  const d = device({ server, storage, doc: docOf(garment('a', 'Coat'), garment('b', 'Hat')) });
   assert.equal(await d.syncer.login(sessionOf('u1')), 'synced');
   assert.equal(storedSync(storage).owner, 'u1');
-  assert.deepEqual(d.client.pushed.map(({ key }) => key), ['a']);
+  assert.equal(loadSession(storage).user.id, 'u1');
+  assert.deepEqual(d.client.pushed.map(({ key, op }) => [key, op]), [['a', 'upsert'], ['b', 'upsert']]);
+  assert.deepEqual(ids(d.box.doc), ['a', 'b', 'c']);
+  assert.equal(d.box.doc.garments.find(({ id }) => id === 'b').name, 'Hat');
+  assert.deepEqual(liveKeys(server, 'u1'), ['a', 'b', 'c']);
+  assert.equal(server.rows.find(({ key }) => key === 'b').data.name, 'Hat');
+  assert.equal(d.syncer.status().pending, 0);
 });
 
-test('login of an account with no approval makes no request', async () => {
-  const d = device({ storage: fakeStorage() });
+test('a first login on a device with no garments takes the account and sends nothing (SYNC-8)', async () => {
+  const server = fakeServer();
+  server.add('u1', docOf(garment('c', 'Scarf')).garments[0]);
+  const d = device({ server, storage: fakeStorage() });
+  assert.equal(await d.syncer.login(sessionOf('u1')), 'synced');
+  assert.deepEqual(d.client.pushed, []);
+  assert.deepEqual(ids(d.box.doc), ['c']);
+});
+
+test('a login of the same user again keeps the queue and the state and goes on (ACC-11)', async () => {
+  const d = device({ doc: docOf(garment('a')) });
+  d.save(docOf(garment('a'), garment('b')));
+  assert.equal(await d.syncer.login(sessionOf('u1')), 'synced');
+  assert.deepEqual(d.client.pushed.map(({ key, op }) => [key, op]), [['b', 'upsert']]);
+  assert.deepEqual(ids(d.box.doc), ['a', 'b']);
+  assert.equal(d.box.sets, 0);
+});
+
+test('a login of another user with an empty queue clears the device and takes the new account, with no change sent from the old one (ACC-11)', async () => {
+  const server = fakeServer();
+  const coat = docOf(garment('a', 'Coat'));
+  server.add('u1', coat.garments[0]);
+  server.add('u2', docOf(garment('z', 'Boots')).garments[0]);
+  const d = device({ server, doc: coat });
+  assert.equal(await d.syncer.run(), 'ok');
+  assert.notEqual(storedSync(d.storage).cursor, '');
+  assert.equal(await d.syncer.login(sessionOf('u2')), 'synced');
+  assert.deepEqual(d.client.pushed, []);
+  assert.deepEqual(ids(d.box.doc), ['z']);
+  const sync = storedSync(d.storage);
+  assert.equal(sync.owner, 'u2');
+  assert.deepEqual(sync.local.map(([id]) => id), ['garment:z']);
+  assert.deepEqual(sync.server.map(([id]) => id), ['garment:z']);
+  assert.equal(sync.cursor, server.rows.find(({ owner }) => owner === 'u2').updated);
+  assert.deepEqual(sync.added, []);
+  assert.equal(loadSession(d.storage).user.id, 'u2');
+  assert.deepEqual(liveKeys(server, 'u2'), ['z']);
+  assert.deepEqual(liveKeys(server, 'u1'), ['a']);
+});
+
+test('a login of another user with a queue asks for an export and changes nothing; with discard it clears and goes on (ACC-11)', async () => {
+  const server = fakeServer();
+  const coat = docOf(garment('a', 'Coat'));
+  server.add('u1', coat.garments[0]);
+  const d = device({ server, local: [...toRecords(coat)] });
+  // A refused save (SYNC-2): the queue holds the hat and `added` names it.
+  await quiet(() => d.save(docOf(garment('b', 'Hat'))));
+  const doc = d.box.doc;
+  const before = { sync: d.storage.getItem(SYNC_KEY), queue: d.storage.getItem(QUEUE_KEY), session: d.storage.getItem(SESSION_KEY) };
+  assert.deepEqual(storedSync(d.storage).added, ['garment:b']);
+  assert.equal(await d.syncer.login(sessionOf('u2')), 'ask-export');
+  assert.equal(d.box.doc, doc);
+  assert.equal(d.box.sets, 0);
+  assert.deepEqual({ sync: d.storage.getItem(SYNC_KEY), queue: d.storage.getItem(QUEUE_KEY), session: d.storage.getItem(SESSION_KEY) }, before);
+  assert.deepEqual(d.client.calls, []);
+  assert.equal(d.syncer.status().pending, 1);
+  assert.equal(await d.syncer.login(sessionOf('u2'), { discard: true }), 'synced');
+  assert.deepEqual(d.client.pushed, []);
+  assert.deepEqual(d.box.doc, emptyGarments());
+  assert.equal(storedSync(d.storage).owner, 'u2');
+  assert.deepEqual(storedSync(d.storage).added, []);
+  assert.deepEqual(storedSync(d.storage).local, []);
+  assert.deepEqual(storedQueue(d.storage), []);
+  assert.deepEqual(liveKeys(server, 'u2'), []);
+});
+
+test('a login of an account with no approval saves the session, makes no request and changes no state (ACC-3)', async () => {
+  const storage = fakeStorage();
+  const d = device({ storage, doc: docOf(garment('a')) });
   assert.equal(await d.syncer.login(sessionOf('u1', false)), 'waiting');
   assert.equal(d.client.calls.length, 0);
+  assert.equal(loadSession(storage).user.approved, false);
+  assert.equal(storage.getItem(SYNC_KEY), null);
+  assert.equal(storage.getItem(QUEUE_KEY), null);
+  assert.deepEqual(ids(d.box.doc), ['a']);
+  // Over the data of another owner, with a queue: no question yet, and the data stays.
+  const e = device({ doc: docOf(garment('a')), local: [] });
+  e.save(docOf(garment('a'), garment('b')));
+  const sync = e.storage.getItem(SYNC_KEY);
+  assert.equal(await e.syncer.login(sessionOf('u2', false)), 'waiting');
+  assert.equal(e.client.calls.length, 0);
+  assert.equal(e.storage.getItem(SYNC_KEY), sync);
+  assert.equal(e.syncer.status().pending, 2);
+  assert.equal(e.box.sets, 0);
 });
 
-test('logout online sends the queue, then clears the account data', async () => {
+test('a login during a run makes that run stale: its auth error does not stop the sync of the login (SYNC-8)', async () => {
   const d = device();
+  const held = gate();
+  const arrived = gate();
+  let pulls = 0;
+  d.client.hold = () => {
+    pulls += 1;
+    if (pulls > 1) return Promise.resolve();
+    arrived.open();
+    return held.opened.then(() => {
+      throw new PocketBaseError('auth', 401);
+    });
+  };
+  const running = d.syncer.run();
+  await arrived.opened;
+  const login = d.syncer.login(sessionOf('u1'));
+  held.open();
+  assert.equal(await running, 'ok');
+  assert.equal(await login, 'synced');
+  assert.equal(d.syncer.status().auth, false);
+  assert.equal(pulls, 2);
+});
+
+test('logout online sends the queue, then clears the garments, the sync state, the queue and the session; the preferences stay (ACC-12)', async () => {
+  const d = device();
+  d.storage.setItem(OFFLINE_KEY, '1');
+  d.storage.setItem(LANGUAGE_KEY, 'es');
   d.save(docOf(garment('a')));
+  await d.syncer.run();
+  d.save(docOf(garment('a'), garment('b')));
   assert.equal(await d.syncer.logout({ online: true }), 'done');
-  assert.deepEqual(d.client.pushed.map(({ key }) => key), ['a']);
+  assert.deepEqual(d.client.pushed.map(({ key }) => key), ['a', 'b']);
   assert.deepEqual(d.box.doc, emptyGarments());
-  assert.equal(d.storage.getItem(SESSION_KEY), null);
+  for (const key of [SYNC_KEY, QUEUE_KEY, SESSION_KEY]) assert.equal(d.storage.getItem(key), null, key);
+  assert.equal(d.storage.getItem(OFFLINE_KEY), '1');
+  assert.equal(d.storage.getItem(LANGUAGE_KEY), 'es');
+  assert.equal(d.client.streams[0].closed, true);
+  assert.equal(d.syncer.status().pending, 0);
 });
 
-test('logout with changes not sent asks for an export first', async () => {
+test('logout offline with a queue asks for an export and changes nothing; with discard it clears and sends nothing (ACC-12)', async () => {
   const d = device();
   d.save(docOf(garment('a')));
+  const doc = d.box.doc;
+  const before = [SYNC_KEY, QUEUE_KEY, SESSION_KEY].map((key) => d.storage.getItem(key));
   assert.equal(await d.syncer.logout({ online: false }), 'ask-export');
+  assert.equal(d.box.doc, doc);
+  assert.equal(d.box.sets, 0);
+  assert.deepEqual([SYNC_KEY, QUEUE_KEY, SESSION_KEY].map((key) => d.storage.getItem(key)), before);
+  assert.deepEqual(d.client.calls, []);
   assert.equal(d.syncer.status().pending, 1);
   assert.equal(await d.syncer.logout({ online: false, discard: true }), 'done');
+  assert.deepEqual(d.client.calls, []);
+  assert.deepEqual(d.box.doc, emptyGarments());
+  for (const key of [SYNC_KEY, QUEUE_KEY, SESSION_KEY]) assert.equal(d.storage.getItem(key), null, key);
   assert.equal(d.syncer.status().pending, 0);
+});
+
+test('logout online with a sync that stops keeps the queue and asks for an export (ACC-12)', async () => {
+  const d = device();
+  d.save(docOf(garment('a')));
+  d.client.failPush = () => new PocketBaseError('network');
+  assert.equal(await d.syncer.logout({ online: true }), 'ask-export');
+  assert.equal(d.syncer.status().pending, 1);
+  assert.notEqual(d.storage.getItem(SESSION_KEY), null);
+});
+
+test('an import tombstones each garment of the server that it does not hold (SYNC-9)', async () => {
+  const server = fakeServer();
+  const both = docOf(garment('a', 'Coat'), garment('b', 'Hat'));
+  both.garments.forEach((g) => server.add('u1', g));
+  const d = device({ server, doc: both });
+  assert.equal(await d.syncer.run(), 'ok');
+  d.save(docOf(garment('c', 'Scarf')), { explicit: true });
+  assert.equal(await d.syncer.run(), 'ok');
+  assert.deepEqual(d.client.pushed.map(({ key, op }) => [key, op]), [['a', 'delete'], ['b', 'delete'], ['c', 'upsert']]);
+  assert.deepEqual(liveKeys(server, 'u1'), ['c']);
+  assert.deepEqual(ids(d.box.doc), ['c']);
+});
+
+test('Delete all data stops the sync, clears this device only and sends nothing; the status starts again (SYNC-10)', async () => {
+  const server = fakeServer();
+  server.add('u1', docOf(garment('a', 'Coat')).garments[0]);
+  const d = device({ server });
+  assert.equal(await d.syncer.run(), 'ok');
+  d.save(docOf(garment('a', 'Coat'), garment('b')));
+  d.client.failPush = () => new PocketBaseError('server', 503);
+  assert.equal(await d.syncer.run(), 'offline');
+  assert.equal(d.syncer.status().online, false);
+  const calls = d.client.calls.length;
+  d.syncer.reset();
+  assert.deepEqual(d.syncer.status(), { online: true, pending: 0, lastSync: null, auth: false, reached: 0 });
+  assert.deepEqual(d.box.statuses.at(-1), d.syncer.status());
+  assert.deepEqual(d.live(), []);
+  assert.equal(d.client.calls.length, calls);
+  assert.equal(d.client.streams[0].closed, true);
+  for (const key of [SYNC_KEY, QUEUE_KEY, SESSION_KEY]) assert.equal(d.storage.getItem(key), null, key);
+  assert.deepEqual(liveKeys(server, 'u1'), ['a']);
 });
 
 test('the stream opens after a run that reached the server, and an event starts a run (SYNC-3)', async () => {

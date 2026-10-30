@@ -2,8 +2,9 @@
 
 The account and the approval gate. The server is the PocketBase server of `pwa-server`: one
 account serves every app, and the administrator approves access per app. The app talks to it
-with `fetch`, with no SDK. The garments stay on the device: nothing syncs. The user picks one of
-two ways in: **Continue with Google**, or **Use offline** with no account.
+with `fetch`, with no SDK. The garments of an approved account sync between its devices
+([09-sync.md](09-sync.md)). The user picks one of two ways in: **Continue with Google**, or
+**Use offline** with no account.
 
 ## Rules
 
@@ -35,13 +36,25 @@ two ways in: **Continue with Google**, or **Use offline** with no account.
 - **ACC-7** **Check again** refreshes the session as ACC-6. A session that is still not approved
   shows the toast `account.waiting.still`.
 - **ACC-8** Settings has the group **Account**: with a session, the email and **Log out**; with
-  none, **Sign in with Google**, which opens **Sign in**. **Log out** removes the session only;
-  the garments and the preferences stay. It then routes as ACC-1: with the offline flag the app
-  stays open, else **Sign in** shows.
+  none, **Sign in with Google**, which opens **Sign in**. **Log out** runs as ACC-12: the
+  device preferences and the offline flag stay. It then routes as ACC-1: with the offline flag
+  the app stays open, else **Sign in** shows.
 - **ACC-9** With no `localStorage` the app shows no account screen and works as before.
 - **ACC-10** The offline flag is `wardrobe.offline` = `1` in `localStorage`. **Use offline**
   writes it; an approved session that opens the app removes it. A storage that refuses the
   write still opens the app for this start.
+- **ACC-11** A login of a user other than the stored owner first clears the device: the garments,
+  the sync state and the queue of the previous user, so no change of that user reaches the new
+  account. Then the new user takes the account (SYNC-8). A device preference stays. When the queue
+  is not empty, the login first offers an export and changes nothing, the session too; after the
+  export, or when the user declines it, the login clears and goes on. A device with no stored
+  owner clears nothing and merges (SYNC-8). A session that is not approved changes nothing and
+  asks nothing until the approval (ACC-3).
+- **ACC-12** **Log out** when online sends the queue first. When changes are still not sent
+  (offline, or the sync stopped), the app offers an export first and changes nothing; after the
+  export, or when the user declines it, the logout goes on. It removes the garments, the sync
+  state, the queue and the session, and closes the stream. A run in progress becomes stale. The
+  device preferences and the offline flag stay.
 
 ## Set-up outside the app
 

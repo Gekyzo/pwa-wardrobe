@@ -52,15 +52,35 @@ the storage, the clock and the timer as parameters.
   `offline`, a 429 is `rate`. A 400 with field errors drops that change and goes on. A 401, a 403
   or a 400 with no field error (a refused rule) is an auth stop: the queue stays, the status has
   `auth`, and no run makes a request until the next login; a save still queues. A run that ends
-  stores the time of the sync. A reset (a logout, or Delete all data) makes a run in progress
-  stale: it saves nothing and changes no doc, and the session, the sync state and the queue leave
-  the storage.
+  stores the time of the sync. A reset (a logout, Delete all data, or a login of another user)
+  makes a run in progress stale: it saves nothing and changes no doc (SYNC-10).
 - **SYNC-5** A change that waits in the queue wins. A pulled record with the same id does not
   change the local record. The copy of the server still takes the pulled record.
 - **SYNC-6** A pulled record with `deleted` counts as absent. It removes the local record, unless
   a change of that record waits in the queue.
 - **SYNC-7** The app checks each record alone, as a doc with that one garment. A record that the
   check refuses is dropped and its id is reported. The other records stay.
+
+## Login, import and reset
+
+- **SYNC-8** The first login on a device with no stored owner merges. The base of the sync is
+  empty, so each local garment is queued as an upsert, and the pull brings the garments of the
+  account. A garment on both sides (the same id) keeps the copy of the device, as a queued change
+  wins (SYNC-5). A device with no garments takes the account and sends nothing. No garment is
+  dropped, so the device keeps no copy of the list of before the login. A login of the stored
+  owner goes on with the queue and the state. A login starts a run of its own; a run in progress
+  with the token of before the login becomes stale, so its auth error cannot stop this sync.
+- **SYNC-9** An import replaces the garments of the account, so on every device. It is an
+  explicit save: the next run sends a tombstone for each garment of the server that the import
+  does not hold, and an upsert for the others, with no regard to the guard of SYNC-2.
+- **SYNC-10** **Delete all data** (SET-3) clears this device only. The sync stops first: a run in
+  progress becomes stale and saves nothing, the timers and the stream stop, and the queue is
+  dropped. The driver sends nothing; it removes the session, the sync state and the queue, puts
+  the empty doc in place, and the status starts again (online, nothing pending, `reached` 0).
+  The garments of the account stay on the server.
+
+## Status
+
 - **SYNC-11** The status is `{ online, pending, lastSync, auth, reached }`. `online` is false
   after the `offline` event or a run that stopped at the network or at a server error, and true
   again after a run that reached the server. A rate limit keeps it. `pending` is the length of the

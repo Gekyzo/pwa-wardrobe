@@ -1,7 +1,8 @@
 // The sync driver: it queues each save, sends the queue, pulls the account and merges it into the doc
-// (SYNC-2 to SYNC-7), refreshes the token (SYNC-4), keeps the realtime stream (SYNC-3) and reports the
-// status (SYNC-11). The client, the storage, the clock and the timer are injected, so a test runs with
-// no network.
+// (SYNC-2 to SYNC-9), refreshes the token (SYNC-4), keeps the realtime stream (SYNC-3), runs the login
+// and the logout (ACC-11, ACC-12), stops at Delete all data (SYNC-10) and reports the status
+// (SYNC-11). The client, the storage, the clock and the timer are injected, so a test runs with no
+// network.
 import { toRecords, fromRecords, diffRecords, recordKey } from '#records';
 import { enqueue, mergePulled, validRecords, cursorOf } from '#sync';
 import { loadSession, saveSession, SESSION_KEY } from '#session';
@@ -121,7 +122,8 @@ export const createSyncer = ({
   // SYNC-3: the timer of the retry after a rate limit or a server error, and the delays used in a row.
   let retryTimer = null;
   let retries = 0;
-  // A reset starts a new generation: a run of an older one is stale.
+  // A reset (a logout, Delete all data, a login of another user) and a login start a new generation:
+  // a run of an older one is stale.
   let generation = 0;
   // SYNC-4: after an auth stop no sync makes a request until a login, so the rate limit of the auth
   // endpoints stays free for that login.
@@ -352,14 +354,16 @@ export const createSyncer = ({
 
   // SYNC-2: the app calls it after each save, never for a doc that setDoc gave. A device with no
   // account keeps no queue. After an auth stop the change waits in the queue for the login (SYNC-4).
+  // An import is `explicit` (SYNC-9): the next run deletes each garment of the account that it lacks.
   const notify = (doc, { explicit = false } = {}) => {
     if (!activeSession()) return;
     if (noted(doc, explicit)) report();
     if (!authStopped) schedule();
   };
 
-  // A run in progress becomes stale: it saves nothing and changes no doc after this. The session,
-  // the sync state and the queue leave the storage; the app saves the empty doc that setDoc gives.
+  // SYNC-10: a run in progress becomes stale: it saves nothing and changes no doc after this. The
+  // timers and the stream stop, and nothing is sent. The session, the sync state and the queue leave
+  // the storage, and the status starts again; the app saves the empty doc that setDoc gives.
   const reset = () => {
     generation += 1;
     cancelTimer();
@@ -370,37 +374,53 @@ export const createSyncer = ({
     queue = [];
     lastRefresh = null;
     authStopped = false;
+    online = true;
+    reached = 0;
     try {
       [SESSION_KEY, SYNC_KEY, QUEUE_KEY].forEach((key) => storage.removeItem(key));
     } catch {
       // Storage is not available: nothing is saved either.
     }
     put(emptyGarments());
+    report();
   };
 
-  // The minimal login: the session, the owner, then a run. The question of another user and the first-login merge are on top.
-  const login = async (session) => {
+  // ACC-11, SYNC-8. With `discard` the user has exported, or declined, the queue of the previous user.
+  // 'ask-export' changes nothing, the session too: the app keeps the session and logs in again.
+  const login = async (session, { discard = false } = {}) => {
+    const approved = session.user.approved === true;
+    const other = sync.owner !== null && sync.owner !== session.user.id;
+    if (approved && other && queue.length > 0 && !discard) return 'ask-export';
     authStopped = false;
     saveSession(storage, session);
     lastRefresh = now();
     // ACC-3: no request for data, and the local doc stays as it is.
-    if (session.user.approved !== true) return 'waiting';
+    if (!approved) return 'waiting';
+    if (other) {
+      // ACC-11: nothing of the previous user stays, so no diff against its base reaches this account.
+      reset();
+      saveSession(storage, session);
+      lastRefresh = now();
+    } else if (sync.owner === null) {
+      // SYNC-8: the base is empty, so each local garment is queued and the pull brings the account;
+      // a garment on both sides keeps the copy of the device (SYNC-5).
+      sync = { ...sync, cursor: '', server: new Map(), local: new Map(), added: [] };
+    }
     sync = { ...sync, owner: session.user.id };
     persist();
     // A run in progress uses the token of before the login: it becomes stale, so that its auth error
-    // cannot stop the sync of this login.
+    // cannot stop the sync of this login, and the login starts a run of its own.
     generation += 1;
     await run();
     return 'synced';
   };
 
-  // Online, the queue goes first. Changes that are still not sent need an export first.
+  // ACC-12: online, the queue goes first. Changes that are still not sent need an export first, and
+  // then nothing changes. The device preferences and the offline flag stay.
   const logout = async ({ online: isOnline, discard = false }) => {
     if (isOnline) await run();
     if (queue.length > 0 && !discard) return 'ask-export';
     reset();
-    online = true;
-    report();
     return 'done';
   };
 
