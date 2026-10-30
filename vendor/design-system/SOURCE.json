@@ -1,8 +1,8 @@
 {
-  "version": "0.8.0",
-  "commit": "cb89cc1505853a3be0591b1093269de7906ad26d",
+  "version": "0.8.1",
+  "commit": "ac3ba3b6317b4628c4b3b771278ad3162eb386e1",
   "files": {
-    "design-system.css": "df474c04766544de78fb6fd69aef0021f479e07c287d38756dfc8b7d4141e5e1",
+    "design-system.css": "fefad3d7b435f17675bf5116361a52c217185eb3b026591ab0e29b72de0a798e",
     "catalog.js": "5615ead0966cabcb62ebf1f64f128f9176672766a40194245ad892c0110a9d22",
     "rules.js": "2678a1cac8124d069234ebc34de05f185fc4bb1dfe62f14f1507dda991419254",
     "sheet.js": "98e27e1ddb882500c4b0ebc6b21ab9197b60a0c62133162d54b5e8edcc2df686",

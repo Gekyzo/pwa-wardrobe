@@ -1947,8 +1947,10 @@
       display: block;
     }
 
-    /* A header-add is the add button from 600px (LAY-2). Last, so it wins over the rule above. */
-    body:has(.app-header > .header-add) .fab {
+    /* A header-add is the add button from 600px (LAY-2). Last, and the second selector as specific as
+       the rule above, so it wins beside a dock too. */
+    body:has(.app-header > .header-add) .fab,
+    body:has(.app-header > .header-add):has(.dock:not([hidden]) > .dock-add:not([hidden])) .fab {
       display: none;
     }
   }
