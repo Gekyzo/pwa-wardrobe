@@ -17,6 +17,7 @@
 | `src/wada.js` | The 159 colours of Sanzo Wada's palette and their combinations (data) | nothing |
 | `src/palette.js` | Lab, ΔE, the nearest colour, the combinations and their index | `wada` |
 | `src/garments.js` | The doc of the garments, its operations and its validation | `config`, `wada`, `measures` |
+| `src/brands.js` | The seed list of brands and the brands that the brand field suggests | nothing |
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
@@ -31,7 +32,7 @@
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
 | `src/ui/outfit.js` | The swatch, the image of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
-| `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `links`, `palette`, `outfits`, `measures`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
+| `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `brands`, `links`, `palette`, `outfits`, `measures`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
 | `src/ui/settings.js` | Settings, Delete all data (SET-3), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
@@ -95,6 +96,7 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 |---|---|
 | `tests/palette.test.js` | The palette, the colour distance and the combinations |
 | `tests/garments.test.js` | The garment operations, their order and the validation of the doc |
+| `tests/brands.test.js` | The brands that the brand field suggests and their order (GAR-11) |
 | `tests/measures.test.js` | The size, the fit and the measures of a garment, the parse of a value, the measures of a slot |
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |

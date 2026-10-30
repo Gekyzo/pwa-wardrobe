@@ -65,6 +65,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   decimal mark, and gives the number when it is above 0, else null.
 - **GAR-10** `measuresOf` gives the `{ name, unit }` of the measures of the garments of one slot,
   newest garment first, each name one time, case aside.
+- **GAR-11** `suggestBrands` gives the brands that start with a text, with case and accents
+  aside: the brands of the wardrobe (GAR-6) first, then the brands of the seed list `BRANDS` of
+  `src/brands.js` that the wardrobe does not hold, case and accents aside. An empty text gives
+  no brand.
 
 ## Links
 
@@ -123,8 +127,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   the colour, the link, the images and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
   in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
   **Add measure**. The measure name suggests the names in use, and the unit the units in use, then
-  `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests the brands of the wardrobe
-  (GAR-6). The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a
+  `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests no brand while it is empty, and
+  the brands of GAR-11 for its text. The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.

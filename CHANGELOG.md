@@ -4,6 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+- **Brand suggestions** (GAR-11, WAR-3): `src/brands.js` holds a seed list `BRANDS` and `suggestBrands`, which gives the brands that start with the text, case and accents aside: the brands of the wardrobe first, then the seed brands it does not hold. The datalist `garment-brands` fills on each `input` of the brand field and is empty while the field is empty.
 - **Random outfit** in the Wardrobe section (OUT-9, WAR-9): `randomOutfit` of `src/outfits.js` takes one outfit of every combination under the season filter, never the one in view while there is another (`except`, the key `outfitKey`, formerly `keyOf`). The detail is `#random-outfit` in `#garment-detail`, state `ui.random`; Escape, Back and the back slide close it. Keys `wardrobe.random`, `wardrobe.randomAgain`, `wardrobe.noRandom`; new icon `shuffle`.
 - **Delete all data** in Settings › Backup, as in pwa-template (SET-3): `resetAll` in `src/storage.js` removes each `localStorage` key `wardrobe.*`, and no key of another app of the origin; the page loads again as a new install. With a session the question says that it also logs out (`signedIn` of `src/ui/account.js`). Keys `settings.reset`, `reset.confirm`, `reset.confirmLocal`, `error.resetFailed`.
 

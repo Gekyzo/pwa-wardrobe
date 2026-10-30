@@ -4,6 +4,7 @@ import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor } from '#palette';
 import { outfitsWith, outfitKey, randomOutfit } from '#outfits';
 import { FITS, measuresOf } from '#measures';
+import { suggestBrands } from '#brands';
 import { settle } from '#swipe';
 import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, lang, textOf, apply, render, guardClick, showToast } from '#ui/context';
 import { icon, iconButton } from '#ui/controls';
@@ -103,6 +104,9 @@ const fitPill = (fit) => el('span', { className: fit === 'good' ? 'pill' : 'pill
 
 const fillList = (id, values) => $(id).replaceChildren(...values.map((value) => el('option', { value })));
 
+// The brands that start with the text of the brand field, none while it is empty (WAR-3).
+const showBrands = () => fillList('garment-brands', suggestBrands(brandsOf(state.garments), $('garment-brand').value));
+
 // One line of the measures of the sheet: name, value and unit, and a button that removes it.
 const measureLine = ({ name = '', value = '', unit = '' } = {}) => {
   const input = (props, list, label) => {
@@ -167,7 +171,7 @@ const openSheet = (id = null) => {
   $('garment-sheet-title').textContent = t(id ? 'wardrobe.editTitle' : 'wardrobe.new');
   $('garment-name').value = garment?.name ?? '';
   $('garment-brand').value = garment?.brand ?? '';
-  $('garment-brands').replaceChildren(...brandsOf(state.garments).map((value) => el('option', { value })));
+  showBrands();
   $('garment-link').value = garment?.link ?? '';
   $('garment-image-url').value = '';
   ui.draftImages = [...(garment?.images ?? [])];
@@ -395,6 +399,7 @@ export const bind = () => {
     ui.draftColor = id;
     showColor({ fromInput: true });
   });
+  $('garment-brand').addEventListener('input', showBrands);
   $('garment-link').addEventListener('input', showLoad);
   $('garment-slot').addEventListener('change', offerMeasures);
   $('garment-measure-add').addEventListener('click', () => {
