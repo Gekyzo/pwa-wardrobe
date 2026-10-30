@@ -18,6 +18,8 @@
 | `src/palette.js` | Lab, ΔE, the nearest colour, the combinations and their index | `wada` |
 | `src/garments.js` | The doc of the garments, its operations and its validation | `config`, `wada`, `measures` |
 | `src/brands.js` | The seed list of brands and the brands that the brand field suggests | nothing |
+| `src/records.js` | The garments as server records, their order and the diff of two sets of records | nothing |
+| `src/sync.js` | The queue of changes, the merge of pulled records and the check of each record | `records`, `garments` |
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
@@ -97,6 +99,8 @@ The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are
 | `tests/palette.test.js` | The palette, the colour distance and the combinations |
 | `tests/garments.test.js` | The garment operations, their order and the validation of the doc |
 | `tests/brands.test.js` | The brands that the brand field suggests and their order (GAR-11) |
+| `tests/records.test.js` | The garments as records, the doc back from them and the diff (SYNC-1) |
+| `tests/sync.test.js` | The queue, the merge of pulled records, tombstones, the cursor and the check of records (SYNC-5 to SYNC-7) |
 | `tests/measures.test.js` | The size, the fit and the measures of a garment, the parse of a value, the measures of a slot |
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |

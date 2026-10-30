@@ -33,6 +33,8 @@ const SHELL = [
   './src/wada.js',
   './src/palette.js',
   './src/garments.js',
+  './src/records.js',
+  './src/sync.js',
   './src/brands.js',
   './src/measures.js',
   './src/links.js',
