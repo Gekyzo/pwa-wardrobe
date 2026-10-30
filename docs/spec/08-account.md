@@ -45,16 +45,18 @@ with `fetch`, with no SDK. The garments of an approved account sync between its 
   write still opens the app for this start.
 - **ACC-11** A login of a user other than the stored owner first clears the device: the garments,
   the sync state and the queue of the previous user, so no change of that user reaches the new
-  account. Then the new user takes the account (SYNC-8). A device preference stays. When the queue
-  is not empty, the login first offers an export and changes nothing, the session too; after the
-  export, or when the user declines it, the login clears and goes on. A device with no stored
-  owner clears nothing and merges (SYNC-8). A session that is not approved changes nothing and
-  asks nothing until the approval (ACC-3).
+  account. Then the new user takes the account (SYNC-8). A device preference stays. When changes
+  are not sent, the login first offers an export and changes nothing, the session too; after the
+  export, or when the user declines it, the login clears and goes on. A change that the server
+  has not taken counts as not sent whether or not it was queued: a save after a lost approval
+  stays in the doc only. A device with no stored owner clears nothing and merges (SYNC-8). A
+  session that is not approved changes nothing and asks nothing until the approval (ACC-3).
 - **ACC-12** **Log out** when online sends the queue first. When changes are still not sent
-  (offline, or the sync stopped), the app offers an export first and changes nothing; after the
-  export, or when the user declines it, the logout goes on. It removes the garments, the sync
-  state, the queue and the session, and closes the stream. A run in progress becomes stale. The
-  device preferences and the offline flag stay.
+  (offline, the sync stopped, or a save after a lost approval that no queue holds), the app
+  offers an export first and changes nothing; after the export, or when the user declines it,
+  the logout goes on. It removes the garments, the sync state, the queue and the session, and
+  closes the stream. A run in progress becomes stale. The device preferences and the offline
+  flag stay.
 
 ## Set-up outside the app
 

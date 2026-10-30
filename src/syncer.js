@@ -385,12 +385,16 @@ export const createSyncer = ({
     report();
   };
 
+  // ACC-11, ACC-12: changes that the server has not taken, queued or not: a save with no approved
+  // session (a lost approval) stays in the doc only, against the base.
+  const unsent = () => queue.length > 0 || diffRecords(sync.local, toRecords(getDoc())).length > 0;
+
   // ACC-11, SYNC-8. With `discard` the user has exported, or declined, the queue of the previous user.
   // 'ask-export' changes nothing, the session too: the app keeps the session and logs in again.
   const login = async (session, { discard = false } = {}) => {
     const approved = session.user.approved === true;
     const other = sync.owner !== null && sync.owner !== session.user.id;
-    if (approved && other && queue.length > 0 && !discard) return 'ask-export';
+    if (approved && other && unsent() && !discard) return 'ask-export';
     authStopped = false;
     saveSession(storage, session);
     lastRefresh = now();
@@ -419,7 +423,7 @@ export const createSyncer = ({
   // then nothing changes. The device preferences and the offline flag stay.
   const logout = async ({ online: isOnline, discard = false }) => {
     if (isOnline) await run();
-    if (queue.length > 0 && !discard) return 'ask-export';
+    if (unsent() && !discard) return 'ask-export';
     reset();
     return 'done';
   };

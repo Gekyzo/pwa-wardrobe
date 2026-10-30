@@ -676,3 +676,38 @@ test('an auth stop and a reset close the stream (SYNC-3)', async () => {
   e.syncer.reset();
   assert.equal(e.client.streams[0].closed, true);
 });
+
+// A lost approval: the saves stay in the doc only, and no queue holds them.
+const unapprovedEdit = () => {
+  const d = device({ doc: docOf(garment('a')) });
+  saveSession(d.storage, sessionOf('u1', false));
+  d.save(docOf(garment('a'), garment('b')));
+  assert.equal(d.syncer.status().pending, 0);
+  return d;
+};
+
+test('logout after a lost approval asks for an export of an edit that no queue holds; with discard it clears (ACC-12)', async () => {
+  const d = unapprovedEdit();
+  const before = [SYNC_KEY, QUEUE_KEY, SESSION_KEY].map((key) => d.storage.getItem(key));
+  assert.equal(await d.syncer.logout({ online: true }), 'ask-export');
+  assert.deepEqual(ids(d.box.doc), ['a', 'b']);
+  assert.equal(d.box.sets, 0);
+  assert.deepEqual([SYNC_KEY, QUEUE_KEY, SESSION_KEY].map((key) => d.storage.getItem(key)), before);
+  assert.equal(await d.syncer.logout({ online: true, discard: true }), 'done');
+  assert.deepEqual(d.box.doc, emptyGarments());
+  for (const key of [SYNC_KEY, QUEUE_KEY, SESSION_KEY]) assert.equal(d.storage.getItem(key), null, key);
+});
+
+test('a login of another user after a lost approval asks for an export of an edit that no queue holds; with discard it clears (ACC-11)', async () => {
+  const d = unapprovedEdit();
+  const before = [SYNC_KEY, QUEUE_KEY, SESSION_KEY].map((key) => d.storage.getItem(key));
+  assert.equal(await d.syncer.login(sessionOf('u2')), 'ask-export');
+  assert.deepEqual(ids(d.box.doc), ['a', 'b']);
+  assert.equal(d.box.sets, 0);
+  assert.deepEqual([SYNC_KEY, QUEUE_KEY, SESSION_KEY].map((key) => d.storage.getItem(key)), before);
+  assert.deepEqual(d.client.calls, []);
+  assert.equal(await d.syncer.login(sessionOf('u2'), { discard: true }), 'synced');
+  assert.deepEqual(d.client.pushed, []);
+  assert.deepEqual(d.box.doc, emptyGarments());
+  assert.equal(storedSync(d.storage).owner, 'u2');
+});
