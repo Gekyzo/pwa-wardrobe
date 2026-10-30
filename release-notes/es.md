@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.1.14 - 2026-10-31
+
 - La fecha de compra de una prenda nueva empieza en el día de hoy.
 - Una prenda puede tener ahora **fecha de compra** y **precio**, ambos opcionales. Su detalle muestra también cuándo la añadiste a la app.
 - El campo **marca** sugiere marcas conocidas mientras escribes, primero las tuyas.

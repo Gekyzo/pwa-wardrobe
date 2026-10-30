@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.14 - 2026-10-31
+
 - The buy date of a new garment starts at today.
 - A garment can now have a **buy date** and a **price**, both optional. Its detail also shows when you added it to the app.
 - The **brand** field suggests known brands as you type, your own brands first.

@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.14 - 2026-10-31
+
 - The buy date of a new garment starts at today (WAR-3); an edit shows the stored date, empty when there is none.
 - **Buy date, price and creation date** (GAR-12, GAR-5, WAR-3, WAR-4): the garments doc goes to version 4 with `buy_date` (`''` or `YYYY-MM-DD`), `price` (`null` or a number > 0 up to `MAX_PRICE`, two decimals, a comma accepted through `parseValue`) and `creation_date` (the `toISOString` instant of `addGarment`, kept by `editGarment`, `''` for migrated garments). The sheet has a Purchase part with a date input (max today) and a decimal price input; the detail shows the price in EUR, the buy date and `wardrobe.added` in the formats of the language. `isDay` is exported. The shell cache goes to `wardrobe-shell-v7` (SW-10). Keys `wardrobe.purchase`, `wardrobe.buyDate`, `wardrobe.price`, `wardrobe.priceEuros`, `wardrobe.added`, `error.buyDateInvalid`, `error.priceInvalid`.
 - **Brand suggestions** (GAR-11, WAR-3): `src/brands.js` holds a seed list `BRANDS` and `suggestBrands`, which gives the brands that start with the text, case and accents aside: the brands of the wardrobe first, then the seed brands it does not hold. The datalist `garment-brands` fills on each `input` of the brand field and is empty while the field is empty.
