@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.1.13 - 2026-10-30
+
 - En un ordenador o una tableta, la app aprovecha la pantalla ancha: un menú lateral con el nombre de la app, **Añadir prenda** arriba, el detalle de una prenda en una tarjeta junto a la lista y Ajustes en dos columnas.
 
 ## 0.1.12 - 2026-10-27

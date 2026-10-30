@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.13 - 2026-10-30
+
 - Design system 0.8.1 (`npm run ds`): the wide layout of the entry below now comes from LAY-1 to LAY-5, and `styles.css` drops its versions of `nav-bar`, `app-header` and `sheet` and the DS-8 skip of `tests/design.test.js`. From 600px the header and `main` share the padding of the design system, so the title lines up with the list; from 840px the detail of a garment or a palette is a card beside the list, 24px apart; Settings sets `--page-max` to `--settings-max`.
 - Desktop layout of `pwa-shopping-list` (DSV-5, DSV-6, NAV-4 to NAV-6, SET-2): four width classes; from 600px the rail at the left with either hand and **Add garment** in the header (`header-add`) in place of the `+`; from 840px side sheets at the end of the frame, below the header (`--header-height` from a `ResizeObserver` in `src/app.js`), and Settings in two columns with help lines for Backup and Preferences; from 1024px a centred frame of at most 1280px with a 232px sidebar: the app mark, labelled sections and, with no session, `nav.local`. `tests/design.test.js` skips DS-8 and runs it again without the 1024px query. `.version-status` is relative, so Settings no longer scrolls the page as well. New keys `app.name`, `nav.local`, `settings.backupHint`, `settings.preferencesHint`; new icon `plus`.
 
