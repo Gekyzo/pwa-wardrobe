@@ -19,9 +19,14 @@ const loadNotes = async () => {
   return null;
 };
 
-// A note with its `name` spans, as the onboarding text shows them.
-const noteItem = (note) =>
-  el('li', {}, textParts(note).map(({ text, key }) => (key ? el('span', { className: 'onboarding-key' }, [text]) : text)));
+// A part of a note: a `name` span, as the onboarding text shows it, or text; a bold part is in a
+// <strong>.
+const noteNode = ({ text, key, strong }) => {
+  const node = key ? el('span', { className: 'onboarding-key' }, [text]) : text;
+  return strong ? el('strong', {}, [node]) : node;
+};
+
+const noteItem = (note) => el('li', {}, textParts(note).map(noteNode));
 
 const entryNode = ({ version, date, notes }) => {
   const day = new Date(`${date}T12:00:00`).toLocaleDateString(intlTag(lang), { day: 'numeric', month: 'long', year: 'numeric' });
