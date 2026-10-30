@@ -306,21 +306,58 @@ test('lost with an empty doc pulls the account and queues no delete (SYNC-2)', a
   assert.deepEqual(d.box.doc.garments.map(({ name }) => name), ['Coat']);
 });
 
-test('a save with none of the garments of the account is not sent, unless explicit (SYNC-2)', async () => {
+// The console.error of the SYNC-2 guard is expected in these tests.
+const quiet = async (fn) => {
+  const original = console.error;
+  console.error = () => {};
+  try {
+    return await fn();
+  } finally {
+    console.error = original;
+  }
+};
+
+test('a save with none of the garments of the account sends no delete of them, unless explicit (SYNC-2)', async () => {
   const server = fakeServer();
   const coat = docOf(garment('a', 'Coat'));
   server.add('u1', coat.garments[0]);
   const d = device({ server, local: [...toRecords(coat)] });
-  const original = console.error;
-  console.error = () => {};
-  try {
+  await quiet(() => {
     d.save(docOf(garment('b', 'Hat')));
-    assert.equal(d.syncer.status().pending, 0);
+    assert.deepEqual(storedQueue(d.storage).map(({ key, op }) => [key, op]), [['b', 'upsert']]);
     d.save(docOf(garment('b', 'Hat')), { explicit: true });
-  } finally {
-    console.error = original;
-  }
-  assert.deepEqual(storedQueue(d.storage).map(({ key, op }) => [key, op]), [['a', 'delete'], ['b', 'upsert']]);
+  });
+  assert.deepEqual(storedQueue(d.storage).map(({ key, op }) => [key, op]), [['b', 'upsert'], ['a', 'delete']]);
+});
+
+test('a garment added to a doc that fell back to empty reaches the server and stays in the doc (SYNC-2)', async () => {
+  const server = fakeServer();
+  const coat = docOf(garment('a', 'Coat'));
+  server.add('u1', coat.garments[0]);
+  const d = device({ server, local: [...toRecords(coat)] });
+  await quiet(async () => {
+    d.save(docOf(garment('b', 'Hat')));
+    d.save(docOf(garment('b', 'Hat'), garment('c', 'Scarf')));
+    d.save(docOf(garment('b', 'Hat')));
+    assert.equal(await d.syncer.run(), 'ok');
+  });
+  // The garment that the user added and deleted again goes as a delete; the coat gets none.
+  assert.deepEqual(d.client.pushed.map(({ key, op }) => [key, op]), [['b', 'upsert'], ['c', 'delete']]);
+  assert.deepEqual(d.box.doc.garments.map(({ id }) => id).sort(), ['a', 'b']);
+  assert.deepEqual(server.rows.filter((row) => !row.deleted).map(({ key }) => key).sort(), ['a', 'b']);
+  assert.equal(d.syncer.status().pending, 0);
+});
+
+test('a refused save keeps its garment across a restart before the merge (SYNC-2)', async () => {
+  const server = fakeServer();
+  const coat = docOf(garment('a', 'Coat'));
+  server.add('u1', coat.garments[0]);
+  const d = device({ server, local: [...toRecords(coat)] });
+  await quiet(() => d.save(docOf(garment('b', 'Hat'))));
+  const again = device({ server, storage: d.storage, doc: d.box.doc });
+  assert.equal(await quiet(() => again.syncer.run()), 'ok');
+  assert.ok(again.client.pushed.every(({ op }) => op === 'upsert'));
+  assert.deepEqual(again.box.doc.garments.map(({ id }) => id).sort(), ['a', 'b']);
 });
 
 test('a user who deletes the garments one by one still sends the deletes (SYNC-2)', () => {

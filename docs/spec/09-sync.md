@@ -20,8 +20,11 @@ the storage, the clock and the timer as parameters.
   against the last state that the driver knows, and that state moves to the saved doc. A doc that
   the driver puts in place after a merge is not a save: it queues nothing. A run first queues a
   save that the driver did not see (no session yet, an auth stop). A save that holds none of the
-  garments of the account, from a doc that held none of them since the start, is not queued and is
-  logged: a doc that fell back to the empty one deletes nothing. A user who deletes the garments
+  garments of the account, from a doc that held none of them since the start, queues no delete of
+  them and is logged: a doc that fell back to the empty one deletes nothing. Such a save still
+  queues its new and changed garments, and the deletes of the garments that it added, and they
+  join the base (with their ids in `wardrobe.sync` until the next merge), so the merge keeps them
+  next to the garments of the account. A user who deletes the garments
   one by one, or an explicit save such as an import, still queues the deletes. When the start could
   not read the garments (`lost`), the account is pulled again in full with an empty base, so
   nothing is deleted.
@@ -65,6 +68,6 @@ the storage, the clock and the timer as parameters.
 
 ## Keys
 
-- `wardrobe.sync`: the owner, the cursor, the last server records, the base records and the time
-  of the last sync.
+- `wardrobe.sync`: the owner, the cursor, the last server records, the base records, the time
+  of the last sync and the ids that a refused save added (SYNC-2).
 - `wardrobe.queue`: the changes that the server has not taken, in order.

@@ -32,7 +32,8 @@ const tokenExpired = (token, now) => {
   }
 };
 
-const emptySync = () => ({ owner: null, cursor: '', server: new Map(), local: new Map(), lastSync: null });
+// `added`: the ids that saves added while the SYNC-2 guard refused their deletes, until a merge.
+const emptySync = () => ({ owner: null, cursor: '', server: new Map(), local: new Map(), lastSync: null, added: [] });
 
 const isEntries = (value) => Array.isArray(value) && value.every((entry) => Array.isArray(entry) && entry.length === 2);
 
@@ -41,7 +42,8 @@ const loadSync = (storage) => {
     const data = JSON.parse(storage.getItem(SYNC_KEY));
     const valid = data && (data.owner === null || typeof data.owner === 'string') && typeof data.cursor === 'string' && isEntries(data.server) && isEntries(data.local);
     if (!valid) return emptySync();
-    return { owner: data.owner, cursor: data.cursor, server: new Map(data.server), local: new Map(data.local), lastSync: typeof data.lastSync === 'string' ? data.lastSync : null };
+    return { owner: data.owner, cursor: data.cursor, server: new Map(data.server), local: new Map(data.local), lastSync: typeof data.lastSync === 'string' ? data.lastSync : null,
+      added: Array.isArray(data.added) ? data.added.filter((id) => typeof id === 'string') : [] };
   } catch {
     return emptySync();
   }
@@ -75,8 +77,8 @@ const known = (error) => {
 
 const badData = (error) => error?.type === 'invalid' && Object.keys(error.fields ?? {}).length > 0;
 
-// SYNC-2: `records` hold none of the garments of `local`, and `local` holds some.
-const holdsNone = (local, records) => local.size > 0 && [...local.keys()].every((id) => !records.has(id));
+// SYNC-2: `records` hold none of the garments `ids`, and there are some.
+const holdsNone = (ids, records) => ids.length > 0 && ids.every((id) => !records.has(id));
 
 // SYNC-5: the queued changes go on top of the merged records.
 const withQueue = (records, queue) => {
@@ -148,9 +150,11 @@ export const createSyncer = ({
   // SYNC-2: a doc that never held the garments of the account since the start (a doc that fell back
   // to the empty one) does not delete them. A user who deletes them one by one, or an import
   // (`explicit`), still does.
+  // The garments of the account are the base, less those that a refused save added.
   const refused = (records, explicit) => {
-    if (explicit || !holdsNone(sync.local, records) || !holdsNone(sync.local, seen)) return false;
-    console.error('sync: a doc with none of the garments of the account is not sent');
+    const account = [...sync.local.keys()].filter((id) => !sync.added.includes(id));
+    if (explicit || !holdsNone(account, records) || !holdsNone(account, seen)) return false;
+    console.error('sync: a doc with none of the garments of the account sends no delete of them');
     return true;
   };
 
@@ -161,14 +165,18 @@ export const createSyncer = ({
   };
 
   // SYNC-2: the changes of a doc against the last state that the syncer knows.
+  // A refused doc still queues its upserts and the deletes of garments that it added, and they go
+  // into the base, so the merge keeps them; the garments of the account stay in the base.
   const noted = (doc, explicit) => {
     const records = toRecords(doc);
-    if (refused(records, explicit)) return false;
+    const guard = refused(records, explicit);
     seen = records;
-    const changes = diffRecords(sync.local, records);
+    const all = diffRecords(sync.local, records);
+    const changes = guard ? all.filter((c) => c.op === 'upsert' || sync.added.includes(recordKey(c.kind, c.key))) : all;
     if (changes.length === 0) return false;
     queue = enqueue(queue, changes);
-    sync = { ...sync, local: records };
+    const added = guard ? [...new Set([...sync.added, ...changes.filter((c) => c.op === 'upsert').map((c) => recordKey(c.kind, c.key))])] : sync.added;
+    sync = { ...sync, local: guard ? withQueue(sync.local, changes) : records, added };
     persist();
     return true;
   };
@@ -245,7 +253,7 @@ export const createSyncer = ({
     const nextRecords = toRecords(next);
     if (diffRecords(toRecords(getDoc()), nextRecords).length > 0) put(next);
     else seen = nextRecords;
-    sync = { ...sync, server: merged.server, local: nextRecords, cursor: cursorOf(pulled, sync.cursor) };
+    sync = { ...sync, server: merged.server, local: nextRecords, cursor: cursorOf(pulled, sync.cursor), added: [] };
   };
 
   const syncOnce = async (live) => {
