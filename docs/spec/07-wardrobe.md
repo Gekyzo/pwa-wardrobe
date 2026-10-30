@@ -103,6 +103,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **OUT-8** `outfitsWith` gives the outfits that contain one garment: over each combination of a
   colour near it, the garment takes each place that it matches, out of the candidate cap, and the
   other places are searched among the other garments.
+- **OUT-9** `randomOutfit` takes one outfit at random from the outfits of every combination
+  (OUT-5) under the season filter, or gives null when there is none. `except` is the key of an
+  outfit (`outfitKey`: its combination and its garment ids); that outfit is not taken while
+  another one is in the pool.
 
 ## Wardrobe section
 
@@ -147,6 +151,11 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-8** While a new garment has no measure line with a name or a value, the lines are the
   measures of its slot (GAR-10), with their units and no value; a change of the slot changes
   them.
+- **WAR-9** With one garment or more, **Random outfit** above the list opens a detail (LAY-3)
+  with one outfit of OUT-9 as a card of WAR-5, the season filter and **Another**, which takes
+  another outfit (OUT-9 `except`). With no outfit the detail shows `wardrobe.noRandom` and no
+  **Another**. A change of the season filter or of the garments takes a new outfit. A tap on a
+  garment row closes it.
 
 ## Combinations section
 

@@ -16,7 +16,7 @@ const enter = (way) => {
 export const setView = (view) => {
   if (view === ui.view) return;
   const way = direction(ui.view, view, visibleSections(off));
-  Object.assign(ui, { view, garmentId: null, combination: null, openId: null });
+  Object.assign(ui, { view, garmentId: null, random: null, combination: null, openId: null });
   scroller.scrollTop = 0;
   render();
   enter(way);
@@ -56,10 +56,10 @@ export const bind = () => {
     const [dx, dy] = [event.clientX - sectionSlide.x, event.clientY - sectionSlide.y];
     sectionSlide = null;
     // Below 840px a detail shows alone: a slide to the right goes back to its list (NAV-3).
-    const detail = ui.garmentId !== null || ui.combination !== null;
+    const detail = ui.garmentId !== null || ui.random !== null || ui.combination !== null;
     if (slideBack(dx, dy, detail && matchMedia('(max-width: 839px)').matches)) {
       guardClick();
-      Object.assign(ui, { garmentId: null, detailImage: null, combination: null });
+      Object.assign(ui, { garmentId: null, detailImage: null, random: null, combination: null });
       render();
       enter(-1);
       return;

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { COMBINATIONS, combination, colorsNear, distance, colorOf } from '#palette';
-import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone } from '#outfits';
+import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone, outfitKey, randomOutfit } from '#outfits';
 
 let next = 0;
 const g = (color, slot, extra = {}) => ({ id: `g${next++}`, name: `${slot} ${color}`, slot, season: 'all', color, ...extra });
@@ -185,4 +185,42 @@ test('whyNone names the first colour with no garment, else the missing set', () 
   const [a, b] = two.colors;
   assert.deepEqual(whyNone(two.number, [g(a, 'top')]), { key: 'outfits.noColor', params: { color: colorOf(b).name } });
   assert.deepEqual(whyNone(two.number, [g(a, 'top'), g(b, 'shoes')]), { key: 'outfits.noSet' });
+});
+
+// Every outfit of a wardrobe, in the order of the combinations (OUT-9).
+const poolOf = (garments, options) => COMBINATIONS.flatMap(({ number }) => outfitsFor(number, garments, options));
+
+test('randomOutfit is null for a wardrobe with no outfit (OUT-9)', () => {
+  assert.equal(randomOutfit([]), null);
+  assert.equal(randomOutfit([g(two.colors[0], 'top')]), null);
+});
+
+test('randomOutfit takes the outfit of the pool that the random number names (OUT-9)', () => {
+  const [a, b] = two.colors;
+  const garments = [g(a, 'top'), g(a, 'top'), g(b, 'bottom')];
+  const pool = poolOf(garments);
+  assert.ok(pool.length >= 2);
+  assert.deepEqual(randomOutfit(garments, { random: () => 0 }), pool[0]);
+  assert.deepEqual(randomOutfit(garments, { random: () => 0.9999 }), pool.at(-1));
+});
+
+test('randomOutfit keeps to the season filter (OUT-7, OUT-9)', () => {
+  const [a, b] = two.colors;
+  const garments = [g(a, 'top', { season: 'cold' }), g(b, 'bottom')];
+  assert.equal(randomOutfit(garments, { season: 'warm' }), null);
+  assert.ok(randomOutfit(garments, { season: 'cold' }));
+});
+
+test('randomOutfit gives another outfit than `except` while the pool has one (OUT-9)', () => {
+  const [a, b] = two.colors;
+  const garments = [g(a, 'top'), g(a, 'top'), g(b, 'bottom')];
+  const pool = poolOf(garments);
+  for (const random of [() => 0, () => 0.5, () => 0.9999]) {
+    const outfit = randomOutfit(garments, { except: outfitKey(pool[0]), random });
+    assert.notEqual(outfitKey(outfit), outfitKey(pool[0]));
+  }
+  const single = [g(a, 'top'), g(b, 'bottom')];
+  const [only, ...rest] = poolOf(single);
+  assert.equal(rest.length, 0);
+  assert.deepEqual(randomOutfit(single, { except: outfitKey(only) }), only);
 });

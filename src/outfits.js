@@ -1,4 +1,4 @@
-import { combination, colorOf, colorsNear, distance } from '#palette';
+import { COMBINATIONS, combination, colorOf, colorsNear, distance } from '#palette';
 
 // The largest colour distance of a match, the outfits of one search, and the garments that one
 // colour keeps: the cap bounds the search to MAX_CANDIDATES ** 4 for a combination of 4 colours.
@@ -49,15 +49,15 @@ const outfitOf = (number, picks) => ({
   exact: picks.every((pick) => pick.distance === 0),
 });
 
-const keyOf = (outfit) => `${outfit.combination}:${outfit.picks.map((pick) => pick.garment.id).sort().join(',')}`;
+export const outfitKey = (outfit) => `${outfit.combination}:${outfit.picks.map((pick) => pick.garment.id).sort().join(',')}`;
 
 // Exact first, then the lower score, then a stable order; one outfit for one set of garments.
 const best = (outfits) => {
   const sorted = [...outfits].sort(
-    (a, b) => Number(b.exact) - Number(a.exact) || a.score - b.score || a.combination - b.combination || byId(keyOf(a), keyOf(b)),
+    (a, b) => Number(b.exact) - Number(a.exact) || a.score - b.score || a.combination - b.combination || byId(outfitKey(a), outfitKey(b)),
   );
   const seen = new Set();
-  return sorted.filter((outfit) => !seen.has(keyOf(outfit)) && seen.add(keyOf(outfit))).slice(0, MAX_OUTFITS);
+  return sorted.filter((outfit) => !seen.has(outfitKey(outfit)) && seen.add(outfitKey(outfit))).slice(0, MAX_OUTFITS);
 };
 
 export const outfitsFor = (number, garments, { season = 'any' } = {}) => {
@@ -92,4 +92,13 @@ export const whyNone = (number, garments, { season = 'any' } = {}) => {
   const fit = garments.filter((garment) => fitsSeason(garment, season));
   const empty = colors.find((color) => candidates(color, fit).length === 0);
   return empty === undefined ? { key: 'outfits.noSet' } : { key: 'outfits.noColor', params: { color: colorOf(empty).name } };
+};
+
+// One outfit at random among those of every combination, or null with none. `except` is the key
+// of the outfit in view, so that the next pick is another one while the wardrobe has another.
+export const randomOutfit = (garments, { season = 'any', except = null, random = Math.random } = {}) => {
+  const all = COMBINATIONS.flatMap(({ number }) => outfitsFor(number, garments, { season }));
+  const others = all.filter((outfit) => outfitKey(outfit) !== except);
+  const pool = others.length ? others : all;
+  return pool.length ? pool[Math.floor(random() * pool.length)] : null;
 };

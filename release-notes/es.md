@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- **Conjunto al azar** en Armario te propone un conjunto de tus prendas con los colores de una combinación. Toca **Otro** para ver uno distinto.
 - **Borrar todos los datos** en Ajustes borra las prendas y las preferencias de este dispositivo, y la app empieza como nueva.
 
 ## 0.1.13 - 2026-10-30

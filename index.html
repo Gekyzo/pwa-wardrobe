@@ -29,6 +29,7 @@
     <main>
       <section id="wardrobe" class="pane">
         <div class="pane-list">
+          <button id="wardrobe-random" class="button outline wide random-open" type="button" hidden><svg class="icon small" aria-hidden="true"><use href="icons.svg#shuffle"/></svg><span data-i18n="wardrobe.random"></span></button>
           <ul id="garment-list" class="item-list"></ul>
           <div id="wardrobe-empty" class="empty-state" hidden>
             <p data-i18n="wardrobe.empty"></p>
@@ -45,6 +46,7 @@
             <button id="garment-delete" class="button outline danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="action.delete"></span></button>
           </div>
           <div id="garment-outfits" class="outfits"></div>
+          <div id="random-outfit" class="outfits" hidden></div>
         </article>
       </section>
 

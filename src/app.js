@@ -67,8 +67,8 @@ document.addEventListener('keydown', (event) => {
     return;
   }
   if (ui.sheetOpen) closeGarmentSheet();
-  else if (ui.garmentId !== null || ui.combination !== null) {
-    Object.assign(ui, { garmentId: null, combination: null });
+  else if (ui.garmentId !== null || ui.random !== null || ui.combination !== null) {
+    Object.assign(ui, { garmentId: null, random: null, combination: null });
     render();
   }
 });

@@ -81,6 +81,8 @@ export const ui = {
   // The garment whose detail is open, or null, and the image that its detail shows large.
   garmentId: null,
   detailImage: null,
+  // The random outfit in view (WAR-9): { garments, season, outfit }, or null when it is closed.
+  random: null,
   // The number of the combination whose detail is open, or null.
   combination: null,
   sheetOpen: false,

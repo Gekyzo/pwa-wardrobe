@@ -4,6 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- **Random outfit** in Wardrobe suggests an outfit of your garments in the colours of a combination. Tap **Another** to see a different one.
 - **Delete all data** in Settings removes the garments and the preferences from this device, and the app starts as new.
 
 ## 0.1.13 - 2026-10-30

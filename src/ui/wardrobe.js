@@ -2,7 +2,7 @@ import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, bran
 import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor } from '#palette';
-import { outfitsWith } from '#outfits';
+import { outfitsWith, outfitKey, randomOutfit } from '#outfits';
 import { FITS, measuresOf } from '#measures';
 import { settle } from '#swipe';
 import { SIDE_BUTTON, DRAG_START, $, el, ui, state, t, lang, textOf, apply, render, guardClick, showToast } from '#ui/context';
@@ -199,6 +199,19 @@ export const closeGarmentSheet = () => {
 const openGarment = (id) => {
   ui.garmentId = id;
   ui.detailImage = null;
+  ui.random = null;
+  render();
+};
+
+// A pick for the doc and the season filter in view; a change of either picks again (WAR-9).
+const pickRandom = (except = null) => {
+  ui.random = { garments: state.garments, season: ui.season, outfit: randomOutfit(state.garments, { season: ui.season, except }) };
+};
+
+// Opens the random outfit, or picks another one than the outfit in view.
+const openRandom = () => {
+  ui.garmentId = null;
+  pickRandom(ui.random?.outfit ? outfitKey(ui.random.outfit) : null);
   render();
 };
 
@@ -325,16 +338,19 @@ export const renderWardrobe = () => {
   $('garment-list').replaceChildren(...sortGarments(state.garments).map(row));
   ui.settleFrom = null;
   $('wardrobe-empty').hidden = state.garments.length > 0;
+  $('wardrobe-random').hidden = state.garments.length === 0;
   // From 600px the add is the button of the header (NAV-6), and the fab is hidden there. The add of
   // the empty state replaces it.
   $('header-add').hidden = $('fab').hidden || !$('wardrobe-empty').hidden;
   const garment = ui.garmentId === null ? null : findGarment(state, ui.garmentId);
   if (!garment) ui.garmentId = null;
+  if (ui.random && (ui.random.garments !== state.garments || ui.random.season !== ui.season)) pickRandom();
+  const random = garment ? null : ui.random;
   // The pane shows the detail alone below 840px, and beside the list from 840px (LAY-3).
-  if (garment) $('wardrobe').dataset.detail = '';
+  if (garment || random) $('wardrobe').dataset.detail = '';
   else delete $('wardrobe').dataset.detail;
   $('garment-info').replaceChildren(...(garment ? info(garment) : []));
-  $('garment-detail-empty').hidden = Boolean(garment);
+  $('garment-detail-empty').hidden = Boolean(garment || random);
   $('garment-actions').hidden = !garment;
   $('garment-open').hidden = !garment?.link;
   if (garment?.link) $('garment-open').href = garment.link;
@@ -342,6 +358,11 @@ export const renderWardrobe = () => {
   if (garment && visible) {
     const outfits = outfitsWith(garment, state.garments, { season: ui.season });
     renderOutfits($('garment-outfits'), t('wardrobe.outfits'), outfits, t('wardrobe.noOutfits'));
+  }
+  $('random-outfit').hidden = !random;
+  if (random && visible) {
+    renderOutfits($('random-outfit'), t('wardrobe.random'), random.outfit ? [random.outfit] : [], t('wardrobe.noRandom'));
+    if (random.outfit) $('random-outfit').append(el('button', { className: 'button outline', type: 'button', textContent: t('wardrobe.randomAgain'), onclick: openRandom }));
   }
   $('garment-sheet').hidden = !ui.sheetOpen;
 };
@@ -354,6 +375,7 @@ export const bind = () => {
   $('garment-close').addEventListener('click', closeGarmentSheet);
   bindSheetDrag($('garment-sheet'), { close: closeGarmentSheet });
   $('garment-back').addEventListener('click', () => openGarment(null));
+  $('wardrobe-random').addEventListener('click', openRandom);
   $('garment-edit').addEventListener('click', () => openSheet(ui.garmentId));
   $('garment-delete').addEventListener('click', () => remove(ui.garmentId));
   // The grid of the palette: built once, the names are data (PAL-2).
