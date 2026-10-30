@@ -132,7 +132,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
   sheet holds the name, the brand, the slot, the season,
   the colour, the link, the images, under `wardrobe.purchase` the buy date, which is not after
-  today, and the price in euros (GAR-12) and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
+  today and is today for a new garment, and the price in euros (GAR-12) and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
   in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
   **Add measure**. The measure name suggests the names in use, and the unit the units in use, then
   `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests no brand while it is empty, and

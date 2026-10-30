@@ -187,7 +187,7 @@ const openSheet = (id = null) => {
   options($('garment-slot'), SLOTS, 'slot', garment?.slot ?? 'top');
   options($('garment-season'), SEASONS, 'season', garment?.season ?? 'all');
   showColor();
-  $('garment-buy-date').value = garment?.buy_date ?? '';
+  $('garment-buy-date').value = garment ? garment.buy_date : today();
   $('garment-buy-date').max = today();
   $('garment-price').value = garment?.price == null ? '' : number(garment.price, false);
   $('garment-size').value = garment?.size ?? '';
