@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.18 - 2026-10-31
+
 - **Back closes a detail** (NAV-7): an open detail of a garment, of the random outfit or of a combination pushes a history entry `{ detail: true }`, so the Back of Android, also its slide from the edge, fires `popstate` and closes the detail instead of the app. `syncHistory` of `src/ui/nav.js` runs at the end of each render; a detail that the app closes leaves its entry with `history.back()`. `historyStep` of `src/sections.js` decides the step.
 
 ## 0.1.17 - 2026-10-31

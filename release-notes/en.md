@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.18 - 2026-10-31
+
 - The **Back** of the phone, also the slide from the edge of the screen, closes the detail of a garment or of a combination. It no longer closes the app.
 
 ## 0.1.17 - 2026-10-31
