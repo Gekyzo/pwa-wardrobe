@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.1.15 - 2026-10-31
+
 - Con una cuenta, tus prendas se **sincronizan ahora entre tus dispositivos**. Los cambios sin conexión se quedan guardados y se envían cuando vuelve la conexión. Ajustes muestra la hora de la última sincronización.
 
 ## 0.1.14 - 2026-10-31
