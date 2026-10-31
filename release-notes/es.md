@@ -9,7 +9,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 ## 0.1.16 - 2026-10-31
 
 - Una prenda puede tener la **referencia** del producto en la tienda.
-- Escribe un **código de color** como `#hex`, `rgb(…)` o `hsl(…)`: la prenda toma el color más cercano de la paleta.
+- Escribe un **código de color** como `#1a2b3c`, `rgb(…)` o `hsl(…)`: la prenda toma el color más cercano de la paleta.
 No change.
 
 ## 0.1.15 - 2026-10-31

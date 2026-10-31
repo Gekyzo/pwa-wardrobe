@@ -9,7 +9,7 @@ What changes for you in each version of the app. The newest version is first.
 ## 0.1.16 - 2026-10-31
 
 - A garment can have the **reference** of the product in the shop.
-- Type a **colour code** as `#hex`, `rgb(…)` or `hsl(…)`: the garment takes the nearest colour of the palette.
+- Type a **colour code** as `#1a2b3c`, `rgb(…)` or `hsl(…)`: the garment takes the nearest colour of the palette.
 No change.
 
 ## 0.1.15 - 2026-10-31
