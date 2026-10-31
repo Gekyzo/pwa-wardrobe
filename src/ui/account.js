@@ -2,7 +2,7 @@
 // whole app; the group Account of Settings with the last sync (ACC-8); and the sync of the garments
 // with the account (09-sync.md): the login, the logout, the auth stop and the offline note (SYNC-11).
 import { createClient, PocketBaseError } from '#pocketbase';
-import { createSyncer, SYNC_KEY } from '#syncer';
+import { createSyncer, reloadsOn, SYNC_KEY } from '#syncer';
 import { loadSession, dropSession, routeAtStart, savePending, takePending, loadOffline, saveOffline, dropOffline } from '#session';
 import { apiUrl } from '#config';
 import { intlTag } from '#i18n';
@@ -311,6 +311,15 @@ export const goVisible = () => {
 // saves nothing after the removal.
 export const stopSync = () => {
   syncer?.reset();
+};
+
+// SYNC-12: another tab changed the garments, the sync state, the queue or the session. The sync of
+// this tab stops first, so that a run in progress saves nothing of its old memory, then the page
+// loads again from what the storage holds.
+export const goStale = (event) => {
+  if (!storage || event.storageArea !== storage || !reloadsOn(event)) return;
+  syncer?.stop();
+  location.reload();
 };
 
 export const isAccountOpen = () => screen !== null;

@@ -20,7 +20,7 @@
 | `src/brands.js` | The seed list of brands and the brands that the brand field suggests | nothing |
 | `src/records.js` | The garments as server records, their order and the diff of two sets of records | nothing |
 | `src/sync.js` | The queue of changes, the merge of pulled records and the check of each record | `records`, `garments` |
-| `src/syncer.js` | The sync driver: the queue of each save, the run, the retries, the token refresh, the stream and the status (SYNC-2 to SYNC-4, SYNC-11) | `records`, `sync`, `session`, `pocketbase`, `garments`, `storage` |
+| `src/syncer.js` | The sync driver: the queue of each save, the run, the retries, the token refresh, the stream, the status and the check of a change by another tab (SYNC-2 to SYNC-4, SYNC-11, SYNC-12) | `records`, `sync`, `session`, `pocketbase`, `garments`, `storage` |
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
@@ -40,7 +40,7 @@
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
-| `src/ui/account.js` | The account screens, the group Account of Settings, and the sync of the app: the login, the logout, the auth stop, the window events and the offline note (ACC-1 to ACC-12, SYNC-3, SYNC-10, SYNC-11) | `pocketbase`, `syncer`, `session`, `config`, `i18n`, `ui/context` |
+| `src/ui/account.js` | The account screens, the group Account of Settings, and the sync of the app: the login, the logout, the auth stop, the window events and the offline note (ACC-1 to ACC-12, SYNC-3, SYNC-10 to SYNC-12) | `pocketbase`, `syncer`, `session`, `config`, `i18n`, `ui/context` |
 | `src/app.js` | Wires the views, the global keys, the service worker and the update check | all of the above |
 
 ## Code rules
@@ -103,7 +103,7 @@ in [09-sync.md](09-sync.md).
 | `tests/brands.test.js` | The brands that the brand field suggests and their order (GAR-11) |
 | `tests/records.test.js` | The garments as records, the doc back from them and the diff (SYNC-1) |
 | `tests/sync.test.js` | The queue, the merge of pulled records, tombstones, the cursor and the check of records (SYNC-5 to SYNC-7) |
-| `tests/syncer.test.js` | The sync driver: the queue of a save, the run, the stops and retries, the refresh, the merge, the reset and the stream (SYNC-2 to SYNC-4, SYNC-11) |
+| `tests/syncer.test.js` | The sync driver: the queue of a save, the run, the stops and retries, the refresh, the merge, the reset, the stream and two tabs (SYNC-2 to SYNC-4, SYNC-11, SYNC-12) |
 | `tests/measures.test.js` | The size, the fit and the measures of a garment, the parse of a value, the measures of a slot |
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |

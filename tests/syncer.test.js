@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createSyncer, SYNC_KEY, QUEUE_KEY } from '#syncer';
+import { createSyncer, reloadsOn, SYNC_KEY, QUEUE_KEY } from '#syncer';
 import { PocketBaseError } from '#pocketbase';
 import { saveSession, loadSession, SESSION_KEY, OFFLINE_KEY } from '#session';
 import { LANGUAGE_KEY } from '#storage';
-import { normalizeGarments, emptyGarments } from '#garments';
+import { normalizeGarments, emptyGarments, GARMENTS_KEY } from '#garments';
 import { toRecords } from '#records';
 
 const garment = (id, name = id, creation_date = '') => ({ id, name, slot: 'top', season: 'all', color: 0, creation_date });
@@ -737,4 +737,159 @@ test('a merged doc that the app cannot save keeps the base and the cursor, so th
   assert.deepEqual(storedSync(d.storage).local.map(([id]) => id).sort(), ['garment:a', 'garment:b']);
   assert.deepEqual(d.client.pushed, []);
   assert.equal(console.error.mock.callCount(), 1);
+});
+
+const syncOf = (fields) => JSON.stringify({ owner: 'u1', cursor: 'c1', server: [], local: [['garment:a', { kind: 'garment', key: 'a', data: {} }]], lastSync: null, added: [], ...fields });
+const sessionText = (id, approved = true, n = 0) => JSON.stringify({ ...sessionOf(id, approved), token: tokenOf(id, n) });
+
+test('a change by another tab of the garments, the queue or a clear of the storage reloads this tab (SYNC-12)', () => {
+  assert.equal(reloadsOn({ key: GARMENTS_KEY, oldValue: '{"a":1}', newValue: '{"a":2}' }), true);
+  assert.equal(reloadsOn({ key: GARMENTS_KEY, oldValue: null, newValue: '{}' }), true);
+  assert.equal(reloadsOn({ key: QUEUE_KEY, oldValue: '[]', newValue: '[{}]' }), true);
+  assert.equal(reloadsOn({ key: QUEUE_KEY, oldValue: '[]', newValue: null }), true);
+  assert.equal(reloadsOn({ key: null, oldValue: null, newValue: null }), true);
+});
+
+test('a change by another tab of the sync state reloads this tab, unless only the time of the sync or the server copy changed (SYNC-12)', () => {
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: syncOf(), newValue: syncOf({ cursor: 'c2' }) }), true);
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: syncOf(), newValue: syncOf({ owner: 'u2' }) }), true);
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: syncOf(), newValue: syncOf({ local: [] }) }), true);
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: syncOf(), newValue: syncOf({ added: ['garment:b'] }) }), true);
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: syncOf(), newValue: null }), true);
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: 'not json', newValue: syncOf() }), true);
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: syncOf(), newValue: syncOf({ lastSync: '2026-10-31T08:00:00.000Z' }) }), false);
+  assert.equal(reloadsOn({ key: SYNC_KEY, oldValue: syncOf(), newValue: syncOf({ server: [['garment:a', { id: 'pb1' }]] }) }), false);
+});
+
+test('a change by another tab of the session reloads this tab only for another user, an approval or a logout; a new token does not (SYNC-12)', () => {
+  assert.equal(reloadsOn({ key: SESSION_KEY, oldValue: sessionText('u1', true, 1), newValue: sessionText('u1', true, 2) }), false);
+  assert.equal(reloadsOn({ key: SESSION_KEY, oldValue: sessionText('u1'), newValue: sessionText('u2') }), true);
+  assert.equal(reloadsOn({ key: SESSION_KEY, oldValue: sessionText('u1', false), newValue: sessionText('u1', true) }), true);
+  assert.equal(reloadsOn({ key: SESSION_KEY, oldValue: sessionText('u1'), newValue: null }), true);
+  assert.equal(reloadsOn({ key: SESSION_KEY, oldValue: null, newValue: sessionText('u1') }), true);
+});
+
+test('a change by another tab of other keys does not reload this tab (SYNC-12)', () => {
+  assert.equal(reloadsOn({ key: LANGUAGE_KEY, oldValue: 'en', newValue: 'es' }), false);
+  assert.equal(reloadsOn({ key: OFFLINE_KEY, oldValue: null, newValue: '1' }), false);
+  assert.equal(reloadsOn({ key: 'other.app', oldValue: null, newValue: '1' }), false);
+});
+
+test('stop makes a run in progress stale and leaves the storage as the other tab wrote it; nothing runs after it (SYNC-12)', async () => {
+  const server = fakeServer();
+  server.add('u1', garment('b'));
+  const d = device({ doc: docOf(garment('a')), server });
+  const held = gate();
+  d.client.hold = () => held.opened;
+  const running = d.syncer.run();
+  await Promise.resolve();
+  d.syncer.stop();
+  const before = new Map(d.storage.map);
+  d.storage.setItem(GARMENTS_KEY, 'written by another tab');
+  held.open();
+  assert.equal(await running, 'ok');
+  assert.equal(d.box.sets, 0);
+  assert.equal(d.storage.getItem(GARMENTS_KEY), 'written by another tab');
+  d.storage.removeItem(GARMENTS_KEY);
+  assert.deepEqual(d.storage.map, before);
+  d.client.hold = null;
+  const calls = d.client.calls.length;
+  d.save(docOf(garment('a'), garment('c')));
+  assert.equal(await d.syncer.run(), 'ok');
+  assert.equal(await d.syncer.login(sessionOf('u1')), 'stopped');
+  assert.equal(await d.syncer.logout({ online: true }), 'stopped');
+  assert.equal(d.client.calls.length, calls);
+  assert.deepEqual(d.storage.map, before);
+  assert.deepEqual(d.live(), []);
+});
+
+// Two tabs of one browser share one storage. A write of one tab reaches the other one as a `storage`
+// event after the task of the write, as in a browser; the listener of the app (SYNC-12) stops the
+// syncer of that tab and loads it again from the storage.
+const twoTabs = (server) => {
+  const map = new Map();
+  const tabs = [];
+  const view = (owner) => {
+    const write = (key, value) => {
+      const oldValue = map.has(key) ? map.get(key) : null;
+      if (value === null) map.delete(key);
+      else map.set(key, String(value));
+      const newValue = map.has(key) ? map.get(key) : null;
+      if (oldValue === newValue) return;
+      for (const tab of tabs) if (tab !== owner()) setImmediate(() => tab.onStorage({ key, oldValue, newValue }));
+    };
+    return { map, getItem: (key) => (map.has(key) ? map.get(key) : null), setItem: write, removeItem: (key) => write(key, null) };
+  };
+  const open = () => {
+    const tab = { reloads: 0 };
+    const storage = view(() => tab);
+    const client = fakeClient(server);
+    const load = () => {
+      const stored = storage.getItem(GARMENTS_KEY);
+      tab.doc = stored ? JSON.parse(stored) : emptyGarments();
+      tab.syncer = createSyncer({
+        client,
+        storage,
+        getDoc: () => tab.doc,
+        setDoc: (next) => {
+          tab.doc = next;
+          storage.setItem(GARMENTS_KEY, JSON.stringify(next));
+          return true;
+        },
+        setTimer: () => null,
+        clearTimer: () => {},
+      });
+    };
+    tab.onStorage = (event) => {
+      if (!reloadsOn(event)) return;
+      tab.syncer.stop();
+      tab.reloads += 1;
+      load();
+    };
+    tab.save = (next) => {
+      tab.doc = next;
+      storage.setItem(GARMENTS_KEY, JSON.stringify(next));
+      tab.syncer.notify(next);
+    };
+    tab.client = client;
+    load();
+    tabs.push(tab);
+    return tab;
+  };
+  return { map, open };
+};
+
+const flush = () => new Promise((resolve) => setImmediate(resolve));
+const serverView = (server) => server.rows.map((row) => `${row.key}:${row.deleted ? 'deleted' : row.data.name}`).sort();
+
+test('two tabs that edit offline never mix their state, so a new start deletes nothing (SYNC-12)', async () => {
+  const server = fakeServer();
+  server.add('u1', garment('a'));
+  const browser = twoTabs(server);
+  const first = browser.open();
+  first.save(docOf(garment('a')));
+  assert.equal(await first.syncer.login(sessionOf('u1')), 'synced');
+  const second = browser.open();
+  await flush();
+  // Offline: the first tab adds a garment, then the second tab renames the other one.
+  for (const tab of [first, second]) tab.client.failPush = () => new PocketBaseError('network');
+  first.save(docOf(garment('a'), garment('g')));
+  await flush();
+  assert.ok(second.reloads > 0);
+  assert.deepEqual(second.doc.garments.map(({ id }) => id).sort(), ['a', 'g']);
+  // The second tab edits the doc that it holds in memory.
+  second.save({ ...second.doc, garments: second.doc.garments.map((g) => (g.id === 'a' ? { ...g, name: 'A2' } : g)) });
+  await flush();
+  assert.ok(first.reloads > 0);
+  // Online: the first tab runs, then every tab closes and the browser starts again.
+  for (const tab of [first, second]) tab.client.failPush = null;
+  assert.equal(await first.syncer.run(), 'ok');
+  await flush();
+  assert.deepEqual(serverView(server), ['a:A2', 'g:g']);
+  const next = twoTabs(server);
+  for (const [key, value] of browser.map) next.map.set(key, value);
+  const restart = next.open();
+  assert.equal(await restart.syncer.login(sessionOf('u1')), 'synced');
+  assert.deepEqual(serverView(server), ['a:A2', 'g:g']);
+  assert.deepEqual(restart.doc.garments.map(({ id }) => id).sort(), ['a', 'g']);
 });

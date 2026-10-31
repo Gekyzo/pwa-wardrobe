@@ -1,13 +1,13 @@
 // The sync driver: it queues each save, sends the queue, pulls the account and merges it into the doc
 // (SYNC-2 to SYNC-9), refreshes the token (SYNC-4), keeps the realtime stream (SYNC-3), runs the login
-// and the logout (ACC-11, ACC-12), stops at Delete all data (SYNC-10) and reports the status
-// (SYNC-11). The client, the storage, the clock and the timer are injected, so a test runs with no
-// network.
+// and the logout (ACC-11, ACC-12), stops at Delete all data (SYNC-10) and when another tab changes the
+// stored state (SYNC-12), and reports the status (SYNC-11). The client, the storage, the clock and the
+// timer are injected, so a test runs with no network.
 import { toRecords, fromRecords, diffRecords, recordKey } from '#records';
 import { enqueue, mergePulled, validRecords, cursorOf } from '#sync';
 import { loadSession, saveSession, SESSION_KEY } from '#session';
 import { PocketBaseError } from '#pocketbase';
-import { normalizeGarments, emptyGarments } from '#garments';
+import { normalizeGarments, emptyGarments, GARMENTS_KEY } from '#garments';
 import { keyOf } from '#storage';
 
 export const SYNC_KEY = keyOf('sync');
@@ -91,6 +91,40 @@ const withQueue = (records, queue) => {
   return next;
 };
 
+const parsed = (value) => {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return undefined;
+  }
+};
+
+// The sync state that a tab acts on: the time of the last sync and the server copy are left out,
+// as a run that changed nothing still writes them.
+const syncFacts = (value) => {
+  const data = parsed(value);
+  if (!data || typeof data !== 'object' || !Array.isArray(data.local)) return value;
+  const local = [...data.local].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+  return JSON.stringify([data.owner, data.cursor, JSON.stringify(local), Array.isArray(data.added) ? [...data.added].sort() : data.added]);
+};
+
+// The user of a session and its approval: a refresh of the token alone changes neither.
+const sessionFacts = (value) => {
+  const user = parsed(value)?.user;
+  return value === null ? null : JSON.stringify([user?.id, user?.approved]);
+};
+
+// SYNC-12: true when a `storage` event of another tab (its `key`, `oldValue` and `newValue`) changed
+// what this tab holds in memory: the garments, the queue, the sync state or the session. A `key` of
+// null is a clear of the storage. Pure: the app reloads the tab when it is true.
+export const reloadsOn = ({ key, oldValue, newValue }) => {
+  if (key === null) return true;
+  if (key === GARMENTS_KEY || key === QUEUE_KEY) return oldValue !== newValue;
+  if (key === SYNC_KEY) return syncFacts(oldValue) !== syncFacts(newValue);
+  if (key === SESSION_KEY) return sessionFacts(oldValue) !== sessionFacts(newValue);
+  return false;
+};
+
 // Returned by a run that a reset made stale: it stops with no save and no change of the doc.
 const STALE = Symbol('stale');
 
@@ -129,6 +163,8 @@ export const createSyncer = ({
   // SYNC-4: after an auth stop no sync makes a request until a login, so the rate limit of the auth
   // endpoints stays free for that login.
   let authStopped = false;
+  // SYNC-12: after a stop (another tab changed the stored state) nothing runs, and nothing is saved.
+  let stopped = false;
   // SYNC-11: counts the runs after which the server had answered (ok, a rate limit, an auth error).
   let reached = 0;
   let stream = null;
@@ -292,6 +328,7 @@ export const createSyncer = ({
 
   // A run while one of the same generation is in progress gets the promise of that run.
   const run = () => {
+    if (stopped) return Promise.resolve('ok');
     if (authStopped) {
       report();
       return Promise.resolve('auth');
@@ -365,7 +402,7 @@ export const createSyncer = ({
   // account keeps no queue. After an auth stop the change waits in the queue for the login (SYNC-4).
   // An import is `explicit` (SYNC-9): the next run deletes each garment of the account that it lacks.
   const notify = (doc, { explicit = false } = {}) => {
-    if (!activeSession()) return;
+    if (stopped || !activeSession()) return;
     if (noted(doc, explicit)) report();
     if (!authStopped) schedule();
   };
@@ -401,6 +438,7 @@ export const createSyncer = ({
   // ACC-11, SYNC-8. With `discard` the user has exported, or declined, the queue of the previous user.
   // 'ask-export' changes nothing, the session too: the app keeps the session and logs in again.
   const login = async (session, { discard = false } = {}) => {
+    if (stopped) return 'stopped';
     const approved = session.user.approved === true;
     const other = sync.owner !== null && sync.owner !== session.user.id;
     if (approved && other && unsent() && !discard) return 'ask-export';
@@ -431,6 +469,7 @@ export const createSyncer = ({
   // ACC-12: online, the queue goes first. Changes that are still not sent need an export first, and
   // then nothing changes. The device preferences and the offline flag stay.
   const logout = async ({ online: isOnline, discard = false }) => {
+    if (stopped) return 'stopped';
     if (isOnline) await run();
     if (unsent() && !discard) return 'ask-export';
     reset();
@@ -445,5 +484,16 @@ export const createSyncer = ({
     report();
   };
 
-  return { notify, run, login, logout, reset, status, online: goOnline, offline: goOffline };
+  // SYNC-12: another tab changed the stored state, and the app loads this tab again. A run in progress
+  // becomes stale, the timers and the stream stop, and no run, save, login or logout follows. Unlike
+  // a reset, the storage keeps what the other tab wrote.
+  const stop = () => {
+    stopped = true;
+    generation += 1;
+    cancelTimer();
+    cancelRetry();
+    closeStream();
+  };
+
+  return { notify, run, login, logout, reset, stop, status, online: goOnline, offline: goOffline };
 };

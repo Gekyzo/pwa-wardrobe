@@ -99,6 +99,17 @@ the storage, the clock and the timer as parameters.
   `online` is false, the note `sync.offline` shows above Wardrobe and Combinations, not in
   Settings. The status also gives the last sync of Settings (ACC-8).
 
+## Tabs
+
+- **SYNC-12** A change of the stored garments, sync state, queue or session by another tab reloads
+  this tab, so two tabs never mix their state. The app listens to the `storage` event. It reloads
+  for a change of `wardrobe.garments` or `wardrobe.queue`, for a clear of the storage, for a change
+  of `wardrobe.sync` other than the time of the last sync and the server copy, and for a change of
+  the user or of the approval in `wardrobe.session`. A new token alone does not reload, so two
+  open tabs do not reload each other at each start. Before the reload the sync of this tab stops:
+  a run in progress becomes stale and saves nothing, the timers and the stream stop, and the
+  storage keeps what the other tab wrote. An open sheet of this tab loses its draft.
+
 ## Keys
 
 - `wardrobe.sync`: the owner, the cursor, the last server records, the base records, the time
