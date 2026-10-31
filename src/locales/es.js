@@ -13,6 +13,7 @@ export default {
   'wardrobe.slot': 'Tipo de prenda',
   'wardrobe.season': 'Temporada',
   'wardrobe.color': 'Color',
+  'wardrobe.colorCode': 'Código de color (#hex, rgb, hsl)',
   'wardrobe.colorNone': 'Elige un color',
   'wardrobe.pick': 'Elige una prenda.',
   'wardrobe.outfits': 'Conjuntos con esta prenda',

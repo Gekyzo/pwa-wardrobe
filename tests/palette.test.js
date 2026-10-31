@@ -7,6 +7,7 @@ import {
   distance,
   colorOf,
   nearestColor,
+  parseColor,
   colorsNear,
   COMBINATIONS,
   combination,
@@ -84,4 +85,29 @@ test('combination and combinationsOf agree with the dataset', () => {
 
 test('combination keeps the order of the dataset', () => {
   for (const { colors } of COMBINATIONS) assert.deepEqual(colors, [...colors].sort((a, b) => a - b));
+});
+
+test('parseColor reads a hex, rgb or hsl text as #rrggbb (PAL-4)', () => {
+  const cases = [
+    ['#A1B2C3', '#a1b2c3'],
+    ['#abc', '#aabbcc'],
+    [' #ff0000 ', '#ff0000'],
+    ['rgb(255, 0, 0)', '#ff0000'],
+    ['rgb(0 128 255)', '#0080ff'],
+    ['RGBA(0, 128, 255, 0.5)', '#0080ff'],
+    ['rgb(0 128 255 / 50%)', '#0080ff'],
+    ['rgb(100%, 50%, 0%)', '#ff8000'],
+    ['hsl(0, 100%, 50%)', '#ff0000'],
+    ['hsl(120deg 100% 25%)', '#008000'],
+    ['hsla(240, 100%, 50%, 0.3)', '#0000ff'],
+    ['hsl(-120, 100%, 50%)', '#0000ff'],
+    ['hsl(210 50% 40%)', '#336699'],
+  ];
+  for (const [text, hex] of cases) assert.equal(parseColor(text), hex, text);
+});
+
+test('parseColor gives null for a text that is not a colour (PAL-4)', () => {
+  for (const text of ['', 'red', '#12', '#1234567', 'rgb(256, 0, 0)', 'rgb(1, 2)', 'rgb(-1, 0, 0)', 'hsl(0, 101%, 50%)', 'hsl(0, 50, 50)', 'rgb(1, 2, 3', null, 7]) {
+    assert.equal(parseColor(text), null, String(text));
+  }
 });

@@ -1,7 +1,7 @@
 import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, isWebUrl, SLOTS, SEASONS } from '#garments';
 import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
-import { COLORS, colorOf, nearestColor } from '#palette';
+import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
 import { outfitsWith, outfitKey, randomOutfit } from '#outfits';
 import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
@@ -21,6 +21,11 @@ const showColor = ({ fromInput = false } = {}) => {
   $('garment-swatches').querySelectorAll('[data-color]').forEach((button) => {
     button.setAttribute('aria-pressed', String(Number(button.dataset.color) === ui.draftColor));
   });
+};
+
+const clearColorText = () => {
+  $('garment-color-text').value = '';
+  $('garment-color-text').removeAttribute('aria-invalid');
 };
 
 // The Load images button: on for an http or https link, while no load runs.
@@ -173,6 +178,7 @@ const openSheet = (id = null) => {
   ui.sheetOpen = true;
   ui.editing = id;
   ui.draftColor = garment?.color ?? null;
+  clearColorText();
   $('garment-sheet-title').textContent = t(id ? 'wardrobe.editTitle' : 'wardrobe.new');
   $('garment-name').value = garment?.name ?? '';
   $('garment-brand').value = garment?.brand ?? '';
@@ -398,6 +404,7 @@ export const bind = () => {
   $('garment-swatches').replaceChildren(...COLORS.map(({ id, name, hex }) => {
     const button = el('button', { className: 'swatch-grid-item', type: 'button', onclick: () => {
       ui.draftColor = id;
+      clearColorText();
       showColor();
     } });
     button.dataset.color = id;
@@ -409,7 +416,16 @@ export const bind = () => {
     const id = nearestColor(event.target.value);
     if (id === null) return;
     ui.draftColor = id;
+    clearColorText();
     showColor({ fromInput: true });
+  });
+  // A typed hex, rgb or hsl colour takes the nearest palette colour (PAL-4, WAR-3).
+  $('garment-color-text').addEventListener('input', (event) => {
+    const hex = parseColor(event.target.value);
+    event.target.toggleAttribute('aria-invalid', hex === null && event.target.value.trim() !== '');
+    if (hex === null) return;
+    ui.draftColor = nearestColor(hex);
+    showColor();
   });
   $('garment-brand').addEventListener('input', showBrands);
   $('garment-link').addEventListener('input', showLoad);

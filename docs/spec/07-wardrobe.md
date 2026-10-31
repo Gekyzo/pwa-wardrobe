@@ -20,6 +20,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **PAL-3** The distance of two colours is CIE76 ΔE over CIELAB with a D65 white, computed from
   the `hex` of each colour. `nearestColor` takes a `#rrggbb` value in any case and gives the id of
   the palette colour with the smallest distance; any other value gives null.
+- **PAL-4** `parseColor` reads a colour text as `#rrggbb`: `#rgb` and `#rrggbb` in any case,
+  `rgb()` or `rgba()` with three values from 0 to 255 or three percentages, and `hsl()` or `hsla()`
+  with a hue in degrees and two percentages from 0 to 100. Commas or spaces separate the values,
+  and an alpha is read and ignored. Any other text gives null.
 
 ## Garments
 
@@ -136,7 +140,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
   **Add measure**. The measure name suggests the names in use, and the unit the units in use, then
   `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests no brand while it is empty, and
-  the brands of GAR-11 for its text. The colour input of the phone takes the nearest palette colour (PAL-3); a tap on a
+  the brands of GAR-11 for its text. The colour input of the phone takes the nearest palette colour (PAL-3); so does a colour code typed as `#hex`, `rgb()` or
+  `hsl()` (PAL-4), and a code that is not a colour marks its field invalid; a tap on a
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.

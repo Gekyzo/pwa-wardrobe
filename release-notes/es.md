@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- Escribe un **código de color** como `#hex`, `rgb(…)` o `hsl(…)`: la prenda toma el color más cercano de la paleta.
 No change.
 
 ## 0.1.15 - 2026-10-31

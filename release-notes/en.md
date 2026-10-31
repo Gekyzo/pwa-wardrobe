@@ -4,6 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- Type a **colour code** as `#hex`, `rgb(…)` or `hsl(…)`: the garment takes the nearest colour of the palette.
 No change.
 
 ## 0.1.15 - 2026-10-31

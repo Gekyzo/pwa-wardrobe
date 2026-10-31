@@ -44,6 +44,45 @@ export const nearestColor = (hex) => {
   return best;
 };
 
+const NUMBER = String.raw`(-?\d+(?:\.\d+)?)`;
+// rgb() and rgba(), hsl() and hsla(), with commas or spaces, an optional alpha that is ignored.
+const FUNCTION = new RegExp(
+  String.raw`^(rgba?|hsla?)\(\s*${NUMBER}(deg|%)?\s*(?:,\s*|\s+)${NUMBER}(%)?\s*(?:,\s*|\s+)${NUMBER}(%)?\s*(?:(?:,|\/)\s*-?\d+(?:\.\d+)?%?\s*)?\)$`,
+  'i',
+);
+
+const hexOf = (channels) => `#${channels.map((value) => Math.round(value).toString(16).padStart(2, '0')).join('')}`;
+
+const fromHsl = (h, s, l) => {
+  const a = s * Math.min(l, 1 - l);
+  const f = (n) => {
+    const k = (n + h / 30) % 12;
+    return 255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)));
+  };
+  return hexOf([f(0), f(8), f(4)]);
+};
+
+// A colour text as `#rrggbb`: `#rgb`, `#rrggbb`, `rgb(…)` with 0-255 values or percentages, or
+// `hsl(…)` with a hue in degrees and two percentages. Any other text gives null (PAL-4).
+export const parseColor = (text) => {
+  if (typeof text !== 'string') return null;
+  const clean = text.trim().toLowerCase();
+  if (/^#[0-9a-f]{3}$/.test(clean)) return `#${[...clean.slice(1)].map((digit) => digit + digit).join('')}`;
+  if (HEX.test(clean)) return clean;
+  const match = FUNCTION.exec(clean);
+  if (!match) return null;
+  const [, name, first, unit, second, secondPercent, third, thirdPercent] = match;
+  const [x, y, z] = [first, second, third].map(Number);
+  if (name.startsWith('rgb')) {
+    if (unit === 'deg') return null;
+    const percent = [unit === '%', secondPercent === '%', thirdPercent === '%'];
+    const channels = [x, y, z].map((value, i) => (percent[i] ? (value / 100) * 255 : value));
+    return channels.every((value) => value >= 0 && value <= 255) ? hexOf(channels) : null;
+  }
+  if (unit === '%' || secondPercent !== '%' || thirdPercent !== '%' || y < 0 || y > 100 || z < 0 || z > 100) return null;
+  return fromHsl(((x % 360) + 360) % 360, y / 100, z / 100);
+};
+
 // The ids of the colours within `max` of `id`, `id` included.
 export const colorsNear = (id, max) => COLORS.filter((color) => distance(id, color.id) <= max).map((color) => color.id);
 

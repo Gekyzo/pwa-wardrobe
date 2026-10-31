@@ -4,6 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+- **Colour code** (PAL-4, WAR-3): `parseColor` of `src/palette.js` reads `#rgb`, `#rrggbb`, `rgb()`/`rgba()` (0-255 or percentages) and `hsl()`/`hsla()` as `#rrggbb`; the field `garment-color-text` of the sheet takes the nearest palette colour, marks an unreadable code `aria-invalid`, and empties on a pick or a swatch. Key `wardrobe.colorCode`.
 No change.
 
 ## 0.1.15 - 2026-10-31
