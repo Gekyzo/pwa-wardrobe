@@ -32,6 +32,12 @@ test('the records give the doc back, newest first, empty dates last, then by key
   assert.deepEqual(doc.garments.find(({ id }) => id === 'c'), garments[0]);
 });
 
+test('a stray id in the data does not replace the key of the record (SYNC-1)', () => {
+  const { id, ...data } = garment('a', '');
+  const doc = fromRecords(new Map([['garment:a', { kind: 'garment', key: 'a', data: { ...data, id: 'other' } }]]));
+  assert.deepEqual(doc.garments.map((g) => g.id), ['a']);
+});
+
 test('an add gives one upsert (SYNC-1)', () => {
   const prev = toRecords({ version: 4, garments: [] });
   const next = toRecords({ version: 4, garments: [garment('a', '')] });

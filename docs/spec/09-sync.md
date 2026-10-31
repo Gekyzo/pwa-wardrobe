@@ -11,7 +11,8 @@ the storage, the clock and the timer as parameters.
 ## Records
 
 - **SYNC-1** A garment is one record `{ kind: 'garment', key: <id>, data }`. `data` is the garment
-  without its `id`. The record id is `garment:<id>`. A doc built from records has version 4 and
+  without its `id`. The record id is `garment:<id>`. A doc built from records, and the check of
+  SYNC-7, take the `id` of a garment from the key, also when `data` holds an `id`. The doc has version 4 and
   its garments are newest first by `creation_date`, a garment with no date last, then by `id`. The
   diff of two sets of records gives the deletes first, then the upserts, each sorted by record id.
   Two `data` values that differ only in the order of their keys are equal. The cursor of a pull is

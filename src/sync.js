@@ -37,7 +37,7 @@ export const validRecords = (records) => {
   const local = new Map();
   const dropped = [];
   for (const [id, rec] of records) {
-    if (normalizeGarments({ version: 4, garments: [{ id: rec.key, ...rec.data }] })) local.set(id, rec);
+    if (normalizeGarments({ version: 4, garments: [{ ...rec.data, id: rec.key }] })) local.set(id, rec);
     else dropped.push(id);
   }
   return { local, dropped };

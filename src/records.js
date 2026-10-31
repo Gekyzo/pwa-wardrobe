@@ -11,7 +11,7 @@ const byKey = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 export const fromRecords = (records) => ({
   version: 4,
   garments: [...records.values()]
-    .map(({ key, data }) => ({ id: key, ...data }))
+    .map(({ key, data }) => ({ ...data, id: key }))
     .sort((a, b) => byKey(b.creation_date ?? '', a.creation_date ?? '') || byKey(a.id, b.id)),
 });
 

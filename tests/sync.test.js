@@ -56,3 +56,10 @@ test('a bad record is dropped alone and the rest stay (SYNC-7)', () => {
   assert.deepEqual([...local.keys()], ['garment:a']);
   assert.equal(map.size, 2);
 });
+
+test('a record is checked with its key as the id, not a stray id in its data (SYNC-1, SYNC-7)', () => {
+  const data = { name: 'Cap', slot: 'accessory', season: 'all', color: 0, creation_date: '', id: '' };
+  const { local, dropped } = validRecords(new Map([['garment:a', { kind: 'garment', key: 'a', data }]]));
+  assert.deepEqual(dropped, []);
+  assert.deepEqual([...local.keys()], ['garment:a']);
+});
