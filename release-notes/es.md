@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- El **Atrás** del móvil, también el deslizamiento desde el borde de la pantalla, cierra el detalle de una prenda o de una combinación. Ya no cierra la app.
 
 ## 0.1.17 - 2026-10-31
 

@@ -1,4 +1,4 @@
-import { direction, slideTo, slideBack } from '#sections';
+import { direction, slideTo, slideBack, historyStep } from '#sections';
 import { visibleSections } from '#modules';
 import { ui, off, render, scroller, guardClick } from '#ui/context';
 import { checkVersion } from '#ui/update';
@@ -21,6 +21,28 @@ export const setView = (view) => {
   render();
   enter(way);
   if (view === 'settings') checkVersion();
+};
+
+const detailOpen = () => ui.garmentId !== null || ui.random !== null || ui.combination !== null;
+
+const closeDetail = () => {
+  Object.assign(ui, { garmentId: null, detailImage: null, random: null, combination: null });
+  render();
+  enter(-1);
+};
+
+// An open detail has an entry of the history, so that the Back of the phone, the slide from the
+// edge too, closes it instead of the app (NAV-7). `leaving` is true from a `history.back()` of the
+// app until its `popstate`, which then closes nothing.
+let leaving = false;
+export const syncHistory = () => {
+  if (leaving) return;
+  const step = historyStep(detailOpen(), history.state?.detail === true);
+  if (step === 'push') history.pushState({ ...history.state, detail: true }, '');
+  else if (step === 'back') {
+    leaving = true;
+    history.back();
+  }
 };
 
 export const renderNav = () => {
@@ -56,12 +78,9 @@ export const bind = () => {
     const [dx, dy] = [event.clientX - sectionSlide.x, event.clientY - sectionSlide.y];
     sectionSlide = null;
     // Below 840px a detail shows alone: a slide to the right goes back to its list (NAV-3).
-    const detail = ui.garmentId !== null || ui.random !== null || ui.combination !== null;
-    if (slideBack(dx, dy, detail && matchMedia('(max-width: 839px)').matches)) {
+    if (slideBack(dx, dy, detailOpen() && matchMedia('(max-width: 839px)').matches)) {
       guardClick();
-      Object.assign(ui, { garmentId: null, detailImage: null, random: null, combination: null });
-      render();
-      enter(-1);
+      closeDetail();
       return;
     }
     const view = slideTo(ui.view, dx, dy, visibleSections(off));
@@ -72,5 +91,12 @@ export const bind = () => {
   });
   document.addEventListener('pointercancel', () => {
     sectionSlide = null;
+  });
+  window.addEventListener('popstate', () => {
+    if (leaving) {
+      leaving = false;
+      // A detail that opened before the `popstate` gets its entry now.
+      syncHistory();
+    } else if (detailOpen()) closeDetail();
   });
 };

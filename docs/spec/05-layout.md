@@ -23,7 +23,6 @@ From 840px the detail of the pane is a card beside the list. In this app the War
   the detail of a garment or of a combination and shows its list again, which comes in from the
   left. A slide to the left still goes to the next section. The **Back** of a detail starts with
   an arrow that lines up with the content edge.
-
 - **NAV-4** Below 600px the navigation is the bottom bar. From 600px it is a rail at the left with
   **Right** and with **Left** (DSV-5). **Left** still puts the `+` of a phone at the left and the
   buttons of the header before its text.
@@ -34,6 +33,10 @@ From 840px the detail of the pane is a card beside the list. In this app the War
 - **NAV-6** Below 600px the add of Wardrobe is the floating `+`. From 600px it is the button
   **Add garment** of the header, with the same conditions, and the `+` does not float. While the
   empty state shows its own **Add garment**, the header has no add.
+- **NAV-7** An open detail of a garment, of the random outfit or of a combination has its own entry
+  of the history. The **Back** of the phone, also the slide from the edge of the screen, closes the
+  detail and shows its list again; it does not close the app. A detail that the app closes leaves
+  its entry, so the next **Back** acts as before the detail opened.
 
 ## Modules
 

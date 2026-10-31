@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { SECTIONS, direction, slideDirection, slideTo, slideBack } from '#sections';
+import { SECTIONS, direction, slideDirection, slideTo, slideBack, historyStep } from '#sections';
 
 // A longer list than the template's, so that a slide has a middle section to pass.
 const FIVE = ['a', 'b', 'c', 'd', 'settings'];
@@ -89,4 +89,17 @@ test('slideBack is false for a slide to the left, a short or vertical slide, or 
   assert.equal(slideBack(30, 0, true), false);
   assert.equal(slideBack(80, 60, true), false);
   assert.equal(slideBack(80, 0, false), false);
+});
+
+test('historyStep adds an entry when a detail opens with no entry of its own (NAV-7)', () => {
+  assert.equal(historyStep(true, false), 'push');
+});
+
+test('historyStep goes back over the entry when a detail closes in the app (NAV-7)', () => {
+  assert.equal(historyStep(false, true), 'back');
+});
+
+test('historyStep does nothing when the history already matches the detail (NAV-7)', () => {
+  assert.equal(historyStep(true, true), null);
+  assert.equal(historyStep(false, false), null);
 });

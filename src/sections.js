@@ -31,3 +31,12 @@ export const direction = (from, to, sections = SECTIONS) => {
   const [a, b] = [sections.indexOf(from), sections.indexOf(to)];
   return a < 0 || b < 0 ? 0 : Math.sign(b - a);
 };
+
+// What the history needs so that the Back of the phone closes an open detail (NAV-7): 'push' adds
+// the entry of a detail that opened, 'back' leaves the entry of a detail that the app closed, null
+// when the history already matches.
+export const historyStep = (detailOpen, hasEntry) => {
+  if (detailOpen && !hasEntry) return 'push';
+  if (!detailOpen && hasEntry) return 'back';
+  return null;
+};

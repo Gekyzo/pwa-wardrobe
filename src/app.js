@@ -1,5 +1,5 @@
 import { $, ui, state, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
-import { bind as bindNav, renderNav } from '#ui/nav';
+import { bind as bindNav, renderNav, syncHistory } from '#ui/nav';
 import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
 import { bind as bindCombinations, renderCombinations } from '#ui/combinations';
 import { bind as bindSettings, applyLanguage } from '#ui/settings';
@@ -23,6 +23,7 @@ const renderAll = () => {
   renderVersion();
   renderInstall();
   renderAccount();
+  syncHistory();
 };
 setRender(renderAll);
 // The side sheets from 840px start below the header (DSV-6).
