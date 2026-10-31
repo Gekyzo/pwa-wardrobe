@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.17 - 2026-10-31
+
 - **What's new** shows bold text in bold, no longer between asterisks.
 
 ## 0.1.16 - 2026-10-31

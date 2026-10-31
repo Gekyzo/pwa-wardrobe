@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.1.17 - 2026-10-31
+
 - **Novedades** muestra el texto en negrita, ya no entre asteriscos.
 
 ## 0.1.16 - 2026-10-31
