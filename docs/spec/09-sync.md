@@ -28,9 +28,11 @@ the storage, the clock and the timer as parameters.
   one by one, or an explicit save such as an import, still queues the deletes. When the start could
   not read the garments (`lost`), the account is pulled again in full with an empty base, so
   nothing is deleted.
-- **SYNC-3** A sync starts at the start of the app, at the `online` event, 1.5 s after the last
-  save of a burst (a new save in that time starts the delay again) and at each event of the
-  realtime stream. A run asked for while one runs gets that run; a stream event during a run starts
+- **SYNC-3** A sync starts at the start of the app and at the `online` event (after the refresh
+  of ACC-6, through the login), when the app shows again (`visibilitychange` to visible) while the
+  browser is online, 1.5 s after the last save of a burst (a new save in that time starts the delay
+  again) and at each event of the realtime stream. Over **Sign in** after an auth stop, the
+  `online` event only runs the sync, which waits for the login. A run asked for while one runs gets that run; a stream event during a run starts
   one more run after it. The stream opens after a run that ends `ok`, and closes at a reset, at an
   auth stop and at the `offline` event. A stop at a rate limit (429) or a server error (5xx)
   starts the next run after 5, 15, 30 and then 60 s, the last delay again for each further stop; a
@@ -51,7 +53,8 @@ the storage, the clock and the timer as parameters.
   The run stops at the first change that fails, and keeps the queue: a network or server error is
   `offline`, a 429 is `rate`. A 400 with field errors drops that change and goes on. A 401, a 403
   or a 400 with no field error (a refused rule) is an auth stop: the queue stays, the status has
-  `auth`, and no run makes a request until the next login; a save still queues. A run that ends
+  `auth`, and no run makes a request until the next login; a save still queues. The app then shows
+  **Sign in** over the app, which can close (ACC-2), and keeps the garments and the queue. A run that ends
   stores the time of the sync. A reset (a logout, Delete all data, or a login of another user)
   makes a run in progress stale: it saves nothing and changes no doc (SYNC-10).
 - **SYNC-5** A change that waits in the queue wins. A pulled record with the same id does not
@@ -70,10 +73,14 @@ the storage, the clock and the timer as parameters.
   dropped, so the device keeps no copy of the list of before the login. A login of the stored
   owner goes on with the queue and the state. A login starts a run of its own; a run in progress
   with the token of before the login becomes stale, so its auth error cannot stop this sync.
-- **SYNC-9** An import replaces the garments of the account, so on every device. It is an
-  explicit save: the next run sends a tombstone for each garment of the server that the import
-  does not hold, and an upsert for the others, with no regard to the guard of SYNC-2.
-- **SYNC-10** **Delete all data** (SET-3) clears this device only. The sync stops first: a run in
+- **SYNC-9** An import replaces the garments of the account, so on every device. With a session
+  its question is `import.confirmAccount`, which says so. It is an explicit save: the next run
+  sends a tombstone for each garment of the account that the device knows and the import does not
+  hold, and an upsert for the others, with no regard to the guard of SYNC-2. A garment that another
+  device added after the last sync, or a pulled record that the check dropped (SYNC-7), is not
+  known: it stays on the server. The first comes into the doc at the next pull.
+- **SYNC-10** **Delete all data** (SET-3) clears this device only. The sync stops first, before
+  the storage is removed: a run in
   progress becomes stale and saves nothing, the timers and the stream stop, and the queue is
   dropped. The driver sends nothing; it removes the session, the sync state and the queue, puts
   the empty doc in place, and the status starts again (online, nothing pending, `reached` 0).
@@ -84,7 +91,9 @@ the storage, the clock and the timer as parameters.
 - **SYNC-11** The status is `{ online, pending, lastSync, auth, reached }`. `online` is false
   after the `offline` event or a run that stopped at the network or at a server error, and true
   again after a run that reached the server. A rate limit keeps it. `pending` is the length of the
-  queue, and `reached` counts the runs that the server answered.
+  queue, and `reached` counts the runs that the server answered. While a session is saved and
+  `online` is false, the note `sync.offline` shows above Wardrobe and Combinations, not in
+  Settings. The status also gives the last sync of Settings (ACC-8).
 
 ## Keys
 

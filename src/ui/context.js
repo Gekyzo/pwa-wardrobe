@@ -12,6 +12,9 @@ import {
   saveModules,
   loadOnboarded,
   hasStoredDoc,
+  isDocLost,
+  exportJson,
+  exportFilename,
 } from '#storage';
 import { LANGUAGES, resolveLanguage, translator } from '#i18n';
 import { shouldShow } from '#onboarding';
@@ -74,6 +77,9 @@ const firstStart = storage ? shouldShow({ seen: loadOnboarded(storage), hasState
 
 const DOC = { key: GARMENTS_KEY, normalize: normalizeGarments, empty: emptyGarments };
 export let state = storage ? loadDoc(storage, DOC) : emptyGarments();
+
+// SYNC-2: read before any save, as the first save replaces the doc that could not be read.
+export const stateLost = storage ? isDocLost(storage, DOC) : false;
 
 export const ui = {
   // The section in view.
@@ -142,26 +148,52 @@ export const setRender = (fn) => {
 };
 export const render = () => renderer();
 
-export const commit = (next) => {
+// The hook of each save: account.js registers the queue of the sync (SYNC-2), so that this module
+// imports no view.
+let onSave = () => {};
+export const setOnSave = (fn) => {
+  onSave = fn;
+};
+
+// `explicit` marks an import (SYNC-9): its save deletes the garments of the account that it lacks.
+export const commit = (next, { explicit = false } = {}) => {
   state = next;
   const saved = storage !== null && saveDoc(storage, GARMENTS_KEY, state);
+  if (saved) onSave(state, { explicit });
   render();
   return saved;
 };
 
+// Puts a doc that the sync merged in place (SYNC-2): it is saved and shown, but it is not a save of
+// the user, so the hook queues nothing.
+export const replaceDoc = (next) => {
+  state = next;
+  if (storage) saveDoc(storage, GARMENTS_KEY, state);
+  render();
+};
+
 // Applies a pure operation. `undoText` makes the change reversible for a few seconds.
-export const apply = (result, { undoText = null } = {}) => {
+export const apply = (result, { undoText = null, explicit = false } = {}) => {
   if (result.error) {
     showToast(textOf(result.error));
     return false;
   }
   const previous = state;
-  const saved = commit(result.state);
+  const saved = commit(result.state, { explicit });
   if (!saved) showToast(t('error.notSaved'));
   else if (undoText) showToast(undoText, { undo: previous });
   else hideToast();
   return true;
 };
+
+// Offers the doc as a backup file (SET-1, ACC-11, ACC-12).
+const download = (filename, text) => {
+  const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+  el('a', { href: url, download: filename }).click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+export const exportDoc = (doc) => download(exportFilename(new Date()), exportJson(doc));
 
 // The click that follows a drag, a drop or a slide must not press the button below the finger.
 export let clickGuardUntil = 0;

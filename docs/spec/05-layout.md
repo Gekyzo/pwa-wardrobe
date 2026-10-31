@@ -59,10 +59,12 @@ From 840px the detail of the pane is a card beside the list. In this app the War
   row: its head and its help at the left, its rows at the right, the groups split by a line.
 - **SET-3** **Delete all data** is the last row of Backup, in the colour of danger, with no
   chevron. It asks `reset.confirm`, or `reset.confirmLocal` with a session, which also says that
-  the session closes. A yes removes each `localStorage` key of the app, `wardrobe.*` (`resetAll`),
+  the session closes and that the garments of the account stay on the server. A yes first stops the
+  sync (SYNC-10), then removes each `localStorage` key of the app, `wardrobe.*` (`resetAll`),
   and no key of another app of the origin, then loads the page again: the app starts as a new
   install, with the walkthrough (ONB-1), and a device that had a session opens Sign in (ACC-1). It
-  has no Undo. When the removal fails, `error.resetFailed` shows and nothing else changes. The
+  has no Undo. When the removal fails, `error.resetFailed` shows and nothing else changes, but
+  the sync has stopped. The
   caches of the worker stay, the images of the garments (SW-14) too.
 
 ## Walkthrough

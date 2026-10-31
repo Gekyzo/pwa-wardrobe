@@ -4,7 +4,9 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Sync of the garments** between the devices of an approved account (09-sync.md, ACC-6, ACC-8, ACC-11, ACC-12, SET-3). Each garment is a record of `wardrobe_records` on the account server: `src/records.js` (records, diff), `src/sync.js` (queue, merge, tombstones, check of each record), the record calls of `src/pocketbase.js` (pull, push, realtime stream over `EventSource`) and the driver `src/syncer.js` (queue of each save, debounce of 1.5 s, retries 5/15/30/60 s, token refresh every 10 min, generations, stream, status). Keys `wardrobe.sync` and `wardrobe.queue`.
+- The app wires the driver in `src/ui/account.js`: the login after the Google return and after each refresh (ACC-6) goes through `syncer.login`, with `account.exportAsk` for unsent changes of another user (the session waits in memory); **Log out** goes through `syncer.logout`, with `account.logoutAsk` and `account.logoutExport`; Log out of Waiting for approval drops only the session of an account that does not own the garments; an auth stop shows Sign in over the app, which can close; `online`, `offline` and `visibilitychange` run or pause the sync. `commit` of `src/ui/context.js` calls a save hook (`setOnSave`) that queues the save, an import passes `explicit` (SYNC-9), and a merged doc goes in place through `replaceDoc`, with no hook. `isDocLost` of `src/storage.js` gives the `lost` flag of SYNC-2. The export file comes from `exportDoc` of `src/ui/context.js`.
+- Settings › Account shows the last sync under the email (`account.lastSync`, `account.never`; component `account-row`); the note `sync.offline` (component `sync-note`) shows over Wardrobe and Combinations while the sync cannot reach the server. **Delete all data** stops the sync first (`stopSync`, SYNC-10), and `reset.confirmLocal` says the account keeps the garments; an import with a session asks `import.confirmAccount`. The shell cache goes to `wardrobe-shell-v8`.
 
 ## 0.1.14 - 2026-10-31
 

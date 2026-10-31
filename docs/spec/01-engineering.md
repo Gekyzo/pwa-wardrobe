@@ -27,7 +27,7 @@
 | `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
-| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit` and `apply` | `garments`, `storage`, `i18n`, `onboarding` |
+| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit`, `apply`, the hook of each save, the doc that the sync puts in place and the export file | `garments`, `storage`, `i18n`, `onboarding` |
 | `src/ui/controls.js` | The icon builder and the side-action button | `ui/context` |
 | `src/ui/motion.js` | Row collapse, expand and slide animations | `ui/context` |
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
@@ -40,7 +40,7 @@
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
-| `src/ui/account.js` | The account screens and the group Account of Settings (ACC-1 to ACC-9) | `pocketbase`, `session`, `config`, `ui/context` |
+| `src/ui/account.js` | The account screens, the group Account of Settings, and the sync of the app: the login, the logout, the auth stop, the window events and the offline note (ACC-1 to ACC-12, SYNC-3, SYNC-10, SYNC-11) | `pocketbase`, `syncer`, `session`, `config`, `i18n`, `ui/context` |
 | `src/app.js` | Wires the views, the global keys, the service worker and the update check | all of the above |
 
 ## Code rules
@@ -107,7 +107,7 @@ in [09-sync.md](09-sync.md).
 | `tests/measures.test.js` | The size, the fit and the measures of a garment, the parse of a value, the measures of a slot |
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |
-| `tests/storage.test.js` | Load, save, the corrupt copy, export, import and the device preferences |
+| `tests/storage.test.js` | Load, save, the corrupt copy, the lost doc (SYNC-2), export, import and the device preferences |
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6, SYNC-4) |
 | `tests/session.test.js` | The session, the start route, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5) |
 | `tests/install.test.js` | The install offer states (INS-1) |

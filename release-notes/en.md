@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- With an account, your garments now **sync between your devices**. Changes made offline stay saved and go out when the connection comes back. Settings shows the time of the last sync.
 
 ## 0.1.14 - 2026-10-31
 

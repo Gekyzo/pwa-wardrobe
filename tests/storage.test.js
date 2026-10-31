@@ -9,6 +9,7 @@ import {
   exportFilename,
   importJson,
   hasStoredDoc,
+  isDocLost,
   LANGUAGE_KEY,
   loadLanguage,
   saveLanguage,
@@ -91,6 +92,14 @@ test('a broken storage loads the empty doc and a save returns false', () => {
   assert.deepEqual(loadDoc(brokenStorage(), opts), empty());
   assert.equal(saveDoc(brokenStorage(), KEY, empty()), false);
   assert.equal(hasStoredDoc(brokenStorage(), KEY), false);
+});
+
+test('a stored doc that is not valid, or not JSON, is lost; a valid doc, no doc or a broken storage is not (SYNC-2)', () => {
+  assert.equal(isDocLost(fakeStorage({ [KEY]: '{"version":9}' }), opts), true);
+  assert.equal(isDocLost(fakeStorage({ [KEY]: 'not json' }), opts), true);
+  assert.equal(isDocLost(fakeStorage({ [KEY]: JSON.stringify({ version: 1, items: [] }) }), opts), false);
+  assert.equal(isDocLost(fakeStorage(), opts), false);
+  assert.equal(isDocLost(brokenStorage(), opts), false);
 });
 
 test('a saved doc loads back', () => {

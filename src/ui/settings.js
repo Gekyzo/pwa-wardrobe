@@ -1,5 +1,5 @@
 import { normalizeGarments } from '#garments';
-import { exportJson, exportFilename, importJson, resetAll } from '#storage';
+import { importJson, resetAll } from '#storage';
 import { LANGUAGES, LANGUAGE_NAMES } from '#i18n';
 import { switchModule } from '#modules';
 import {
@@ -23,10 +23,11 @@ import {
   setTheme,
   setModules,
   setNavMotion,
+  exportDoc,
 } from '#ui/context';
 import { runUpdate } from '#ui/update';
 import { renderOnboarding } from '#ui/onboarding';
-import { signedIn } from '#ui/account';
+import { signedIn, stopSync } from '#ui/account';
 
 // The value of a row of Preferences is the text of the option that its select has.
 const renderValues = () => {
@@ -72,22 +73,17 @@ export const applyLanguage = () => {
   renderOnboarding();
 };
 
-const download = (filename, text) => {
-  const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
-  el('a', { href: url, download: filename }).click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-};
-
 export const bind = () => {
   $('export').addEventListener('click', () => {
-    download(exportFilename(new Date()), exportJson(state));
+    exportDoc(state);
   });
   $('import').addEventListener('click', () => $('import-file').click());
   // SET-3: the app starts again as a new install, with the walkthrough. With no storage the data is
   // only in memory, so the reload alone clears it. The session key goes too, so a signed-in device
-  // opens Sign in.
+  // opens Sign in. The sync stops first (SYNC-10): a run in progress saves nothing after the removal.
   $('reset').addEventListener('click', () => {
     if (!window.confirm(t(signedIn() ? 'reset.confirmLocal' : 'reset.confirm'))) return;
+    stopSync();
     if (storage && !resetAll(storage)) {
       showToast(t('error.resetFailed'));
       return;
@@ -120,7 +116,8 @@ export const bind = () => {
       return;
     }
     const items = t('garments.count', { count: result.state.garments.length });
-    if (!window.confirm(t('import.confirm', { items }))) return;
-    apply(result, { undoText: t('toast.imported') });
+    // SYNC-9: with a session the import replaces the garments of the account, on every device.
+    if (!window.confirm(t(signedIn() ? 'import.confirmAccount' : 'import.confirm', { items }))) return;
+    apply(result, { undoText: t('toast.imported'), explicit: true });
   });
 };

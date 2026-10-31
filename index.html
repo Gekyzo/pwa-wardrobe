@@ -27,6 +27,8 @@
     </div>
 
     <main>
+      <p id="sync-offline" class="sync-note" role="status" hidden><svg class="icon small" aria-hidden="true"><use href="icons.svg#offline"/></svg><span data-i18n="sync.offline"></span></p>
+
       <section id="wardrobe" class="pane">
         <div class="pane-list">
           <button id="wardrobe-random" class="button outline wide random-open" type="button" hidden><svg class="icon small" aria-hidden="true"><use href="icons.svg#shuffle"/></svg><span data-i18n="wardrobe.random"></span></button>
@@ -74,7 +76,7 @@
         <div id="account-group" class="settings-section" hidden>
           <h2 class="list-group-head" data-i18n="settings.account"></h2>
           <div class="list-group">
-            <div id="account-row" class="settings-row"><span id="account-email" class="settings-row-label"></span></div>
+            <div id="account-row" class="settings-row account-row"><span id="account-email" class="settings-row-label"></span><span id="account-sync" class="settings-row-value"></span></div>
             <button id="logout" class="settings-row" type="button"><span class="settings-row-label" data-i18n="account.logout"></span><span class="chevron" aria-hidden="true">›</span></button>
             <button id="account-login" class="settings-row" type="button"><span class="settings-row-label" data-i18n="account.signIn"></span><span class="chevron" aria-hidden="true">›</span></button>
           </div>
