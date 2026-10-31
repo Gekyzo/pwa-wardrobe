@@ -175,13 +175,15 @@ export const commit = (next, { explicit = false } = {}) => {
 };
 
 // Puts a doc that the sync merged in place (SYNC-2): it is saved and shown, but it is not a save of
-// the user, so the hook queues nothing.
+// the user, so the hook queues nothing. A doc that cannot be saved changes nothing and gives false,
+// so the doc in memory stays the stored one and the sync keeps its base.
 export const replaceDoc = (next) => {
+  if (storage && !saveDoc(storage, GARMENTS_KEY, next)) return false;
   // SYNC-2: Undo would put back the doc of before the merge and send it as a save of the user.
   if (undoDoc) hideToast();
   state = next;
-  if (storage) saveDoc(storage, GARMENTS_KEY, state);
   render();
+  return true;
 };
 
 // Applies a pure operation. `undoText` makes the change reversible for a few seconds.

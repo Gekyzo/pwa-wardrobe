@@ -99,6 +99,7 @@ export const createSyncer = ({
   storage,
   getDoc,
   // Puts a doc in place, as the app holds and saves it. It is not a save: the syncer queues nothing for it.
+  // It gives false when the app could not save the doc (SYNC-2).
   setDoc,
   now = Date.now,
   onStatus = () => {},
@@ -144,9 +145,11 @@ export const createSyncer = ({
   const status = () => ({ online, pending: queue.length, lastSync: sync.lastSync, auth: authStopped, reached });
   const report = () => onStatus(status());
 
+  // False when the app could not save the doc: it keeps the doc of before.
   const put = (next) => {
+    if (setDoc(next) === false) return false;
     seen = toRecords(next);
-    setDoc(next);
+    return true;
   };
 
   // SYNC-2: a doc that never held the garments of the account since the start (a doc that fell back
@@ -253,8 +256,14 @@ export const createSyncer = ({
       return;
     }
     const nextRecords = toRecords(next);
-    if (diffRecords(toRecords(getDoc()), nextRecords).length > 0) put(next);
-    else seen = nextRecords;
+    if (diffRecords(toRecords(getDoc()), nextRecords).length > 0) {
+      // SYNC-2: the stored doc is still the old one, so the base and the cursor stay with it and the
+      // next run pulls the records again.
+      if (!put(next)) {
+        console.error('sync: the merged garments could not be saved');
+        return;
+      }
+    } else seen = nextRecords;
     sync = { ...sync, server: merged.server, local: nextRecords, cursor: cursorOf(pulled, sync.cursor), added: [] };
   };
 

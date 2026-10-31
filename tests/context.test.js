@@ -74,3 +74,14 @@ test('a doc that the sync puts in place keeps a toast with no Undo', () => {
   assert.equal(context.toastAction, action);
   context.hideToast();
 });
+
+test('a doc that the sync puts in place and that cannot be saved changes nothing and gives false (SYNC-2)', () => {
+  const before = context.state;
+  storage.fail = true;
+  assert.equal(context.replaceDoc(withGarments('x')), false);
+  assert.equal(context.state, before);
+  storage.fail = false;
+  const merged = withGarments('y');
+  assert.equal(context.replaceDoc(merged), true);
+  assert.equal(context.state, merged);
+});

@@ -112,9 +112,12 @@ const device = ({ server = fakeServer(), user = 'u1', doc = emptyGarments(), syn
     client,
     storage,
     getDoc: () => box.doc,
+    // As the app: a doc that cannot be saved stays out, and setDoc gives false.
     setDoc: (next) => {
       box.sets += 1;
+      if (box.failSet) return false;
       box.doc = next;
+      return true;
     },
     now: () => box.clock,
     onStatus: (status) => box.statuses.push(status),
@@ -710,4 +713,28 @@ test('a login of another user after a lost approval asks for an export of an edi
   assert.deepEqual(d.client.pushed, []);
   assert.deepEqual(d.box.doc, emptyGarments());
   assert.equal(storedSync(d.storage).owner, 'u2');
+});
+
+test('a merged doc that the app cannot save keeps the base and the cursor, so the next run pulls it again (SYNC-2)', async (t) => {
+  t.mock.method(console, 'error', () => {});
+  const server = fakeServer();
+  server.add('u1', garment('a'));
+  const d = device({ server, doc: docOf(garment('a')) });
+  assert.equal(await d.syncer.run(), 'ok');
+  const { cursor, local } = storedSync(d.storage);
+  assert.notEqual(cursor, '');
+  server.add('u1', garment('b'));
+  d.box.failSet = true;
+  assert.equal(await d.syncer.run(), 'ok');
+  assert.equal(d.box.sets, 1);
+  assert.deepEqual(d.box.doc.garments.map(({ id }) => id), ['a']);
+  assert.equal(storedSync(d.storage).cursor, cursor);
+  assert.deepEqual(storedSync(d.storage).local, local);
+  assert.deepEqual(storedQueue(d.storage), []);
+  d.box.failSet = false;
+  assert.equal(await d.syncer.run(), 'ok');
+  assert.deepEqual(d.box.doc.garments.map(({ id }) => id).sort(), ['a', 'b']);
+  assert.deepEqual(storedSync(d.storage).local.map(([id]) => id).sort(), ['garment:a', 'garment:b']);
+  assert.deepEqual(d.client.pushed, []);
+  assert.equal(console.error.mock.callCount(), 1);
 });
