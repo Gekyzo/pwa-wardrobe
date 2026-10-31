@@ -18,7 +18,8 @@ the storage, the clock and the timer as parameters.
   the greatest `updated` of the pulled records.
 - **SYNC-2** Each save of a device with an approved session and a stored owner queues its diff
   against the last state that the driver knows, and that state moves to the saved doc. A doc that
-  the driver puts in place after a merge is not a save: it queues nothing. A run first queues a
+  the driver puts in place after a merge is not a save: it queues nothing, and it hides an open
+  **Undo** toast, whose doc of before the merge would delete the merged garments. A run first queues a
   save that the driver did not see (no session yet, an auth stop). A save that holds none of the
   garments of the account, from a doc that held none of them since the start, queues no delete of
   them and is logged: a doc that fell back to the empty one deletes nothing. Such a save still

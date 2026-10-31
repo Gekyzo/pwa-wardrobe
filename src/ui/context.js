@@ -121,12 +121,14 @@ export const ui = {
 };
 
 let toastTimer = null;
-// The button of the toast: { label, run }, or null.
+// The button of the toast: { label, run }, or null; and the doc that its Undo puts back, or null.
 export let toastAction = null;
+export let undoDoc = null;
 
 // `undo` is the doc to go back to; `action` is { label, run } for any other button.
 export const showToast = (text, { undo = null, action = null, ms = undo || action ? UNDO_MS : MESSAGE_MS } = {}) => {
   clearTimeout(toastTimer);
+  undoDoc = undo;
   toastAction = undo ? { label: t('toast.undo'), run: () => commit(undo) } : action;
   $('toast-text').textContent = text;
   $('toast-action').textContent = toastAction?.label ?? '';
@@ -138,6 +140,7 @@ export const showToast = (text, { undo = null, action = null, ms = undo || actio
 export const hideToast = () => {
   clearTimeout(toastTimer);
   toastAction = null;
+  undoDoc = null;
   $('toast').hidden = true;
 };
 
@@ -159,14 +162,23 @@ export const setOnSave = (fn) => {
 export const commit = (next, { explicit = false } = {}) => {
   state = next;
   const saved = storage !== null && saveDoc(storage, GARMENTS_KEY, state);
-  if (saved) onSave(state, { explicit });
   render();
+  // After the render: an error of the sync never leaves the screen behind the state.
+  if (saved) {
+    try {
+      onSave(state, { explicit });
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return saved;
 };
 
 // Puts a doc that the sync merged in place (SYNC-2): it is saved and shown, but it is not a save of
 // the user, so the hook queues nothing.
 export const replaceDoc = (next) => {
+  // SYNC-2: Undo would put back the doc of before the merge and send it as a save of the user.
+  if (undoDoc) hideToast();
   state = next;
   if (storage) saveDoc(storage, GARMENTS_KEY, state);
   render();
