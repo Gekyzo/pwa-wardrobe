@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- What's new renders bold text (VER-22): `textParts` of `src/onboarding.js` also reads a paired `**…**` as parts with `strong: true`, keys inside it too; a `**` with no pair stays as text. `noteNode` of `src/ui/whatsnew.js` puts such a part in a `<strong>`.
 
 ## 0.1.16 - 2026-10-31
 
