@@ -8,6 +8,7 @@ import {
   MAX_LINK,
   MAX_IMAGES,
   MAX_PRICE,
+  MAX_REFERENCE,
   isDay,
   SLOTS,
   SEASONS,
@@ -25,7 +26,7 @@ import {
 } from '#garments';
 
 const shirt = { name: 'Shirt', slot: 'top', season: 'all', color: 3 };
-const extra = { brand: '', link: '', images: [], size: '', fit: '', measures: [], buy_date: '', price: null };
+const extra = { brand: '', reference: '', link: '', images: [], size: '', fit: '', measures: [], buy_date: '', price: null };
 const NOW = '2026-10-30T10:00:00.000Z';
 const build = (...list) => ({ version: 4, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields, creation_date: '' })) });
 
@@ -128,6 +129,7 @@ test('normalizeGarments keeps a valid doc, trims names and drops unknown fields 
         season: 'all',
         color: 3,
         brand: 'Uniqlo',
+        reference: '',
         link: 'https://shop.example/a',
         images: ['https://cdn.example/1.jpg'],
         size: '32',
@@ -151,7 +153,7 @@ test('normalizeGarments migrates a version 1 doc (GAR-5)', () => {
 
 test('normalizeGarments migrates a version 2 doc: no size, fit or measures (GAR-5)', () => {
   const garment = { id: 'a', ...shirt, brand: 'Zara', link: '', images: [] };
-  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), { version: 4, garments: [{ ...garment, size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: '' }] });
+  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), { version: 4, garments: [{ ...garment, reference: '', size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: '' }] });
 });
 
 test('normalizeGarments migrates a version 3 doc: no buy date, no price, unknown creation date (GAR-5)', () => {
@@ -208,7 +210,7 @@ test('brand, link and images are optional, and each is checked (GAR-3)', () => {
   const state = emptyGarments();
   const ok = addGarment(state, { ...shirt, brand: '  Zara ', link: ' https://zara.com/p/1 ', images: ['https://a.example/1.jpg', 'http://a.example/2.png'] }, 'x', NOW);
   assert.equal(ok.error, undefined);
-  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'], size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: NOW });
+  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', reference: '', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'], size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: NOW });
   const url = (n) => `https://a.example/${n}.jpg`;
   const cases = [
     [{ ...shirt, brand: 'b'.repeat(MAX_BRAND + 1) }, { key: 'error.brandTooLong', params: { max: MAX_BRAND } }],
@@ -288,4 +290,14 @@ test('the buy date and the price are optional, and each is checked (GAR-12)', ()
     assert.equal(result.state, state);
     assert.deepEqual(result.error, error, JSON.stringify(fields));
   }
+});
+
+test('the reference is optional, trimmed and at most MAX_REFERENCE characters (GAR-13)', () => {
+  const state = emptyGarments();
+  assert.equal(addGarment(state, { ...shirt, reference: ' 1234/567/800 ' }, 'x', NOW).state.garments[0].reference, '1234/567/800');
+  assert.equal(addGarment(state, shirt, 'x', NOW).state.garments[0].reference, '');
+  const tooLong = { key: 'error.referenceTooLong', params: { max: MAX_REFERENCE } };
+  assert.deepEqual(addGarment(state, { ...shirt, reference: 'r'.repeat(MAX_REFERENCE + 1) }, 'x').error, tooLong);
+  assert.deepEqual(addGarment(state, { ...shirt, reference: 5 }, 'x').error, tooLong);
+  assert.equal(normalizeGarments({ version: 4, garments: [{ id: 'a', ...shirt, creation_date: '' }] }).garments[0].reference, '');
 });

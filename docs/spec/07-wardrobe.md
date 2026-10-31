@@ -28,7 +28,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Garments
 
 - **GAR-1** The doc is
-  `{ version: 4, garments: [{ id, name, slot, season, color, brand, link, images, size, fit, measures, buy_date, price, creation_date }] }`,
+  `{ version: 4, garments: [{ id, name, slot, season, color, brand, reference, link, images, size, fit, measures, buy_date, price, creation_date }] }`,
   newest garment first, stored as JSON under `wardrobe.garments`. A stored doc that is not valid is kept
   under `wardrobe.garments.corrupt`, and the app starts with no garments.
 - **GAR-2** `slot` is one of `top`, `bottom`, `outer`, `shoes`, `accessory`. `season` is one of
@@ -80,6 +80,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   comma is read as GAR-9, and another value is `error.priceInvalid`. `creation_date` is the
   instant (`toISOString`) when `addGarment` added the garment; `editGarment` keeps it, and it is
   `''` for a garment of an earlier version (GAR-5).
+- **GAR-13** The reference is the code of the product in the shop, such as `1234/567/800`. It is
+  optional: a missing one is `''`. It is trimmed, and a reference of more than 40 characters or
+  that is not a text is `error.referenceTooLong`. A doc of version 4 with no reference gets `''`
+  (GAR-5): the version does not change.
 
 ## Links
 
@@ -134,7 +138,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   **Undo** for 5 seconds. A doc that the sync puts in place hides an open **Undo** (SYNC-2).
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
   **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
-  sheet holds the name, the brand, the slot, the season,
+  sheet holds the name, the brand, the reference (GAR-13), the slot, the season,
   the colour, the link, the images, under `wardrobe.purchase` the buy date, which is not after
   today and is today for a new garment, and the price in euros (GAR-12) and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
   in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
@@ -147,7 +151,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   is `error.colorInvalid`.
 - **WAR-4** A tap on a row opens its detail (LAY-3): the main image large and, with two or more
   images, all the images in a row below it, where a tap on one shows it large; the colour, the
-  name, the colour name, slot, season, brand and size, then the fit, each measure, the price in
+  name, the colour name, slot, season, brand and size, then the reference, the fit, each measure, the price in
   euros, the buy date and `wardrobe.added` with the creation date, in the formats of the language,
   each one only when it is set, **Edit**, **Open link** when the garment has a
   link, which opens it in a new tab, and **Delete**, and the outfits that contain it (OUT-8)

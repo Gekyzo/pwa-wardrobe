@@ -3,12 +3,13 @@ import { COLORS } from '#wada';
 import { checkSizing, parseValue } from '#measures';
 
 // The wardrobe: garments with a name, a slot, a season, one colour of the palette and, optionally,
-// a brand, a link to the shop, the URLs of their images, the main one first, and the size, the fit
+// a brand, the reference of the product in the shop, a link to the shop, the URLs of their images, the main one first, and the size, the fit
 // and the measures of `src/measures.js`, the buy date and the price. `creation_date` is when the
 // garment was added to the app.
 export const GARMENTS_KEY = `${APP_SLUG}.garments`;
 export const MAX_NAME = 60;
 export const MAX_BRAND = 40;
+export const MAX_REFERENCE = 40;
 export const MAX_LINK = 2000;
 export const MAX_IMAGES = 8;
 export const MAX_PRICE = 1_000_000;
@@ -45,7 +46,7 @@ const checkPrice = (price) => {
 };
 
 // The clean fields, or an error message.
-const checkFields = ({ name, slot, season, color, brand = '', link = '', images = [], size, fit, measures, buy_date = '', price } = {}) => {
+const checkFields = ({ name, slot, season, color, brand = '', reference = '', link = '', images = [], size, fit, measures, buy_date = '', price } = {}) => {
   const clean = String(name ?? '').trim();
   if (!clean) return { error: { key: 'error.nameRequired' } };
   if (clean.length > MAX_NAME) return { error: { key: 'error.nameTooLong', params: { max: MAX_NAME } } };
@@ -53,6 +54,9 @@ const checkFields = ({ name, slot, season, color, brand = '', link = '', images 
   if (!SEASONS.includes(season)) return { error: { key: 'error.seasonInvalid' } };
   if (!Number.isInteger(color) || color < 0 || color >= COLORS.length) return { error: { key: 'error.colorInvalid' } };
   if (typeof brand !== 'string' || brand.trim().length > MAX_BRAND) return { error: { key: 'error.brandTooLong', params: { max: MAX_BRAND } } };
+  if (typeof reference !== 'string' || reference.trim().length > MAX_REFERENCE) {
+    return { error: { key: 'error.referenceTooLong', params: { max: MAX_REFERENCE } } };
+  }
   const cleanLink = typeof link === 'string' ? link.trim() : null;
   if (cleanLink === null || (cleanLink !== '' && !isWebUrl(cleanLink))) return { error: { key: 'error.linkInvalid' } };
   if (!Array.isArray(images) || images.length > MAX_IMAGES || !images.every(isWebUrl) || new Set(images).size !== images.length) {
@@ -64,7 +68,7 @@ const checkFields = ({ name, slot, season, color, brand = '', link = '', images 
   const { price: cleanPrice, error: priceError } = checkPrice(price);
   if (priceError) return { error: priceError };
   const purchase = { buy_date, price: cleanPrice };
-  return { fields: { name: clean, slot, season, color, brand: brand.trim(), link: cleanLink, images: [...images], ...sizing, ...purchase } };
+  return { fields: { name: clean, slot, season, color, brand: brand.trim(), reference: reference.trim(), link: cleanLink, images: [...images], ...sizing, ...purchase } };
 };
 
 export const findGarment = (state, id) => state.garments.find((garment) => garment.id === id) ?? null;

@@ -182,6 +182,7 @@ const openSheet = (id = null) => {
   $('garment-sheet-title').textContent = t(id ? 'wardrobe.editTitle' : 'wardrobe.new');
   $('garment-name').value = garment?.name ?? '';
   $('garment-brand').value = garment?.brand ?? '';
+  $('garment-reference').value = garment?.reference ?? '';
   showBrands();
   $('garment-link').value = garment?.link ?? '';
   $('garment-image-url').value = '';
@@ -286,10 +287,11 @@ const metaOf = (garment) =>
 
 const fact = (term, value) => [el('dt', { textContent: term }), el('dd', {}, [value])];
 
-// The fit, each measure, the price, the buy date and the creation date of a garment, when it has
+// The reference, the fit, each measure, the price, the buy date and the creation date of a garment, when it has
 // one (WAR-4); the size is in the meta.
 const facts = (garment) => {
   const list = [
+    ...(garment.reference ? fact(t('wardrobe.reference'), garment.reference) : []),
     ...(garment.fit ? fact(t('wardrobe.fit'), fitPill(garment.fit)) : []),
     ...garment.measures.flatMap(({ name, value, unit }) => fact(name, `${number(value)}${unit ? ` ${unit}` : ''}`)),
     ...(garment.price != null ? fact(t('wardrobe.price'), money(garment.price)) : []),
@@ -450,6 +452,7 @@ export const bind = () => {
       season: $('garment-season').value,
       color: ui.draftColor,
       brand: $('garment-brand').value,
+      reference: $('garment-reference').value,
       link: $('garment-link').value,
       images: ui.draftImages,
       buy_date: $('garment-buy-date').value,
