@@ -94,8 +94,9 @@ the storage, the clock and the timer as parameters.
 
 - **SYNC-11** The status is `{ online, pending, lastSync, auth, reached }`. `online` is false
   after the `offline` event or a run that stopped at the network or at a server error, and true
-  again after a run that reached the server. A rate limit keeps it. `pending` is the length of the
-  queue, and `reached` counts the runs that the server answered. While a session is saved and
+  again after a run that `reached` counts, so a rate limit is not offline. `pending` is the length of the
+  queue, and `reached` counts the runs that ended `ok`, at a rate limit or at an auth stop; a run
+  that stopped at the network or at a server error (5xx) does not count. While a session is saved and
   `online` is false, the note `sync.offline` shows above Wardrobe and Combinations, not in
   Settings. The status also gives the last sync of Settings (ACC-8).
 

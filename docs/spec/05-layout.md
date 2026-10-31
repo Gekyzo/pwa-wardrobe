@@ -63,8 +63,9 @@ From 840px the detail of the pane is a card beside the list. In this app the War
   sync (SYNC-10), then removes each `localStorage` key of the app, `wardrobe.*` (`resetAll`),
   and no key of another app of the origin, then loads the page again: the app starts as a new
   install, with the walkthrough (ONB-1), and a device that had a session opens Sign in (ACC-1). It
-  has no Undo. When the removal fails, `error.resetFailed` shows and nothing else changes, but
-  the sync has stopped. The
+  has no Undo. When the removal fails, `error.resetFailed` shows and the page stays. The stop of
+  the sync has already removed the session, the sync state and the queue, and put the empty doc in
+  place, as far as the storage let it (SYNC-10). A key that `resetAll` did not reach stays. The
   caches of the worker stay, the images of the garments (SW-14) too.
 
 ## Walkthrough
