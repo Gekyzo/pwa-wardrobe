@@ -424,7 +424,8 @@ export const bind = () => {
   // A typed hex, rgb or hsl colour takes the nearest palette colour (PAL-4, WAR-3).
   $('garment-color-text').addEventListener('input', (event) => {
     const hex = parseColor(event.target.value);
-    event.target.toggleAttribute('aria-invalid', hex === null && event.target.value.trim() !== '');
+    if (hex === null && event.target.value.trim() !== '') event.target.setAttribute('aria-invalid', 'true');
+    else event.target.removeAttribute('aria-invalid');
     if (hex === null) return;
     ui.draftColor = nearestColor(hex);
     showColor();
