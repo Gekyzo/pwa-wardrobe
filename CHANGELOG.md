@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.16 - 2026-10-31
+
 - **Reference** (GAR-13, WAR-3, WAR-4): an optional `reference` of the garment, the code of the product in the shop, trimmed, at most `MAX_REFERENCE` (40) characters, else `error.referenceTooLong`. The doc stays version 4: a garment with no reference reads as `''`. It syncs as part of the record data. Field `garment-reference` of the sheet; a fact of the detail. Key `wardrobe.reference`.
 - **Colour code** (PAL-4, WAR-3): `parseColor` of `src/palette.js` reads `#rgb`, `#rrggbb`, `rgb()`/`rgba()` (0-255 or percentages) and `hsl()`/`hsla()` as `#rrggbb`; the field `garment-color-text` of the sheet takes the nearest palette colour, marks an unreadable code `aria-invalid`, and empties on a pick or a swatch. Key `wardrobe.colorCode`.
 No change.
