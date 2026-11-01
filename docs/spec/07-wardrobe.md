@@ -166,6 +166,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   suits every colour type. Another colour suits `spring` when warm and light or bright, `summer`
   when cool and light or not bright, `autumn` when warm and not light or not bright, `winter` when
   cool and not light or bright. Every colour suits `off`.
+- **MAT-6** The choice is a preference of the device under `wardrobe.matching` (ENG-8), not part
+  of the doc: a JSON object of the fields that differ from `MATCHING`. The defaults remove the
+  key. A value that cannot be read reads as `normalizeMatching` of it (MAT-1).
 
 ## Basics
 

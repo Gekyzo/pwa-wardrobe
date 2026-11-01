@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { APP_SLUG } from '#config';
+import { MATCHING } from '#matching';
 import {
   keyOf,
   loadDoc,
@@ -22,6 +23,9 @@ import {
   MODULES_KEY,
   loadModules,
   saveModules,
+  MATCHING_KEY,
+  loadMatching,
+  saveMatching,
   ONBOARDED_KEY,
   SEEN_VERSION_KEY,
   loadSeen,
@@ -245,6 +249,30 @@ test('the module functions do not throw when the storage does', () => {
   assert.deepEqual(loadModules(brokenStorage()), []);
   assert.equal(saveModules(brokenStorage(), ['combinations']), false);
   assert.equal(saveModules(brokenStorage(), []), false);
+});
+
+test('loadMatching reads the stored choice through normalizeMatching (MAT-6)', () => {
+  assert.equal(MATCHING_KEY, `${APP_SLUG}.matching`);
+  assert.deepEqual(
+    loadMatching(fakeStorage({ [MATCHING_KEY]: '{"neutrals":true,"contrast":"high"}' })),
+    { ...MATCHING, neutrals: true, contrast: 'high' },
+  );
+  assert.deepEqual(loadMatching(fakeStorage()), MATCHING);
+  assert.deepEqual(loadMatching(fakeStorage({ [MATCHING_KEY]: '{' })), MATCHING);
+  assert.deepEqual(loadMatching(fakeStorage({ [MATCHING_KEY]: '{"contrast":"max"}' })), MATCHING);
+});
+
+test('saveMatching stores the fields that differ from the defaults, and the defaults remove the key (MAT-6)', () => {
+  const storage = fakeStorage();
+  assert.equal(saveMatching(storage, { ...MATCHING, colorType: 'winter', formality: true }), true);
+  assert.equal(storage.getItem(MATCHING_KEY), '{"colorType":"winter","formality":true}');
+  assert.equal(saveMatching(storage, MATCHING), true);
+  assert.equal(storage.getItem(MATCHING_KEY), null);
+});
+
+test('the matching functions do not throw when the storage does (MAT-6)', () => {
+  assert.deepEqual(loadMatching(brokenStorage()), MATCHING);
+  assert.equal(saveMatching(brokenStorage(), { ...MATCHING, neutrals: true }), false);
 });
 
 test('loadOnboarded is true only when the flag is stored', () => {

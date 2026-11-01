@@ -1,5 +1,6 @@
 import { APP_SLUG } from '#config';
 import { MODULES } from '#modules';
+import { MATCHING, normalizeMatching } from '#matching';
 
 // Every key of this app: `<slug>.<name>`, so two apps of one origin do not share data.
 export const keyOf = (name) => `${APP_SLUG}.${name}`;
@@ -161,6 +162,30 @@ export const saveCards = (storage, cards) => {
 };
 
 // The modules that the user turned off (MOD-2). A preference of the device, as the theme is.
+export const MATCHING_KEY = keyOf('matching');
+
+// The choice of the matching rules (MAT-6); anything that cannot be read is the defaults.
+export const loadMatching = (storage) => {
+  try {
+    return normalizeMatching(JSON.parse(storage.getItem(MATCHING_KEY)));
+  } catch {
+    return normalizeMatching(null);
+  }
+};
+
+// Only the fields that differ from MATCHING; the defaults remove the key.
+export const saveMatching = (storage, matching) => {
+  try {
+    const clean = normalizeMatching(matching);
+    const changed = Object.fromEntries(Object.entries(clean).filter(([name, value]) => value !== MATCHING[name]));
+    if (Object.keys(changed).length) storage.setItem(MATCHING_KEY, JSON.stringify(changed));
+    else storage.removeItem(MATCHING_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export const MODULES_KEY = keyOf('modules');
 
 const knownModules = (ids) => MODULES.filter((id) => ids.includes(id));

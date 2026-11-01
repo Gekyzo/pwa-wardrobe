@@ -10,6 +10,8 @@ import {
   saveCards,
   loadModules,
   saveModules,
+  loadMatching,
+  saveMatching,
   loadOnboarded,
   hasStoredDoc,
   isDocLost,
@@ -18,6 +20,7 @@ import {
 } from '#storage';
 import { LANGUAGES, resolveLanguage, translator } from '#i18n';
 import { shouldShow } from '#onboarding';
+import { MATCHING } from '#matching';
 
 // The values that the views share. A view reads them through the import, a live binding, and
 // changes them only through the setters of this module.
@@ -65,6 +68,10 @@ export let cards = storage ? loadCards(storage) : 'photos';
 export let off = storage ? loadModules(storage) : [];
 export const isOn = (id) => !off.includes(id);
 export let navMotion = false;
+
+// The choice of the matching rules (MAT-6). A change gives a new object, so a cache keyed on it
+// computes again.
+export let matching = storage ? loadMatching(storage) : MATCHING;
 
 // The text of a message of a pure module.
 export const textOf = ({ key, params }) => t(key, params);
@@ -230,6 +237,11 @@ export const setCards = (value) => {
 export const setModules = (next) => {
   off = next;
   if (storage) saveModules(storage, off);
+};
+
+export const setMatching = (changes) => {
+  matching = { ...matching, ...changes };
+  if (storage) saveMatching(storage, matching);
 };
 
 // Set by a switch of Modules, so that the render that follows animates the navigation (MOD-3).

@@ -12,7 +12,7 @@
 | `src/i18n.js` | The language choice and the translator | `locales/*` |
 | `src/sections.js` | The order of the sections, the rule of the slide between them, when a detail shows alone, and the history step of a detail | nothing |
 | `src/modules.js` | The modules that Settings turns off, and the visible sections | `sections` |
-| `src/storage.js` | Load, save, validation hook, export, import, device preferences | `config`, `modules` |
+| `src/storage.js` | Load, save, validation hook, export, import, device preferences | `config`, `modules`, `matching` |
 | `src/install.js` | The install offer state machine | nothing |
 | `src/wada.js` | The 159 colours of Sanzo Wada's palette and their combinations (data) | nothing |
 | `src/palette.js` | Lab, ΔE, the nearest colour, the combinations and their index | `wada` |
@@ -29,7 +29,7 @@
 | `src/fill.js` | The ranked list of the Fill tab: the missing basics and the Wada colours that complete open palettes | `basics`, `garments`, `palette`, `outfits` |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
-| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit`, `apply`, the hook of each save, the doc that the sync puts in place and the export file | `garments`, `storage`, `i18n`, `onboarding` |
+| `src/ui/context.js` | The values that the views share, the toast, `render`, `commit`, `apply`, the hook of each save, the doc that the sync puts in place and the export file | `garments`, `storage`, `i18n`, `onboarding`, `matching` |
 | `src/ui/controls.js` | The icon builder | `ui/context` |
 | `src/ui/motion.js` | Row collapse, expand and slide animations | `ui/context` |
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
@@ -77,7 +77,7 @@
 ## Storage keys
 
 The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are `wardrobe.lang`,
-`wardrobe.theme`, `wardrobe.cards` (WAR-11), `wardrobe.modules`, `wardrobe.onboarded` and
+`wardrobe.theme`, `wardrobe.cards` (WAR-11), `wardrobe.modules`, `wardrobe.matching` (MAT-6), `wardrobe.onboarded` and
 `wardrobe.seen-version` (VER-21). The account keeps `wardrobe.session` (ACC-5), and
 `wardrobe.oauth` in `sessionStorage` for the time of a Google redirect (ACC-4). The sync keys are
 in [09-sync.md](09-sync.md).
