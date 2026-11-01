@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- El **filtro de temporada** son tres botones separados, y el pulsado es negro. En **Conjunto al azar** ya no queda apretado.
 
 ## 0.1.19 - 2026-11-01
 

@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Season filter** (WAR-5): `seasonFilter()` of `src/ui/outfit.js` is a `cluster season-filter` group (`role="group"`, label `wardrobe.season`) of outline `chip`s, the pressed one ink, as the size filter. It replaces the `segmented` switch, whose knob was wider than its label in the 360px random panel head; there it has no margin and wraps under the title.
 
 ## 0.1.19 - 2026-11-01
 

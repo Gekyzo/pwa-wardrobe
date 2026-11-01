@@ -313,6 +313,14 @@
     padding-inline: var(--space-2) var(--space-3);
   }
 
+  /* @component season-filter
+     @summary The season filter of the details and the random panel: a group of outline chips; the pressed one is ink.
+     @example <div class="cluster season-filter" role="group" aria-label="Season" style="width: 100%"><button class="chip surface" type="button" aria-pressed="true">Any</button><button class="chip surface" type="button" aria-pressed="false">Warm</button><button class="chip surface" type="button" aria-pressed="false">Cold</button></div> */
+  .season-filter > .chip:not([aria-pressed="true"]) {
+    border: 1px solid var(--control);
+    background: none;
+  }
+
   /* @component outfits
      @summary The outfits of a detail: a title, the season filter, then the outfit cards.
      @part outfits-title  The title.
@@ -880,6 +888,10 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
+  }
+
+  .random-panel-head > .season-filter {
+    margin: 0;
   }
 
   .random-panel-title {

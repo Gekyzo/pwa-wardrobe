@@ -48,15 +48,19 @@ export const strip = (colors) =>
     return block;
   }));
 
-export const seasonFilter = () =>
-  el('div', { className: 'segmented' }, SEASON_FILTERS.map((season) => {
-    const button = el('button', { className: 'segment', type: 'button', textContent: t(`season.${season}`), onclick: () => {
+export const seasonFilter = () => {
+  const group = el('div', { className: 'cluster season-filter' }, SEASON_FILTERS.map((season) => {
+    const button = el('button', { className: 'chip surface', type: 'button', textContent: t(`season.${season}`), onclick: () => {
       ui.season = season;
       render();
     } });
     button.setAttribute('aria-pressed', String(ui.season === season));
     return button;
   }));
+  group.setAttribute('role', 'group');
+  group.setAttribute('aria-label', t('wardrobe.season'));
+  return group;
+};
 
 // The text colour on a field of one palette colour (PAL-5).
 const inkOf = (colorId) => inkOn(colorOf(colorId).hex);

@@ -177,7 +177,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-5** An outfit is a look on a `--surface` card: `outfit.number` and `outfit.exact` for an
   exact outfit, then its garments side by side, each with its picture (WAR-1, 3:4), its name and
   a dot of its colour with the colour name. The season filter (OUT-7) is shared by the details,
-  the random panel and the card counts of the app, and is not stored.
+  the random panel and the card counts of the app, and is not stored. It is a group named
+  `wardrobe.season` of three outline chips, `season.any`, `season.warm` and `season.cold`; the
+  pressed one is ink.
 - **WAR-6** **Load images** of the sheet is on while the link is an `http` or `https` URL and no
   load runs; during a load it reads `wardrobe.loading`. The images of the page (LNK-2) join the
   images of the sheet, which shows them as a grid; a failure shows `error.linkFailed`. A tap on

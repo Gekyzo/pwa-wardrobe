@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- The **season filter** is three separate buttons, and the pressed one is black. In **Random outfit** it is no longer cramped.
 
 ## 0.1.19 - 2026-11-01
 
