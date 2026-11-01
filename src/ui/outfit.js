@@ -1,7 +1,8 @@
-import { mainImage } from '#garments';
+import { mainImage, shapeOf } from '#garments';
 import { colorOf, inkOn } from '#palette';
 import { SEASON_FILTERS, countKey, outfitsFor } from '#outfits';
 import { el, ui, state, t, render } from '#ui/context';
+import { icon } from '#ui/controls';
 
 // The outfits of each combination for the doc and the season filter of now, computed once each.
 // The header and Combinations read them at each render; a new doc or a new filter starts again.
@@ -22,18 +23,43 @@ export const swatch = (colorId, variant = '') => {
 // A remote image: no referrer, since some shops refuse a request from another site.
 export const remoteImage = (src, className) => el('img', { className, referrerPolicy: 'no-referrer', loading: 'lazy', decoding: 'async', alt: '', src });
 
-// The picture of a garment: its main image (GAR-7), or `url`, on the photo ground, or a field of
-// its colour when it has none or when the image fails to load. `variant` is card, hero or worn (in a
-// look). A card and a look have the name and the colour as text beside the picture, so there the picture
+// The drawing of each shape of GAR-14, a symbol of icons.svg.
+const SHAPE_ICONS = {
+  tshirt: 'shape-tshirt',
+  shirt: 'shape-shirt',
+  jersey: 'shape-jersey',
+  trousers: 'shape-trousers',
+  shorts: 'shape-shorts',
+  skirt: 'shape-skirt',
+  jacket: 'shape-jacket',
+  coat: 'shape-coat',
+  shoe: 'shape-shoe',
+  boot: 'shape-boot',
+  bag: 'shape-bag',
+  cap: 'shape-cap',
+  scarf: 'shape-scarf',
+  belt: 'shape-belt',
+};
+
+// The picture of a garment: its main image (GAR-7), or `url`, on the photo ground. With no image,
+// or when the image fails to load, it is the drawing of its shape (GAR-14) in its colour, or with
+// `shape: false` a field of its colour (WAR-11). `variant` is card, hero or worn (in a look). A
+// card and a look have the name and the colour as text beside the picture, so there the picture
 // is hidden from a screen reader; the hero names the garment and its colour.
-export const picture = (garment, variant, url = mainImage(garment)) => {
+export const picture = (garment, variant, url = mainImage(garment), { shape = true } = {}) => {
   const box = el('span', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'worn' ? 'garment-picture worn' : 'garment-picture card' });
   const named = variant === 'hero';
   if (!named) box.setAttribute('aria-hidden', 'true');
   const field = () => {
     const color = colorOf(garment.color);
-    box.replaceChildren();
-    box.style.background = color.hex;
+    if (shape) {
+      const drawing = icon(SHAPE_ICONS[shapeOf(garment)], 'garment-shape');
+      drawing.style.color = color.hex;
+      box.replaceChildren(drawing);
+    } else {
+      box.replaceChildren();
+      box.style.background = color.hex;
+    }
     if (!named) return;
     box.setAttribute('role', 'img');
     box.setAttribute('aria-label', `${garment.name}, ${color.name}`);
@@ -52,7 +78,7 @@ export const picture = (garment, variant, url = mainImage(garment)) => {
 // The picture of a card or a look: with `colorOnly`, the short field of its colour (WAR-11).
 export const smallPicture = (garment, variant, colorOnly) => {
   if (!colorOnly) return picture(garment, variant);
-  const box = picture(garment, variant, null);
+  const box = picture(garment, variant, null, { shape: false });
   box.classList.add('field');
   return box;
 };

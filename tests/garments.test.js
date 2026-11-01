@@ -21,6 +21,8 @@ import {
   normalizeGarments,
   brandsOf,
   mainImage,
+  shapeOf,
+  SHAPES,
   toggleImage,
   makeMain,
 } from '#garments';
@@ -300,4 +302,46 @@ test('the reference is optional, trimmed and at most MAX_REFERENCE characters (G
   assert.deepEqual(addGarment(state, { ...shirt, reference: 'r'.repeat(MAX_REFERENCE + 1) }, 'x').error, tooLong);
   assert.deepEqual(addGarment(state, { ...shirt, reference: 5 }, 'x').error, tooLong);
   assert.equal(normalizeGarments({ version: 4, garments: [{ id: 'a', ...shirt, creation_date: '' }] }).garments[0].reference, '');
+});
+
+test('shapeOf reads the kind of a garment from its name, in Spanish or English (GAR-14)', () => {
+  const of = (slot, name) => shapeOf({ slot, name });
+  assert.equal(of('top', 'Camiseta blanca'), 'tshirt');
+  assert.equal(of('top', 'White T-shirt'), 'tshirt');
+  assert.equal(of('top', 'Camisa de lino'), 'shirt');
+  assert.equal(of('top', 'Oxford shirt'), 'shirt');
+  assert.equal(of('top', 'Jersey de lana'), 'jersey');
+  assert.equal(of('top', 'Grey sweater'), 'jersey');
+  assert.equal(of('top', 'Sudadera'), 'jersey');
+  assert.equal(of('bottom', 'Pantalón corto'), 'shorts');
+  assert.equal(of('bottom', 'Bermudas'), 'shorts');
+  assert.equal(of('bottom', 'Shorts'), 'shorts');
+  assert.equal(of('bottom', 'Vaqueros'), 'trousers');
+  assert.equal(of('bottom', 'Chinos'), 'trousers');
+  assert.equal(of('bottom', 'Falda midi'), 'skirt');
+  assert.equal(of('outer', 'Abrigo largo'), 'coat');
+  assert.equal(of('outer', 'Cazadora vaquera'), 'jacket');
+  assert.equal(of('shoes', 'Botines'), 'boot');
+  assert.equal(of('shoes', 'Zapatillas blancas'), 'shoe');
+  assert.equal(of('accessory', 'Gorra'), 'cap');
+  assert.equal(of('accessory', 'Bufanda'), 'scarf');
+  assert.equal(of('accessory', 'Cinturón de piel'), 'belt');
+  assert.equal(of('accessory', 'Mochila'), 'bag');
+});
+
+test('shapeOf ignores case, accents and words of another slot, and falls back to the shape of the slot (GAR-14)', () => {
+  assert.equal(shapeOf({ slot: 'bottom', name: 'PANTALÓN CORTO' }), 'shorts');
+  assert.equal(shapeOf({ slot: 'top', name: 'Shorts' }), 'tshirt');
+  assert.equal(shapeOf({ slot: 'top', name: 'Shortsleeve' }), 'tshirt');
+  assert.equal(shapeOf({ slot: 'top', name: '' }), 'tshirt');
+  assert.equal(shapeOf({ slot: 'bottom', name: 'Something' }), 'trousers');
+  assert.equal(shapeOf({ slot: 'outer', name: 'Something' }), 'jacket');
+  assert.equal(shapeOf({ slot: 'shoes', name: 'Something' }), 'shoe');
+  assert.equal(shapeOf({ slot: 'accessory', name: 'Watch' }), 'bag');
+  assert.equal(shapeOf({ slot: 'unknown', name: 'Shirt' }), 'shirt');
+  assert.equal(shapeOf({ slot: 'unknown', name: '' }), 'tshirt');
+});
+
+test('SHAPES holds each shape that shapeOf gives', () => {
+  assert.deepEqual([...SHAPES].sort(), ['bag', 'belt', 'boot', 'cap', 'coat', 'jacket', 'jersey', 'scarf', 'shirt', 'shoe', 'shorts', 'skirt', 'trousers', 'tshirt']);
 });

@@ -691,13 +691,15 @@
   }
 
   /* @component garment-picture
-     @summary The picture of a garment: its main image whole on the photo ground, or a field of its colour (role img) when it has none or it fails to load.
+     @summary The picture of a garment: its main image whole on the photo ground, or the drawing of its shape in its colour (role img) when it has none or it fails to load (GAR-14).
      @part garment-picture-img  The image, contained in the box.
+     @part garment-shape        The drawing of the shape, a symbol of icons.svg filled with the colour of the garment, with a --muted outline.
      @variant card  3:4, in a card of the grid.
      @variant hero  4:5, in the detail.
      @variant worn  3:4, in a look.
      @variant field  2:1, the colour only, in a card or a look under Colour (WAR-11).
-     @example <span class="garment-picture card" style="width: 120px; background: #a5c8d1" aria-hidden="true"></span>
+     @example <span class="garment-picture card" style="width: 120px" aria-hidden="true"><svg class="icon garment-shape" aria-hidden="true" style="color: #a5c8d1"><use href="icons.svg#shape-shirt"/></svg></span>
+     @example <span class="garment-picture card field" style="width: 120px; background: #a5c8d1" aria-hidden="true"></span>
      @example <span class="garment-picture hero" style="width: 200px"><img class="garment-picture-img" alt="Trousers" src="./icons/icon-192.png"></span> */
   .garment-picture {
     display: grid;
@@ -713,6 +715,20 @@
 
   .garment-picture.field {
     aspect-ratio: 2 / 1;
+  }
+
+  /* The drawing fills most of the box. */
+  .garment-picture > .garment-shape {
+    width: 76%;
+    height: 76%;
+    fill: currentColor;
+    stroke: var(--muted);
+    stroke-width: 0.75;
+  }
+
+  /* The line scales with the drawing: the detail draws it about 4 times larger than a card. */
+  .garment-picture.hero > .garment-shape {
+    stroke-width: 0.25;
   }
 
   .garment-picture-img {

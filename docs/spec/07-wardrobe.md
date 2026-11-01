@@ -86,6 +86,15 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   optional: a missing one is `''`. It is trimmed, and a reference of more than 40 characters or
   that is not a text is `error.referenceTooLong`. A doc of version 4 with no reference gets `''`
   (GAR-5): the version does not change.
+- **GAR-14** `shapeOf` gives the shape of the drawing of a garment with no image: one of `SHAPES`.
+  Each slot has its shapes, the first one its default: top `tshirt`, `shirt`, `jersey`; bottom
+  `trousers`, `shorts`, `skirt`; outer `jacket`, `coat`; shoes `shoe`, `boot`; accessory `bag`,
+  `cap`, `scarf`, `belt`. The name, in lower case, with no accent and with each run of other
+  characters as one space, is searched for the words of each shape of its slot, in Spanish and
+  English (`camiseta`, `t shirt`, `vaqueros`, `pantalon corto`, `botines`...), as whole words,
+  the words of two or more first; the first found gives the shape, and none gives the default.
+  An unknown slot is searched as `top`. Each shape is the symbol `shape-<shape>` of `icons.svg`,
+  48×48.
 
 ## Links
 
@@ -158,10 +167,11 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   filter (`countKey`: `combinations.countMax` at `MAX_OUTFITS`, else `combinations.count`, so 0
   reads "0 conjuntos"), each one if it has one. The counts are cached for each doc and season
   filter. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
-  image, or whose image fails to load, shows a field of its colour; with **Colour** of WAR-11 every
-  card shows the field. In a card and in a look the
+  image, or whose image fails to load, shows the drawing of its shape (GAR-14) on the same ground,
+  filled with its colour, at 76% of the box with a `--muted` outline; with **Colour** of WAR-11
+  every card shows a field of its colour. In a card and in a look the
   picture is hidden from a screen reader, since the name and the colour stand beside it as text;
-  the picture of the detail has the alt text of the name, or as a field `role="img"` and the label
+  the picture of the detail has the alt text of the name, or as a drawing `role="img"` and the label
   "name, colour name". With no garment the section shows `wardrobe.empty` and **Add
   garment**, which opens the sheet of WAR-3, and the basics of WAR-10.
 - **WAR-2** **Delete** is in the detail of a garment (WAR-4, GAR-4); the toast
@@ -185,7 +195,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   with the colour name and its hex, in dark or light text (`inkOn`, PAL-5). With two or more
   images the picture is a slider of all of them, one at a time: a swipe, or from 600px an arrow
   that shows on hover or focus, shows the one before or after, and the band ends with
-  `wardrobe.imageCount` ("2 / 3"). An image that does not load shows the colour field (WAR-1).
+  `wardrobe.imageCount` ("2 / 3"). An image that does not load shows the drawing of its shape (WAR-1).
   The shown image stays while the detail is open. The info: the name at
   `--screen-title`, a line of slot, brand and season, then the facts in two columns, each a label
   over its value as plain text: the size, the reference, the fit, each measure, the price in euros, the buy

@@ -104,6 +104,53 @@ export const brandsOf = (garments) => {
 
 export const mainImage = (garment) => garment.images?.[0] ?? null;
 
+// The shapes of each slot, the first one its default, each with the words of a name that call it,
+// in Spanish and English, lower case and with no accent. The order is the order of the search:
+// `t shirt` comes before `shirt`, `pantalon corto` before `pantalon` (GAR-14).
+const SHAPE_WORDS = {
+  top: [
+    ['tshirt', ['camiseta', 'camisetas', 't shirt', 'tshirt', 'tee', 'top']],
+    ['shirt', ['camisa', 'camisas', 'blusa', 'shirt', 'blouse', 'polo']],
+    ['jersey', ['jersey', 'jerseys', 'sueter', 'sudadera', 'chaqueta de punto', 'cardigan', 'sweater', 'jumper', 'pullover', 'sweatshirt', 'hoodie']],
+  ],
+  bottom: [
+    ['trousers', ['pantalon', 'pantalones', 'vaqueros', 'vaquero', 'chinos', 'jeans', 'trousers', 'pants', 'leggings', 'joggers']],
+    ['shorts', ['pantalon corto', 'pantalones cortos', 'bermuda', 'bermudas', 'short', 'shorts']],
+    ['skirt', ['falda', 'skirt']],
+  ],
+  outer: [
+    ['jacket', ['chaqueta', 'cazadora', 'americana', 'blazer', 'jacket', 'chaleco', 'vest']],
+    ['coat', ['abrigo', 'gabardina', 'parka', 'plumifero', 'coat', 'trench', 'overcoat']],
+  ],
+  shoes: [
+    ['shoe', ['zapato', 'zapatos', 'zapatilla', 'zapatillas', 'deportivas', 'mocasines', 'shoe', 'shoes', 'sneakers', 'trainers', 'loafers']],
+    ['boot', ['bota', 'botas', 'botin', 'botines', 'boot', 'boots']],
+  ],
+  accessory: [
+    ['bag', ['bolso', 'mochila', 'cartera', 'bag', 'backpack']],
+    ['cap', ['gorra', 'gorro', 'sombrero', 'cap', 'hat', 'beanie']],
+    ['scarf', ['bufanda', 'panuelo', 'fular', 'scarf', 'foulard']],
+    ['belt', ['cinturon', 'belt']],
+  ],
+};
+
+export const SHAPES = Object.values(SHAPE_WORDS).flatMap((list) => list.map(([shape]) => shape));
+
+// The words of a name, lower case, with no accent and one space between them.
+const wordsOf = (name) => ` ${String(name ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()} `;
+
+// The search runs from the most specific words: a two-word one first, so `pantalon corto` wins.
+const byLength = (list) => list.flatMap(([shape, words]) => words.map((word) => [shape, word])).sort(([, a], [, b]) => b.split(' ').length - a.split(' ').length);
+const SEARCH = Object.fromEntries(Object.entries(SHAPE_WORDS).map(([slot, list]) => [slot, byLength(list)]));
+
+// The shape of the drawing of a garment with no image: the first word of its name that names a
+// shape of its slot, else the default shape of the slot (GAR-14).
+export const shapeOf = ({ slot, name }) => {
+  const words = wordsOf(name);
+  const list = SHAPE_WORDS[slot] ?? SHAPE_WORDS.top;
+  return (SEARCH[slot] ?? SEARCH.top).find(([, word]) => words.includes(` ${word} `))?.[0] ?? list[0][0];
+};
+
 // The chosen images of the sheet with `url` added at the end or removed.
 export const toggleImage = (images, url) => {
   if (images.includes(url)) return { images: images.filter((image) => image !== url) };
