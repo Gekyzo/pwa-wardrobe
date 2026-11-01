@@ -61,7 +61,7 @@ export const renderCombinations = () => {
   if (colors) {
     const outfits = outfitsOf(ui.combination);
     const empty = outfits.length ? '' : textOf(whyNone(ui.combination, state.garments, { season: ui.season }));
-    renderOutfits($('combination-outfits'), t('combinations.outfits'), outfits, empty);
+    renderOutfits($('combination-outfits'), t('combinations.outfits'), outfits, empty, { inline: true });
   }
 };
 

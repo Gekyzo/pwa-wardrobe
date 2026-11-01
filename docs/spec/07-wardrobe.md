@@ -183,8 +183,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   and, when there is one or more, their count (`countKey`) on one line, then the season filter
   and the looks. The season filter (OUT-7) is shared by the details,
   the random panel and the card counts of the app, and is not stored. It is a group named
-  `wardrobe.season` of three outline chips, `season.any`, `season.warm` and `season.cold`; the
-  pressed one is ink. A name of a card, a look or a detail that is longer than its column breaks
+  `wardrobe.season` of three compact outline chips, 4px apart, `season.any`, `season.warm` and
+  `season.cold`; the pressed one is ink. A compact chip is drawn `--chip-compact` (36px) high, in
+  `--text-s`, inside a tap-sized button (TAP-1). In the random panel and the Palettes detail the
+  filter shares the head row with the title, and the Palettes detail shows no count. A name of a card, a look or a detail that is longer than its column breaks
   inside a word.
 - **WAR-6** **Load images** of the sheet is on while the link is an `http` or `https` URL and no
   load runs; during a load it reads `wardrobe.loading`. The images of the page (LNK-2) join the
@@ -215,8 +217,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   filter (`countKey`: a count of `MAX_OUTFITS` reads `combinations.countMax`). A `--line` parts
   the rows; the open row has `aria-current="true"` on `--secondary`. The size chips are outline,
   the pressed one ink. From 840px the list and the detail share the width 5 to 7 (`pane wide`).
-- **CMB-2** The size filter keeps the combinations of 2, 3 or 4 colours, or all of them. The
-  switch **Wearable only** keeps the combinations with at least one outfit. With no combination
+- **CMB-2** The size filter keeps the combinations of 2, 3 or 4 colours, or all of them; its
+  chips are compact (WAR-5). The switch **Wearable only**, a plain row on the page, keeps the
+  combinations with at least one outfit. With no combination
   left, the list shows `combinations.empty` and **Show all**, which clears both filters. The
   filters are not stored.
 - **CMB-3** A tap on a row opens its detail (LAY-3): a head with the number and

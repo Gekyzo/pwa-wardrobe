@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- Los filtros de temporada y de colores son más pequeños. En **Conjunto al azar** y en el detalle de **Paletas**, la temporada está junto al título. **Solo las que puedo vestir** ya no está en una tarjeta.
 - La app ya no usa el verde: **Exacto** es gris, los interruptores son negros y **Cómo queda** es texto. **Borrar** está subrayado.
 - Las fotos de un conjunto ocupan todo su hueco, con esquinas rectas.
 - Desde la tablet, la app ocupa un marco centrado, como la propuesta **Blanco de catálogo**. El resumen de **Armario** dice de cuántas combinaciones de Sanzo Wada salen tus conjuntos.

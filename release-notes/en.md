@@ -4,6 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- The season and colour filters are smaller. In **Random outfit** and the **Palettes** detail, the season is beside the title. **Wearable only** is no longer in a card.
 - The app no longer uses green: **Exact** is grey, the switches are black and **Fit** is text. **Delete** is underlined.
 - The pictures of an outfit fill their place, with square corners.
 - From a tablet, the app takes a centred frame, as the **Blanco de catálogo** proposal shows. The **Wardrobe** summary says of how many Sanzo Wada combinations your outfits come.

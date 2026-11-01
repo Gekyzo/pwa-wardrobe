@@ -14,6 +14,8 @@
     --grid-gap-wide: 16px;
     --grid-row-gap-wide: 24px;
     --section-title: 1rem;
+    /* The compact chips of the filters (Blanco): under --tap, as a second way to a choice. */
+    --chip-compact: 36px;
     --title-row-space: 40px;
     --panel-width: 360px;
     --band-pad: 14px;
@@ -318,11 +320,38 @@
   }
 
   /* @component season-filter
-     @summary The season filter of the details and the random panel: a group of outline chips; the pressed one is ink.
+     @summary The season filter of the details and the random panel: a group of compact outline chips, 4px apart; the pressed one is ink.
      @example <div class="cluster season-filter" role="group" aria-label="Season" style="width: 100%"><button class="chip surface" type="button" aria-pressed="true">Any</button><button class="chip surface" type="button" aria-pressed="false">Warm</button><button class="chip surface" type="button" aria-pressed="false">Cold</button></div> */
-  .season-filter > .chip:not([aria-pressed="true"]) {
-    border: 1px solid var(--control);
+  .season-filter {
+    gap: var(--space-1);
+  }
+
+  /* A compact chip keeps the tap height (TAP-1) and draws its outline and fill --chip-compact high
+     inside it. */
+  .season-filter > .chip,
+  .size-filter > .chip {
+    position: relative;
+    isolation: isolate;
+    padding: 0 var(--space-3);
+    border: 0;
     background: none;
+    font-size: var(--text-s);
+  }
+
+  .season-filter > .chip::before,
+  .size-filter > .chip::before {
+    content: '';
+    position: absolute;
+    inset: calc((var(--tap) - var(--chip-compact)) / 2) 0;
+    z-index: -1;
+    border: 1px solid var(--control);
+    border-radius: var(--radius-control);
+  }
+
+  .season-filter > .chip[aria-pressed="true"]::before,
+  .size-filter > .chip[aria-pressed="true"]::before {
+    border-color: var(--ink);
+    background: var(--ink);
   }
 
   /* @component outfits
@@ -791,15 +820,18 @@
 
   /* @component size-filter
      @scope combinations
-     @summary The chips of the size filter of Combinations: a scroll cluster of outline chips; the pressed one is ink.
+     @summary The chips of the size filter of Combinations: a scroll cluster of compact outline chips (as season-filter); the pressed one is ink.
      @example <div class="cluster scroll size-filter" style="width: 100%"><button class="chip surface" type="button" aria-pressed="true">All</button><button class="chip surface" type="button" aria-pressed="false">2 colours</button></div> */
   .size-filter {
     margin-bottom: var(--space-3);
   }
 
-  .size-filter > .chip:not([aria-pressed="true"]) {
-    border: 1px solid var(--control);
-    background: none;
+  /* @component wearable-switch
+     @scope combinations
+     @summary The switch "only the ones I can wear" of Combinations: a plain row on the page, with no card.
+     @example <label class="switch wearable-switch" style="width: 100%"><span>Only the ones I can wear</span><input class="switch-input" type="checkbox" role="switch" checked></label> */
+  .wearable-switch {
+    padding: 0;
   }
 
   /* @component garment-groups
@@ -924,7 +956,8 @@
     gap: var(--space-3);
   }
 
-  .random-panel-head > .season-filter {
+  .random-panel-head > .season-filter,
+  .outfits-head > .season-filter {
     margin: 0;
   }
 

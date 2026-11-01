@@ -111,10 +111,14 @@ export const look = (outfit) =>
 export const outfitList = (outfits, empty) =>
   outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map(look)) : el('p', { className: 'empty-state inline', textContent: empty });
 
-// The outfits of a detail: a head of the title and the count, the season filter, then the cards
-// or the text of none (WAR-5).
-export const renderOutfits = (box, title, outfits, empty) => {
+// The outfits of a detail, then the cards or the text of none (WAR-5). The head holds the title and
+// the count, with the season filter under it; with `inline`, the head holds the title and the filter.
+export const renderOutfits = (box, title, outfits, empty, { inline = false } = {}) => {
+  const heading = el('h2', { className: 'outfits-title', textContent: title });
+  if (inline) {
+    box.replaceChildren(el('div', { className: 'outfits-head' }, [heading, seasonFilter()]), outfitList(outfits, empty));
+    return;
+  }
   const count = outfits.length ? [el('span', { className: 'outfits-count', textContent: t(countKey(outfits.length), { count: outfits.length }) })] : [];
-  const head = el('div', { className: 'outfits-head' }, [el('h2', { className: 'outfits-title', textContent: title }), ...count]);
-  box.replaceChildren(head, seasonFilter(), outfitList(outfits, empty));
+  box.replaceChildren(el('div', { className: 'outfits-head' }, [heading, ...count]), seasonFilter(), outfitList(outfits, empty));
 };
