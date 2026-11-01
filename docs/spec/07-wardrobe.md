@@ -184,7 +184,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
   **Add measure**. The measure name suggests the names in use, and the unit the units in use, then
   `cm`, `mm`, `in`, `EU`, `US` and `UK`. A value shows in the number format of the language. The brand field suggests no brand while it is empty, and
-  the brands of GAR-11 for its text. The colour input of the phone takes the nearest palette colour (PAL-3); so does a colour code typed as `#hex`, `rgb()` or
+  the first 5 brands of GAR-11 for its text, in a list under the field that the app draws, not a
+  `datalist`. A tap on a brand puts it in the field and hides the list; the list also hides when
+  the text is the one brand it gives, on **Escape**, which leaves the sheet open, and when the
+  field loses the focus. The colour input of the phone takes the nearest palette colour (PAL-3); so does a colour code typed as `#hex`, `rgb()` or
   `hsl()` (PAL-4), and a code that is not a colour marks its field invalid; a tap on a
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one

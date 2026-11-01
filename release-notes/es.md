@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- El campo de la marca vuelve a mostrar sugerencias al escribir: una lista de marcas bajo el campo. Toca una para usarla.
 
 ## 0.1.21 - 2026-11-01
 

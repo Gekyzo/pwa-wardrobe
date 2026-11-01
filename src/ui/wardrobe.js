@@ -112,8 +112,31 @@ const today = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60_00
 
 const fillList = (id, values) => $(id).replaceChildren(...values.map((value) => el('option', { value })));
 
-// The brands that start with the text of the brand field, none while it is empty (WAR-3).
-const showBrands = () => fillList('garment-brands', suggestBrands(brandsOf(state.garments), $('garment-brand').value));
+// The brands that start with the text of the brand field, at most MAX_BRAND_ROWS, in a list under the
+// field; none while it is empty or when the text is already the one brand it gives (WAR-3). The app
+// draws the list: the browsers did not show a datalist whose options change as the field is typed.
+const MAX_BRAND_ROWS = 5;
+const hideBrands = () => {
+  $('garment-brands').hidden = true;
+  $('garment-brands').replaceChildren();
+  $('garment-brand').setAttribute('aria-expanded', 'false');
+};
+const showBrands = () => {
+  const text = $('garment-brand').value;
+  const brands = suggestBrands(brandsOf(state.garments), text).slice(0, MAX_BRAND_ROWS);
+  const done = brands.length === 1 && brands[0].toLowerCase() === text.trim().toLowerCase();
+  if (!brands.length || done) return hideBrands();
+  $('garment-brands').replaceChildren(...brands.map((brand) => el('li', { role: 'option' }, [
+    el('button', { type: 'button', className: 'list-row', textContent: brand, tabIndex: -1, onclick: () => pickBrand(brand) }),
+  ])));
+  $('garment-brands').hidden = false;
+  $('garment-brand').setAttribute('aria-expanded', 'true');
+};
+const pickBrand = (brand) => {
+  $('garment-brand').value = brand;
+  hideBrands();
+  $('garment-brand').focus();
+};
 
 // One line of the measures of the sheet: name, value and unit, and a button that removes it.
 const measureLine = ({ name = '', value = '', unit = '' } = {}) => {
@@ -184,7 +207,7 @@ const openSheet = (id = null, fill = null) => {
   $('garment-name').value = base?.name ?? '';
   $('garment-brand').value = garment?.brand ?? '';
   $('garment-reference').value = garment?.reference ?? '';
-  showBrands();
+  hideBrands();
   $('garment-link').value = garment?.link ?? '';
   $('garment-image-url').value = '';
   ui.draftImages = [...(garment?.images ?? [])];
@@ -470,6 +493,10 @@ export const bind = () => {
     showColor();
   });
   $('garment-brand').addEventListener('input', showBrands);
+  $('garment-brand').addEventListener('keydown', (event) => { if (event.key === 'Escape' && !$('garment-brands').hidden) { event.stopPropagation(); hideBrands(); } });
+  $('garment-brand').addEventListener('blur', (event) => { if (!$('garment-brands').contains(event.relatedTarget)) hideBrands(); });
+  // A press on a suggestion keeps the focus in the field, so the blur does not hide the list first.
+  $('garment-brands').addEventListener('pointerdown', (event) => event.preventDefault());
   $('garment-link').addEventListener('input', showLoad);
   $('garment-slot').addEventListener('change', offerMeasures);
   $('garment-measure-add').addEventListener('click', () => {

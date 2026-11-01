@@ -1275,6 +1275,15 @@
     margin-top: var(--space-3);
   }
 
+  /* @component brand-suggestions
+     @scope garment-sheet
+     @summary The brands that the brand field suggests, a plain list-group under the field; its rows start where the text of the field starts.
+     @example <ul class="list-group plain brand-suggestions" style="width: 100%"><li><button class="list-row" type="button">Zara</button></li><li><button class="list-row" type="button">Zegna</button></li></ul> */
+  .list-group.plain.brand-suggestions .list-row {
+    width: 100%;
+    padding-inline: var(--space-3);
+  }
+
   /* @component garment-facts
      @scope garment-detail
      @summary The size, the fit, the measures and the dates of a garment in its detail: two columns, each fact a muted label over its value.

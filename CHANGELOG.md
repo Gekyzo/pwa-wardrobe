@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Brand suggestions** (WAR-3): the brand field no longer uses `<datalist id="garment-brands">`. Desktop and Android Chrome showed no popup for a datalist whose options change on each `input`, which `5762aea` brought in. `#garment-brands` is now a `ul.list-group.plain.brand-suggestions` (`role="listbox"`, the field is a `combobox`), filled by `showBrands` in `src/ui/wardrobe.js` with at most 5 rows of `suggestBrands`. A tap picks a brand; `Escape`, a blur or an exact match hides the list. New component `brand-suggestions` in `styles.css`.
 
 ## 0.1.21 - 2026-11-01
 

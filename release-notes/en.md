@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- The brand field shows its suggestions again as you type: a list of brands under the field. Tap one to use it.
 
 ## 0.1.21 - 2026-11-01
 
