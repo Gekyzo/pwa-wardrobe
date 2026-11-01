@@ -129,7 +129,6 @@ export default {
   'version.unknown': 'Sin conexión',
   'toast.undo': 'Deshacer',
   'toast.update': 'Hay una versión nueva.',
-  'row.delete': 'Borrar «{text}»',
   'toast.imported': 'Copia importada.',
   'import.confirm': '¿Sustituir los datos por la copia ({items})?',
   'import.confirmAccount': '¿Sustituir las prendas de tu cuenta por las de la copia ({items})? Se sustituyen en todos tus dispositivos.',

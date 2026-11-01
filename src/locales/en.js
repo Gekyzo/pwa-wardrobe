@@ -129,7 +129,6 @@ export default {
   'version.unknown': 'Offline',
   'toast.undo': 'Undo',
   'toast.update': 'A new version is ready.',
-  'row.delete': 'Delete «{text}»',
   'toast.imported': 'Backup imported.',
   'import.confirm': 'Replace the data with the backup ({items})?',
   'import.confirmAccount': 'Replace the garments of your account with those of the backup ({items})? They are replaced on all your devices.',

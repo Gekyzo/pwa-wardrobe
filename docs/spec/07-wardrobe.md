@@ -139,8 +139,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   and the slot, the season, and the brand and `wardrobe.sizeShort` with the size, each one if it
   has one. With no garment it shows
   `wardrobe.empty` and **Add garment**, which opens the sheet of WAR-3.
-- **WAR-2** A row slides left to show **Delete** (GAR-4); the toast `toast.garmentDeleted` offers
-  **Undo** for 5 seconds. A doc that the sync puts in place hides an open **Undo** (SYNC-2).
+- **WAR-2** **Delete** is in the detail of a garment (WAR-4, GAR-4); the toast
+  `toast.garmentDeleted` offers **Undo** for 5 seconds. A doc that the sync puts in place hides an open **Undo** (SYNC-2).
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
   **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
   sheet holds the name, the brand, the reference (GAR-13), the slot, the season,

@@ -23,10 +23,3 @@ export const symbolNodes = async (name) => {
   const symbol = (await sprite).getElementById(name);
   return symbol ? [...symbol.childNodes].map((node) => node.cloneNode(true)) : [];
 };
-
-// A button of a side menu: an icon, with the name of the action for a screen reader.
-export const iconButton = (name, label, onClick, { variant = '' } = {}) => {
-  const button = el('button', { type: 'button', className: ['swipe-action', variant].join(' '), title: label, onclick: onClick }, [icon(name)]);
-  button.setAttribute('aria-label', label);
-  return button;
-};

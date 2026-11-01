@@ -24,18 +24,17 @@
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
-| `src/swipe.js` | The rule that settles the slide of a row (optional) | nothing |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
 | `src/ui/context.js` | The values that the views share, the toast, `render`, `commit`, `apply`, the hook of each save, the doc that the sync puts in place and the export file | `garments`, `storage`, `i18n`, `onboarding` |
-| `src/ui/controls.js` | The icon builder and the side-action button | `ui/context` |
+| `src/ui/controls.js` | The icon builder | `ui/context` |
 | `src/ui/motion.js` | Row collapse, expand and slide animations | `ui/context` |
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
 | `src/ui/outfit.js` | The swatch, the image of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
-| `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `brands`, `links`, `palette`, `outfits`, `measures`, `swipe`, `ui/context`, `ui/controls`, `ui/outfit` |
+| `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `brands`, `links`, `palette`, `outfits`, `measures`, `ui/context`, `ui/controls`, `ui/outfit` |
 | `src/ui/settings.js` | Settings, Delete all data (SET-3), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
@@ -111,7 +110,6 @@ in [09-sync.md](09-sync.md).
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6, SYNC-4) |
 | `tests/session.test.js` | The session, the start route, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5) |
 | `tests/install.test.js` | The install offer states (INS-1) |
-| `tests/swipe.test.js` | The settle rule of a row slide |
 | `tests/sw.test.js` | The manifest text that the worker puts in place (SW-13), the images (SW-14) and the release notes in `SHELL` (VER-21) |
 | `tests/sections.test.js` | The slide between sections |
 | `tests/modules.test.js` | The visible sections and the switch of a module |

@@ -25,9 +25,6 @@ import { shouldShow } from '#onboarding';
 export const UNDO_MS = 5000;
 export const MESSAGE_MS = 3000;
 export const CLICK_GUARD_MS = 350;
-// Width of one swipe-action of a row, the same as in styles.css.
-export const SIDE_BUTTON = 64;
-export const DRAG_START = 10;
 export const LEAVE_MS = 200;
 // The wait for the service worker to load the new deploy.
 export const REFRESH_MS = 15000;
@@ -101,10 +98,6 @@ export const ui = {
   candidates: [],
   draftImages: [],
   loadingImages: false,
-  // The garment row whose side actions are open, or null.
-  openId: null,
-  // Where the last swipe left its row, so that the next render moves the row from there.
-  settleFrom: null,
   // The season filter of the outfits (OUT-7), the size filter and the wearable switch of the
   // combinations. Not stored.
   season: 'any',
