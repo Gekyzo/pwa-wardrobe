@@ -157,6 +157,27 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   garment of the wardrobe, under the season filter (option `season`). The basics with the higher
   gain come first, then the order of `BASICS`.
 
+## Fill
+
+- **FIL-1** `fillSuggestions` of `src/fill.js` gives the ranked list of the Fill tab: rows
+  `{ kind, basic, slot, season, color, gain, completes }`, `kind` `basic` or `wada`. `MAX_FILL`
+  is 12 (option `max`).
+- **FIL-2** The basics of the list are all the basics of `missingBasics` (BAS-3, BAS-4) under the
+  season filter, with their gain, even 0, and no `completes`.
+- **FIL-3** The open palettes are the combinations with no outfit under the season filter; the
+  option `of` reads the outfits of one combination in place of `outfitsFor`. Each colour of an
+  open palette, in each slot of GAR-2, is a Wada candidate: a garment of season `all`. Its
+  `completes` is the sorted numbers of the open palettes of its colour and of the colours within
+  `MATCH_MAX` that `outfitsFor` gives an outfit with the candidate added. A candidate with no
+  `completes` is dropped. Its gain is the count of `outfitsWith` (OUT-8) of the candidate.
+- **FIL-4** A candidate is dropped when a garment that fits the season filter (OUT-7) covers it
+  (BAS-2), or when a missing basic of its slot is within `MATCH_MAX` of its colour. Of two
+  candidates of one slot within `MATCH_MAX`, the higher gain stays, then the lower colour id.
+- **FIL-5** After the drops, each colour keeps one slot: the higher gain, then the slot order of
+  GAR-2.
+- **FIL-6** The list is sorted by the higher gain, then basics before Wada colours, then the order
+  of `BASICS`, then the colour id, and cut to `max`.
+
 ## Wardrobe section
 
 - **WAR-1** The Wardrobe section shows the garments as a grid of cards, grouped by slot in the
