@@ -138,3 +138,11 @@ test('a candidate colour fills the one gap of an open palette, or is a colour of
     for (const s of wadaOf(fillSuggestions(wardrobe, { max: 100 }))) assert.ok(allowed.has(s.color), `colour ${s.color}`);
   }
 });
+
+test('a missing basic out of the filter season does not hide a Wada colour (FIL-4)', () => {
+  const navy = BASICS.find((b) => b.id === 'navyCoat');
+  assert.equal(navy.season, 'cold');
+  const wardrobe = [garment('t', 'top', 113, 'warm'), garment('b', 'bottom', 154, 'warm')];
+  const list = fillSuggestions(wardrobe, { season: 'warm', max: 100 });
+  assert.ok(wadaOf(list).some((s) => s.slot === 'outer' && near(s.color, navy.color)), 'a Wada outer near the navy coat');
+});

@@ -174,7 +174,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   that neither a garment nor the candidate is near is not searched. A candidate with no
   `completes` is dropped. Its gain is the count of `outfitsWith` (OUT-8) of the candidate.
 - **FIL-4** A candidate is dropped when a garment that fits the season filter (OUT-7) covers it
-  (BAS-2), or when a missing basic of its slot is within `MATCH_MAX` of its colour. Of two
+  (BAS-2), or when a missing basic of its slot that fits the season filter is within `MATCH_MAX`
+  of its colour. Of two
   candidates of one slot within `MATCH_MAX`, the higher gain stays, then the lower colour id.
 - **FIL-5** After the drops, each colour keeps one slot: the higher gain, then the slot order of
   GAR-2.
@@ -185,7 +186,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   once for each doc and season filter, with the cached outfits of each combination as `of`. A
   row is one button: a swatch of its colour; its name, `basic.<id>` for a basic or
   `fill.wadaName` with the slot and the colour name for a Wada colour; a line of its slot and its
-  season; its gain, `fill.gain` (`fill.gainMax` at `MAX_OUTFITS`), on the end; the tag
+  season; with a gain above 0, its gain, `fill.gain` (`fill.gainMax` at `MAX_OUTFITS`), on the end; the tag
   `fill.basic` or `fill.completes` with the count of `completes`; and for a Wada colour the first
   three palettes of `completes`, each `outfit.number` and its strip, the colours within
   `MATCH_MAX` of the row outlined. A tap opens the sheet of a new garment (WAR-3) with the name,

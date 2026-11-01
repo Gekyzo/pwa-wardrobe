@@ -36,7 +36,7 @@ const row = (s) => {
   return el('li', { className: 'basics-panel-row' }, [el('button', { className: 'basics-panel-item fill-item', type: 'button', onclick: open }, [
     swatch(s.color),
     el('span', { className: 'basics-panel-name', textContent: name }),
-    el('span', { className: 'fill-gain', textContent: t(s.gain >= MAX_OUTFITS ? 'fill.gainMax' : 'fill.gain', { count: s.gain }) }),
+    ...(s.gain > 0 ? [el('span', { className: 'fill-gain', textContent: t(s.gain >= MAX_OUTFITS ? 'fill.gainMax' : 'fill.gain', { count: s.gain }) })] : []),
     el('span', { className: 'basics-panel-meta', textContent: [t(`slot.${s.slot}`), t(`season.${s.season}`)].join(' · ') }),
     el('span', { className: s.kind === 'basic' ? 'fill-tag' : 'fill-tag wada', textContent: tag }),
     ...(s.completes.length ? [el('span', { className: 'fill-palettes' }, s.completes.slice(0, SHOWN_PALETTES).map((n) => palette(n, s.color)))] : []),

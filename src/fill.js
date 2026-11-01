@@ -63,7 +63,7 @@ export const fillSuggestions = (garments, { season = 'any', max = MAX_FILL, of =
   const found = colors.flatMap((color) => SLOTS.flatMap((slot) => {
     const cand = candidate(color, slot);
     if (fit.some((garment) => covers(garment, cand))) return [];
-    if (basics.some((basic) => basic.slot === slot && near(basic.color, color))) return [];
+    if (basics.some((basic) => basic.slot === slot && fitsSeason(basic, season) && near(basic.color, color))) return [];
     const completes = completesOf(cand, open, fit, garments, season);
     if (completes.length === 0) return [];
     return [{ kind: 'wada', basic: null, slot, season: 'all', color, gain: outfitsWith(cand, garments, { season }).length, completes }];
