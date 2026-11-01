@@ -161,16 +161,21 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.
 - **WAR-4** A tap on a card opens its detail, which shows alone at every width, in place of the
-  grid and the panel (LAY-3, `pane single`): the main image large and, with two or more
-  images, all the images in a row below it, where a tap on one shows it large; the colour, the
-  name, the colour name, slot, season, brand and size, then the reference, the fit, each measure, the price in
-  euros, the buy date and `wardrobe.added` with the creation date, in the formats of the language,
-  each one only when it is set, **Edit**, **Open link** when the garment has a
-  link, which opens it in a new tab, and **Delete**, and the outfits that contain it (OUT-8)
-  under the season filter, or `wardrobe.noOutfits`.
-- **WAR-5** An outfit card shows `outfit.number`, the strip of its combination, `outfit.exact`
-  for an exact outfit, and each garment with its main image, if it has one, its colour, name
-  and slot. The season filter (OUT-7) is shared by the details of the app and is not stored.
+  grid and the panel (LAY-3, `pane single`). **Back** reads `nav.wardrobe`. The media: the
+  picture of the garment, 4:5 (WAR-1), with the image shown large; under it a band of its colour
+  with the colour name and its hex, in dark or light text (`inkOn`, PAL-5); and with two or more
+  images, all the images in a row, where a tap on one shows it large. The info: the name at
+  `--screen-title`, a line of slot, brand and season, then the facts in two columns, each a label
+  over its value: the size, the reference, the fit, each measure, the price in euros, the buy
+  date and `wardrobe.added` with the creation date, in the formats of the language, each one only
+  when it is set. Then **Edit** (primary), **Open link** (outline) when the garment has a link,
+  which opens it in a new tab, and **Delete** (a danger text button), and the outfits that
+  contain it (OUT-8) under the season filter, or `wardrobe.noOutfits`. From 1024px the media and
+  the rest are two columns, 7 to 5, and the media stays in sight; below, they stack.
+- **WAR-5** An outfit is a look on a `--surface` card: `outfit.number` and `outfit.exact` for an
+  exact outfit, then its garments side by side, each with its picture (WAR-1, 3:4), its name and
+  a dot of its colour with the colour name. The season filter (OUT-7) is shared by the details,
+  the random panel and the card counts of the app, and is not stored.
 - **WAR-6** **Load images** of the sheet is on while the link is an `http` or `https` URL and no
   load runs; during a load it reads `wardrobe.loading`. The images of the page (LNK-2) join the
   images of the sheet, which shows them as a grid; a failure shows `error.linkFailed`. A tap on

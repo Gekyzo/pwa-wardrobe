@@ -38,15 +38,16 @@
             <button id="wardrobe-add" class="button primary" type="button" data-i18n="wardrobe.add"></button>
           </div>
         </div>
-        <article id="garment-detail" class="pane-detail">
-          <button id="garment-back" class="button quiet pane-back detail-back" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#back"/></svg><span data-i18n="action.back"></span></button>
-          <div id="garment-info" class="detail-head"></div>
-          <div id="garment-actions" class="cluster">
-            <button id="garment-edit" class="button outline" type="button" data-i18n="action.edit"></button>
+        <article id="garment-detail" class="pane-detail garment-detail">
+          <button id="garment-back" class="button quiet pane-back detail-back" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#back"/></svg><span data-i18n="nav.wardrobe"></span></button>
+          <div id="garment-media" class="garment-detail-media"></div>
+          <div id="garment-info" class="garment-detail-info"></div>
+          <div id="garment-actions" class="cluster garment-detail-actions">
+            <button id="garment-edit" class="button primary" type="button" data-i18n="action.edit"></button>
             <a id="garment-open" class="button outline" target="_blank" rel="noopener noreferrer" data-i18n="wardrobe.openLink" hidden></a>
-            <button id="garment-delete" class="button outline danger" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#trash"/></svg><span data-i18n="action.delete"></span></button>
+            <button id="garment-delete" class="button quiet danger" type="button" data-i18n="action.delete"></button>
           </div>
-          <div id="garment-outfits" class="outfits"></div>
+          <div id="garment-outfits" class="outfits garment-detail-outfits"></div>
         </article>
       </section>
 

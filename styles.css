@@ -19,7 +19,11 @@
     --topbar-height: 56px;
     --wordmark: 1.375rem;
     --weight-book: 500;
+    /* The text on a field of a Wada colour (PAL-5): the same in both themes, since the field is data. */
+    --on-field-dark: #141414;
+    --on-field-light: #ffffff;
     --dot: 10px;
+    --detail-gap: 48px;
     /* No rail (DSV-5): the start margin is the frame's side margin, as the end one. */
     --rail-width: var(--frame-side);
   }
@@ -160,38 +164,6 @@
     outline-offset: 2px;
   }
 
-  /* @component thumb
-     @summary The main image of a garment, cut to fill its box. The code removes it when it does not load.
-     @variant small  In an outfit card.
-     @variant large  At the top of a detail, full width.
-     @example <img class="thumb" alt="" src="icons/icon-192.png">
-     @example <img class="thumb small" alt="" src="icons/icon-192.png">
-     @example <img class="thumb large" alt="" src="icons/icon-192.png" style="width: 160px"> */
-  .thumb {
-    flex: none;
-    height: calc(var(--tap-l) - var(--space-2));
-    margin-left: var(--space-1);
-    aspect-ratio: 3 / 4;
-    border-radius: var(--radius-s);
-    background: var(--bg);
-    object-fit: cover;
-  }
-
-  .thumb.small {
-    height: var(--tap);
-    margin-left: 0;
-  }
-
-  .thumb.large {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 60vh;
-    margin-left: 0;
-    border-radius: var(--radius-m);
-    object-fit: contain;
-  }
-
   /* @component image-strip
      @summary The other images of a detail, in one row that scrolls. The image shown large has
        aria-pressed="true".
@@ -309,7 +281,7 @@
 
   /* @component detail-back
      @scope wardrobe, combinations
-     @summary The Back button of a detail below 840px: its arrow lines up with the content edge, and a space parts it from the head.
+     @summary The Back button of a detail where it shows alone: its arrow lines up with the content edge, and a space parts it from the head.
      @example <button class="button quiet pane-back detail-back" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#back"/></svg><span>Back</span></button> */
   .detail-back {
     gap: var(--space-1);
@@ -342,7 +314,7 @@
      @summary The outfits of a detail: a title, the season filter, then the outfit cards.
      @part outfits-title  The title.
      @part outfits-list   The list of the cards.
-     @example <div class="outfits" style="width: 100%"><h2 class="outfits-title">Outfits</h2><ul class="outfits-list"><li class="outfit"><div class="outfit-head"><span class="outfit-number">No. 12</span></div></li></ul></div> */
+     @example <div class="outfits" style="width: 100%"><h2 class="outfits-title">Outfits</h2><ul class="outfits-list"><li class="look"><div class="look-head"><span class="look-number">No. 12</span></div></li></ul></div> */
   .outfits-title {
     margin: var(--space-5) 0 0;
     font-size: var(--text-m);
@@ -356,48 +328,96 @@
     list-style: none;
   }
 
-  /* @component outfit
-     @summary One outfit: the number and the colours of its combination, then its garments.
-     @part outfit-head      The number, the strip and the exact mark.
-     @part outfit-number    The number of the combination.
-     @part outfit-garments  The garments of the outfit.
-     @part outfit-garment   One garment: colour, name, slot.
-     @part outfit-slot      The slot of the garment, muted.
-     @example <ul class="outfits-list" style="width: 100%"><li class="outfit"><div class="outfit-head"><span class="outfit-number">No. 12</span><span class="strip"><span class="strip-block" style="background: #f9c1ce"></span><span class="strip-block" style="background: #2e5f8a"></span></span><span class="pill">Exact</span></div><ul class="outfit-garments"><li class="outfit-garment"><span class="swatch dot" style="background: #f9c1ce"></span><span>Pink shirt</span><small class="outfit-slot">Top</small></li></ul></li></ul> */
-  .outfit {
-    padding: var(--space-3);
-    border-radius: var(--radius-m);
+  /* @component look
+     @summary One outfit as a look on a card: its number and the exact mark, then its garments side by side, each with its picture, name and colour.
+     @part look-head    The number and the exact mark.
+     @part look-number  The number of the combination.
+     @part look-row     The garments, side by side in equal columns.
+     @part look-item    One garment.
+     @part look-name    The name of the garment.
+     @part look-color   A small dot and the name of the colour.
+     @example <ul class="outfits-list" style="width: 320px"><li class="look"><div class="look-head"><span class="look-number">No. 69</span><span class="pill">Exact</span></div><ul class="look-row"><li class="look-item"><figure class="garment-picture look" style="background: #a1a39a" role="img" aria-label="Jumper, Warm Gray"></figure><span class="look-name">Jumper</span><span class="look-color"><span class="swatch dot" style="background: #a1a39a"></span>Warm Gray</span></li><li class="look-item"><figure class="garment-picture look" style="background: #111314" role="img" aria-label="Trousers, Black"></figure><span class="look-name">Trousers</span><span class="look-color"><span class="swatch dot" style="background: #111314"></span>Black</span></li></ul></li></ul> */
+  .look {
+    padding: var(--space-4);
+    border-radius: var(--radius-l);
     background: var(--surface);
   }
 
-  .outfit-head {
+  .look-head {
     display: flex;
     align-items: center;
     gap: var(--space-2);
+    margin-bottom: var(--space-3);
   }
 
-  .outfit-number {
-    font-weight: var(--weight-strong);
+  .look-number {
+    font-weight: var(--weight-book);
   }
 
-  .outfit-garments {
+  .look-row {
     display: grid;
-    gap: var(--space-1);
-    margin: var(--space-2) 0 0;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--space-3);
+    margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .outfit-garment {
+  .look-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    min-width: 0;
+  }
+
+  .look-item > .garment-picture {
+    margin-bottom: var(--space-1);
+  }
+
+  .look-name {
+    font-weight: var(--weight-book);
+  }
+
+  .look-color {
     display: flex;
     align-items: center;
     gap: var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-s);
   }
 
-  .outfit-slot {
-    color: var(--muted);
-    font-size: var(--text-xs);
+  .look-color > .swatch.dot {
+    width: var(--dot);
+    height: var(--dot);
   }
+
+  /* @component color-band
+     @summary The colour of a garment under its picture: the colour name and its hex, in dark or light text by the luminance of the colour (data-ink, PAL-5).
+     @part color-band-hex  The hex of the colour.
+     @state data-ink  dark or light: the colour of the text.
+     @example <div class="color-band" data-ink="light" style="background: #4b3317; width: 280px"><span>Vandyke Brown</span><span class="color-band-hex">#4b3317</span></div>
+     @example <div class="color-band" data-ink="dark" style="background: #ffdd00; width: 280px"><span>Apricot Yellow</span><span class="color-band-hex">#ffdd00</span></div> */
+  .color-band {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--band-pad) var(--space-4);
+    font-size: var(--text-s);
+  }
+
+  .color-band[data-ink="dark"] {
+    color: var(--on-field-dark);
+  }
+
+  .color-band[data-ink="light"] {
+    color: var(--on-field-light);
+  }
+
+  .color-band-hex {
+    font-variant-numeric: tabular-nums;
+  }
+
 
   /* @extends nav-bar */
   /* From 600px the bar is a top bar across the frame (NAV-4, NAV-5): the wordmark, the sections as
@@ -546,6 +566,10 @@
   .pane.single:not([data-detail]) > .pane-detail,
   .pane.single[data-detail] > .pane-list {
     display: none;
+  }
+
+  .pane.single > .pane-detail {
+    padding: 0 0 var(--space-4);
   }
 
   @media (min-width: 840px) {
@@ -856,22 +880,99 @@
 
   /* @component garment-facts
      @scope garment-detail
-     @summary The size, the fit and the measures of a garment in its detail, as a list of terms and values.
-     @example <dl class="garment-facts" style="width: 100%"><dt>Size</dt><dd>32</dd><dt>Waist</dt><dd>84 cm</dd></dl> */
+     @summary The size, the fit, the measures and the dates of a garment in its detail: two columns, each fact a muted label over its value.
+     @part garment-facts-item  One fact: its term and its value.
+     @example <dl class="garment-facts" style="width: 100%"><div class="garment-facts-item"><dt>Size</dt><dd>32</dd></div><div class="garment-facts-item"><dt>Waist</dt><dd>84 cm</dd></div></dl> */
   .garment-facts {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: var(--space-2) var(--space-4);
-    margin: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-6);
+    margin: var(--space-6) 0;
   }
 
   .garment-facts dt {
     color: var(--muted);
+    font-size: var(--text-s);
   }
 
   .garment-facts dd {
     margin: 0;
+    font-size: var(--text-m);
     overflow-wrap: anywhere;
+  }
+
+  /* @component garment-detail
+     @scope wardrobe
+     @summary The detail of a garment, alone: Back, then the media (its picture, colour band and image strip) and the info, actions and outfits. From 1024px two columns, 7 to 5, the media in sight while the rest scrolls.
+     @part garment-detail-media     The picture, the colour band and the image strip.
+     @part garment-detail-info      The name, the meta line and the facts.
+     @part garment-detail-title     The name of the garment.
+     @part garment-detail-meta      The slot, the brand and the season.
+     @part garment-detail-actions   Edit, Open link and Delete.
+     @part garment-detail-outfits   The outfits that contain the garment.
+     @example <article class="garment-detail" style="width: 100%"><div class="garment-detail-media"><figure class="garment-picture hero" style="background: #4b3317" role="img" aria-label="Chinos, Vandyke Brown"></figure><div class="color-band" data-ink="light" style="background: #4b3317"><span>Vandyke Brown</span><span class="color-band-hex">#4b3317</span></div></div><div class="garment-detail-info"><h2 class="garment-detail-title">Chinos</h2><p class="garment-detail-meta">Bottom · Sfera · All year</p></div><div class="cluster garment-detail-actions"><button class="button primary" type="button">Edit</button><button class="button quiet danger" type="button">Delete</button></div></article> */
+  .garment-detail-media {
+    margin-bottom: var(--space-6);
+  }
+
+  .garment-detail-title {
+    margin: 0;
+    font-size: var(--screen-title-phone);
+    font-weight: var(--screen-title-weight);
+    letter-spacing: var(--screen-title-track);
+    line-height: 1.1;
+  }
+
+  .garment-detail-meta {
+    margin: var(--space-2) 0 0;
+    color: var(--muted);
+  }
+
+  .garment-detail-actions {
+    margin-bottom: var(--space-7);
+  }
+
+  .garment-detail-outfits {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 600px) {
+    .garment-detail-title {
+      font-size: var(--screen-title);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .garment-detail {
+      column-gap: var(--detail-gap);
+    }
+
+    .pane.single[data-detail] > .garment-detail {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-content: start;
+    }
+
+    .garment-detail > .pane-back {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+
+    .garment-detail-media {
+      grid-column: 1;
+      grid-row: 2 / span 3;
+      position: sticky;
+      top: var(--space-4);
+      align-self: start;
+      margin-bottom: 0;
+    }
+
+    .garment-detail-info,
+    .garment-detail-actions,
+    .garment-detail-outfits {
+      grid-column: 2;
+    }
   }
 
   /* @component settings

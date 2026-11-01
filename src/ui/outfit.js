@@ -1,5 +1,5 @@
 import { mainImage } from '#garments';
-import { colorOf, combination } from '#palette';
+import { colorOf, inkOn } from '#palette';
 import { SEASON_FILTERS } from '#outfits';
 import { el, ui, t, render } from '#ui/context';
 
@@ -13,19 +13,9 @@ export const swatch = (colorId, variant = '') => {
 // A remote image: no referrer, since some shops refuse a request from another site.
 export const remoteImage = (src, className) => el('img', { className, referrerPolicy: 'no-referrer', loading: 'lazy', decoding: 'async', alt: '', src });
 
-// The main image of a garment (GAR-7), or null when it has none. An image that does not load
-// leaves the page, so the colour dot beside it stands alone.
-export const thumb = (garment, variant = '') => {
-  const url = mainImage(garment);
-  if (!url) return null;
-  const image = remoteImage(url, variant === 'small' ? 'thumb small' : 'thumb');
-  image.addEventListener('error', () => image.remove(), { once: true });
-  return image;
-};
-
-// The picture of a garment: its main image (GAR-7) on the photo ground, or a field of its colour
-// when it has none or when the image fails to load. `variant` is card, hero or look.
-export const picture = (garment, variant) => {
+// The picture of a garment: its main image (GAR-7), or `url`, on the photo ground, or a field of
+// its colour when it has none or when the image fails to load. `variant` is card, hero or look.
+export const picture = (garment, variant, url = mainImage(garment)) => {
   const figure = el('figure', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'look' ? 'garment-picture look' : 'garment-picture card' });
   const field = () => {
     const color = colorOf(garment.color);
@@ -34,7 +24,6 @@ export const picture = (garment, variant) => {
     figure.setAttribute('role', 'img');
     figure.setAttribute('aria-label', `${garment.name}, ${color.name}`);
   };
-  const url = mainImage(garment);
   if (!url) {
     field();
     return figure;
@@ -71,24 +60,35 @@ export const seasonFilter = () =>
     return button;
   }));
 
-const card = (outfit) =>
-  el('li', { className: 'outfit' }, [
-    el('div', { className: 'outfit-head' }, [
-      el('span', { className: 'outfit-number', textContent: t('outfit.number', { number: outfit.combination }) }),
-      strip(combination(outfit.combination)),
+// The text colour on a field of one palette colour (PAL-5).
+const inkOf = (colorId) => inkOn(colorOf(colorId).hex);
+
+// A band of the colour of a garment, with its name and its hex.
+export const colorBand = (colorId) => {
+  const { name, hex } = colorOf(colorId);
+  const band = el('div', { className: 'color-band' }, [el('span', { textContent: name }), el('span', { className: 'color-band-hex', textContent: hex })]);
+  band.style.background = hex;
+  band.dataset.ink = inkOf(colorId);
+  return band;
+};
+
+// One outfit as a look: its number and the exact mark, then its garments side by side (WAR-5).
+export const look = (outfit) =>
+  el('li', { className: 'look' }, [
+    el('div', { className: 'look-head' }, [
+      el('span', { className: 'look-number', textContent: t('outfit.number', { number: outfit.combination }) }),
       ...(outfit.exact ? [el('span', { className: 'pill', textContent: t('outfit.exact') })] : []),
     ]),
-    el('ul', { className: 'outfit-garments' }, outfit.picks.map(({ garment }) => el('li', { className: 'outfit-garment' }, [
-      ...[thumb(garment, 'small')].filter(Boolean),
-      swatch(garment.color, 'dot'),
-      el('span', { textContent: garment.name }),
-      el('small', { className: 'outfit-slot', textContent: t(`slot.${garment.slot}`) }),
+    el('ul', { className: 'look-row' }, outfit.picks.map(({ garment }) => el('li', { className: 'look-item' }, [
+      picture(garment, 'look'),
+      el('span', { className: 'look-name', textContent: garment.name }),
+      el('span', { className: 'look-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
     ]))),
   ]);
 
 // The cards of some outfits, or the text of none.
 export const outfitList = (outfits, empty) =>
-  outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map(card)) : el('p', { className: 'empty-state inline', textContent: empty });
+  outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map(look)) : el('p', { className: 'empty-state inline', textContent: empty });
 
 // The outfits of a detail: a title, the season filter, then the cards or the text of none.
 export const renderOutfits = (box, title, outfits, empty) => {

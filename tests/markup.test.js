@@ -125,3 +125,11 @@ test('Wardrobe has the grid of groups and the random panel in its list (WAR-1, W
   assert.match(body, /<div class="pane-list">\s*<div id="garment-groups" class="garment-groups"><\/div>\s*<aside id="random-panel" class="random-panel" aria-labelledby="random-title" hidden><\/aside>/);
   assert.doesNotMatch(body, /id="wardrobe-random"|id="random-outfit"|id="garment-list"|id="garment-detail-empty"/);
 });
+
+test('the garment detail holds Back, the media, the info, the actions and the outfits, in that order (WAR-4)', () => {
+  const detail = body.slice(body.indexOf('<article id="garment-detail"'), body.indexOf('</article>', body.indexOf('<article id="garment-detail"')));
+  const order = ['garment-back', 'garment-media', 'garment-info', 'garment-actions', 'garment-outfits'].map((id) => detail.indexOf(`id="${id}"`));
+  assert.ok(order.every((at) => at > 0), String(order));
+  assert.deepEqual([...order].sort((a, b) => a - b), order);
+  assert.match(detail, /id="garment-back"[^>]*>.*data-i18n="nav.wardrobe"/);
+});

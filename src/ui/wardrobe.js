@@ -7,7 +7,7 @@ import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
 import { $, el, ui, state, t, lang, textOf, apply, render, showToast } from '#ui/context';
 import { icon } from '#ui/controls';
-import { swatch, remoteImage, renderOutfits, picture, seasonFilter, outfitList } from '#ui/outfit';
+import { swatch, remoteImage, renderOutfits, picture, colorBand, seasonFilter, outfitList } from '#ui/outfit';
 
 const options = (select, values, prefix, chosen) =>
   select.replaceChildren(...values.map((value) => el('option', { value, textContent: t(`${prefix}.${value}`), selected: value === chosen })));
@@ -236,17 +236,16 @@ const remove = (id) => {
   apply(deleteGarment(state, id), { undoText: t('toast.garmentDeleted') });
 };
 
-const metaOf = (garment) =>
-  [t(`slot.${garment.slot}`), t(`season.${garment.season}`), garment.brand, garment.size && t('wardrobe.sizeShort', { size: garment.size })]
-    .filter(Boolean)
-    .join(' · ');
+// The slot, the brand and the season of a garment, under its name in the detail.
+const metaOf = (garment) => [t(`slot.${garment.slot}`), garment.brand, t(`season.${garment.season}`)].filter(Boolean).join(' · ');
 
-const fact = (term, value) => [el('dt', { textContent: term }), el('dd', {}, [value])];
+const fact = (term, value) => [el('div', { className: 'garment-facts-item' }, [el('dt', { textContent: term }), el('dd', {}, [value])])];
 
-// The reference, the fit, each measure, the price, the buy date and the creation date of a garment, when it has
-// one (WAR-4); the size is in the meta.
+// The size, the reference, the fit, each measure, the price, the buy date and the creation date of a
+// garment, when it has one (WAR-4).
 const facts = (garment) => {
   const list = [
+    ...(garment.size ? fact(t('wardrobe.size'), garment.size) : []),
     ...(garment.reference ? fact(t('wardrobe.reference'), garment.reference) : []),
     ...(garment.fit ? fact(t('wardrobe.fit'), fitPill(garment.fit)) : []),
     ...garment.measures.flatMap(({ name, value, unit }) => fact(name, `${number(value)}${unit ? ` ${unit}` : ''}`)),
@@ -307,30 +306,25 @@ const randomPanel = () => {
   ];
 };
 
-// The images of a detail: one large, and the others below it; a tap on one shows it large.
-const gallery = (garment) => {
-  if (!garment.images.length) return [];
-  const shown = garment.images.includes(ui.detailImage) ? ui.detailImage : garment.images[0];
-  const large = remoteImage(shown, 'thumb large');
-  large.addEventListener('error', () => large.remove(), { once: true });
-  if (garment.images.length === 1) return [large];
-  const others = garment.images.map((url, index) => {
+// The media of a detail: the image shown large, the band of its colour and, with two images or
+// more, the strip of all of them, where a tap on one shows it large (WAR-4).
+const media = (garment) => {
+  const shown = garment.images.includes(ui.detailImage) ? ui.detailImage : undefined;
+  const strip = garment.images.length < 2 ? [] : [el('div', { className: 'image-strip' }, garment.images.map((url, index) => {
     const button = el('button', { className: 'image-strip-item', type: 'button', onclick: () => {
       ui.detailImage = url;
       render();
     } }, [remoteImage(url, 'image-grid-img')]);
-    button.setAttribute('aria-pressed', String(url === shown));
+    button.setAttribute('aria-pressed', String(url === (shown ?? garment.images[0])));
     button.setAttribute('aria-label', t('wardrobe.image', { number: index + 1 }));
     return button;
-  });
-  return [large, el('div', { className: 'image-strip' }, others)];
+  }))];
+  return [picture(garment, 'hero', shown), colorBand(garment.color), ...strip];
 };
 
 const info = (garment) => [
-  ...gallery(garment),
-  swatch(garment.color, 'large'),
-  el('h2', { className: 'detail-head-title', textContent: garment.name }),
-  el('p', { className: 'detail-head-meta', textContent: `${colorOf(garment.color).name} · ${metaOf(garment)}` }),
+  el('h2', { className: 'garment-detail-title', textContent: garment.name }),
+  el('p', { className: 'garment-detail-meta', textContent: metaOf(garment) }),
   ...facts(garment),
 ];
 
@@ -355,6 +349,7 @@ export const renderWardrobe = () => {
   $('garment-groups').replaceChildren(...(some && visible && !garment ? groups() : []));
   $('random-panel').hidden = !some;
   $('random-panel').replaceChildren(...(some && visible && !garment ? randomPanel() : []));
+  $('garment-media').replaceChildren(...(garment ? media(garment) : []));
   $('garment-info').replaceChildren(...(garment ? info(garment) : []));
   $('garment-actions').hidden = !garment;
   $('garment-open').hidden = !garment?.link;

@@ -38,7 +38,7 @@ test('styles.css has a top bar version of nav-bar and of app-header, and leaves 
 
 test('the components of the app are documented in styles.css (DSV-3)', () => {
   const names = parseCatalog({ css: read('styles.css'), sprite: files.sprite }).components.map((part) => part.name);
-  for (const name of ['swatch', 'strip', 'blocks', 'swatch-grid', 'thumb', 'image-strip', 'image-grid', 'color-pick', 'detail-head', 'outfits', 'outfit']) {
+  for (const name of ['swatch', 'strip', 'blocks', 'swatch-grid', 'garment-picture', 'color-band', 'garment-detail', 'image-strip', 'image-grid', 'color-pick', 'detail-head', 'outfits', 'look']) {
     assert.ok(names.includes(name), name);
   }
 });
