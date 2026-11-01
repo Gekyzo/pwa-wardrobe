@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.21 - 2026-11-01
+
 - A garment with no photo shows a drawing of its type (T-shirt, shirt, jumper, trousers, shorts, skirt, jacket, coat, shoe, boot, cap, scarf, belt or bag) in its colour. The type comes from the name of the garment.
 - In **Wardrobe** you can choose **Photos** or **Colour**: with **Colour** each garment shows its colour in place of its photo.
 - The app has a new icon: three lengths of fabric in Sanzo Wada colours, to match the new design.

@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.1.21 - 2026-11-01
+
 - Una prenda sin foto se muestra con un dibujo de su tipo (camiseta, camisa, jersey, pantalón, pantalón corto, falda, chaqueta, abrigo, zapato, bota, gorra, bufanda, cinturón o bolso) en su color. El tipo sale del nombre de la prenda.
 - En **Armario** puedes elegir **Fotos** o **Color**: con **Color** cada prenda se muestra con su color en lugar de su foto.
 - La app tiene un icono nuevo: tres telas en colores de Sanzo Wada, a juego con el nuevo diseño.

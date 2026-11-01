@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.21 - 2026-11-01
+
 - **Garment shapes** (GAR-14, WAR-1, WAR-4): a garment with no image, or whose image fails to load, shows the drawing of its shape filled with its colour in place of a flat colour field, except under **Colour**. `shapeOf` and `SHAPES` in `src/garments.js` read the shape from the name within the slot (Spanish and English words, slot default otherwise); 14 symbols `shape-*` (48×48) in `icons.svg`, drawn by `picture()` through `icon(..., 'garment-shape')`; `ui/outfit` now imports `ui/controls`.
 - **Photos or Colour** (WAR-11, WAR-1, WAR-9, DSV-3): a `segmented wardrobe-cards` switch over the wardrobe grid. **Colour** passes `null` as the url of `picture()` in the cards and, through the new `colorOnly` option of `look()` and `outfitList()`, in the random look. The choice is the device preference `wardrobe.cards` (`CARDS_KEY`, `loadCards`, `saveCards` in `src/storage.js`; `cards` and `setCards` in `ui/context.js`). New token `--cards-switch-width`, new keys `wardrobe.cardsShow`, `wardrobe.cardsPhotos`, `wardrobe.cardsColor`.
 - **Walkthrough** (ONB-2): `PAGES` is `welcome`, `outfits`, `palettes`, `offline`, with the new keys `onboarding.outfits.*` and `onboarding.palettes.*` and two new drawings in `#onboarding`. The texts named controls that are gone (the floating `+`, the slide to delete, removed in 0.1.19 and 0.1.20); they now name `Add garment`, `Another`, `Palettes` and Missing basics, and the last page (`offline`, now titled Online or offline) names the offline use, `Sign in with Google` and its sync, and the install; its drawing is two devices that sync in place of a crossed-out signal. `wardrobe.empty` no longer says "Tap +". The dead `onboarding-switch` rules of the sample-data switch are removed from `styles.css`.
