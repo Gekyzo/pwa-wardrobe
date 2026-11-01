@@ -696,6 +696,7 @@
      @variant card  3:4, in a card of the grid.
      @variant hero  4:5, in the detail.
      @variant worn  3:4, in a look.
+     @variant field  2:1, the colour only, in a card or a look under Colour (WAR-11).
      @example <span class="garment-picture card" style="width: 120px; background: #a5c8d1" aria-hidden="true"></span>
      @example <span class="garment-picture hero" style="width: 200px"><img class="garment-picture-img" alt="Trousers" src="./icons/icon-192.png"></span> */
   .garment-picture {
@@ -708,6 +709,10 @@
 
   .garment-picture.hero {
     aspect-ratio: 4 / 5;
+  }
+
+  .garment-picture.field {
+    aspect-ratio: 2 / 1;
   }
 
   .garment-picture-img {

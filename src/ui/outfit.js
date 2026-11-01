@@ -49,6 +49,14 @@ export const picture = (garment, variant, url = mainImage(garment)) => {
   return box;
 };
 
+// The picture of a card or a look: with `colorOnly`, the short field of its colour (WAR-11).
+export const smallPicture = (garment, variant, colorOnly) => {
+  if (!colorOnly) return picture(garment, variant);
+  const box = picture(garment, variant, null);
+  box.classList.add('field');
+  return box;
+};
+
 // The colours of a combination as equal blocks in one row.
 export const strip = (colors) =>
   el('span', { className: 'strip' }, colors.map((id) => {
@@ -102,7 +110,7 @@ export const look = (outfit, { colorOnly = false } = {}) =>
       ...(outfit.exact ? [el('span', { className: 'pill', textContent: t('outfit.exact') })] : []),
     ]),
     el('ul', { className: 'look-row' }, outfit.picks.map(({ garment }) => el('li', { className: 'look-item' }, [
-      picture(garment, 'worn', colorOnly ? null : mainImage(garment)),
+      smallPicture(garment, 'worn', colorOnly),
       el('span', { className: 'look-name', textContent: garment.name }),
       el('span', { className: 'look-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
     ]))),

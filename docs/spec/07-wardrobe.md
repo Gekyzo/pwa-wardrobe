@@ -238,7 +238,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-11** With one garment or more, a segmented control of two (`wardrobe.cardsShow`),
   **Photos** (`wardrobe.cardsPhotos`) and **Colour** (`wardrobe.cardsColor`), stands above the
   groups of the grid, aligned to the end, at most `--cards-switch-width` wide. **Photos** is the
-  picture of WAR-1. **Colour** shows the field of the colour of each garment in place of its
+  picture of WAR-1. **Colour** shows the field of the colour of each garment, 2:1 in place of 3:4, in place of its
   image, in the cards and in the look of the random panel (WAR-9); the detail of a garment and
   the Combinations section keep their images. The choice is a preference of the device, the key
   `wardrobe.cards` (ENG-8, `CARDS_KEY`): `color`, or no key for **Photos**, the default; an unknown value

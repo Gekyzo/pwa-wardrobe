@@ -1,4 +1,4 @@
-import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, mainImage, isWebUrl, SLOTS, SEASONS } from '#garments';
+import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, isWebUrl, SLOTS, SEASONS } from '#garments';
 import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
@@ -8,7 +8,7 @@ import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
 import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, setCards } from '#ui/context';
 import { icon } from '#ui/controls';
-import { swatch, remoteImage, renderOutfits, picture, colorBand, seasonFilter, outfitList } from '#ui/outfit';
+import { swatch, remoteImage, renderOutfits, picture, smallPicture, colorBand, seasonFilter, outfitList } from '#ui/outfit';
 
 const options = (select, values, prefix, chosen) =>
   select.replaceChildren(...values.map((value) => el('option', { value, textContent: t(`${prefix}.${value}`), selected: value === chosen })));
@@ -274,7 +274,7 @@ const cardMeta = (garment) => {
 // A card opens its garment; Delete is in the detail (WAR-2).
 const card = (garment) => {
   const open = el('button', { className: 'garment-card-open', type: 'button', onclick: () => openGarment(garment.id) }, [
-    picture(garment, 'card', cards === 'color' ? null : mainImage(garment)),
+    smallPicture(garment, 'card', cards === 'color'),
     el('span', { className: 'garment-card-name', textContent: garment.name }),
     el('span', { className: 'garment-card-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
     el('span', { className: 'garment-card-meta', textContent: cardMeta(garment) }),
