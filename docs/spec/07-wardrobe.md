@@ -164,6 +164,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   contrast stay. Completion adds garments, never outfits: the counts of OUT-10 and WAR-1 count
   the outfits of the combinations.
 
+- **OUT-15** `outfitsFor`, `outfitsWith`, `countOutfits`, `whyNone` and `randomOutfit` take the
+  family in use (FAM-1) as the option `family`, `wada` when it is not given. They read the sets,
+  their numbers and the sets of a colour through `familyOf` (FAM-2): a number is a number of that
+  family, and an outfit of OUT-3 to OUT-14 is an outfit of one of its sets.
 ## Matching
 
 - **MAT-1** `src/matching.js` holds the optional matching rules. `MATCHING` is the default choice
@@ -233,14 +237,14 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Fill
 
 - **FIL-1** `fillSuggestions` of `src/fill.js` gives the ranked list of the Fill tab: rows
-  `{ kind, basic, slot, season, color, gain, completes }`, `kind` `basic` or `wada`. `MAX_FILL`
+  `{ kind, basic, slot, season, color, gain, completes }`, `kind` `basic` or `set`. `MAX_FILL`
   is 12 (option `max`).
 - **FIL-2** The basics of the list are all the basics of `missingBasics` (BAS-3, BAS-4) under the
   season filter, with their gain, even 0, and no `completes`.
 - **FIL-3** The open palettes are the combinations with no outfit under the season filter; the
   option `of` reads the outfits of one combination in place of `outfitsFor`. A gap of a palette
   is a colour that no garment of the season filter is near. The one gap of an open palette, or
-  each colour of an open palette with no gap, in each slot of GAR-2, is a Wada candidate: a
+  each colour of an open palette with no gap, in each slot of GAR-2, is a set candidate: a
   garment of season `all`. A palette two gaps short gives no candidate. Its
   `completes` is the sorted numbers of the open palettes of its colour and of the colours within
   `MATCH_MAX` that `outfitsFor` gives an outfit with the candidate added; a palette with a colour
@@ -252,7 +256,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   candidates of one slot within `MATCH_MAX`, the higher gain stays, then the lower colour id.
 - **FIL-5** After the drops, each colour keeps one slot: the higher gain, then the slot order of
   GAR-2.
-- **FIL-6** The list is sorted by the higher gain, then basics before Wada colours, then the order
+- **FIL-6** The list is sorted by the higher gain, then basics before set colours, then the order
   of `BASICS`, then the colour id, and cut to `max`.
 - **FIL-7** The Fill section (`nav.fill`, the `star` icon) shows the season filter shared with the
   other views, the hint `fill.hint`, and the rows of `fillSuggestions` under the filter, computed
@@ -269,6 +273,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   and give it to each outfit search (OUT-11). With a `colorType` other than `off`, a row whose
   colour does not suit it (MAT-5) leaves the list, before the cut of FIL-6.
 
+- **FIL-9** `fillSuggestions` and `missingBasics` take the family in use as the option `family`
+  and give it to each outfit search (OUT-15). The open palettes of FIL-3 are the sets of that
+  family with no outfit, and `completes` holds numbers of that family.
 ## Wardrobe section
 
 - **WAR-1** The Wardrobe section shows the garments as a grid of cards, grouped by slot in the

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { COMBINATIONS, combination, colorsNear, distance, colorOf } from '#palette';
 import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone, outfitKey, randomOutfit, countOutfits, countKey } from '#outfits';
 import { MATCHING, isNeutral, contrastOf, inBand } from '#matching';
+import { familyOf } from '#families';
 
 let next = 0;
 const g = (color, slot, extra = {}) => ({ id: `g${next++}`, name: `${slot} ${color}`, slot, season: 'all', color, ...extra });
@@ -369,3 +370,35 @@ test('randomOutfit and outfitsWith take the rules too (OUT-11)', () => {
 function colorsNearAll() {
   return Array.from({ length: 159 }, (_, id) => id).filter((id) => !two.colors.some((c) => distance(c, id) <= MATCH_MAX));
 }
+
+// The family in use (OUT-15).
+test('outfitsFor searches the sets of the family in use (OUT-15)', () => {
+  const comp = familyOf('complementary');
+  const { number, colors: [a, b] } = comp.combinations[0];
+  const top = g(a, 'top');
+  const bottom = g(b, 'bottom');
+  const outfits = outfitsFor(number, [top, bottom], { family: 'complementary' });
+  assert.equal(outfits.length, 1);
+  assert.equal(outfits[0].combination, number);
+  assert.equal(outfits[0].exact, true);
+  assert.deepEqual(outfitsFor(two.number, [g(two.colors[0], 'top'), g(two.colors[1], 'bottom')], { family: 'wada' }).length, 1);
+  assert.deepEqual(outfitsFor(9999, [top, bottom], { family: 'complementary' }), []);
+});
+
+test('countOutfits, outfitsWith and randomOutfit stay in the family in use (OUT-15)', () => {
+  const comp = familyOf('complementary');
+  const { number, colors: [a, b] } = comp.combinations[0];
+  const top = g(a, 'top');
+  const bottom = g(b, 'bottom');
+  const garments = [top, bottom];
+  const expected = comp.combinations.reduce((n, c) => n + outfitsFor(c.number, garments, { family: 'complementary' }).length, 0);
+  assert.equal(countOutfits(garments, { family: 'complementary' }), expected);
+  assert.ok(expected >= 1);
+  const near = new Set(colorsNear(top.color, MATCH_MAX).flatMap((id) => comp.numbersOf(id)));
+  const withTop = outfitsWith(top, garments, { family: 'complementary' });
+  assert.ok(withTop.some((o) => o.combination === number));
+  assert.ok(withTop.every((o) => near.has(o.combination)));
+  const outfit = randomOutfit(garments, { family: 'complementary', random: () => 0 });
+  assert.ok(comp.combination(outfit.combination));
+  assert.equal(whyNone(number, [top], { family: 'complementary' }).key, 'outfits.noColor');
+});

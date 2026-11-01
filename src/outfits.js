@@ -1,4 +1,5 @@
-import { COMBINATIONS, combination, colorOf, colorsNear, distance } from '#palette';
+import { colorOf, colorsNear, distance } from '#palette';
+import { familyOf } from '#families';
 import { MATCHING, contrastOf, formalityFits, inBand, isNeutral } from '#matching';
 
 // The largest colour distance of a match, the outfits of one search, and the garments that one
@@ -61,7 +62,7 @@ const completedSlots = (season) => (season === 'cold' ? ['shoes', 'outer'] : ['s
 
 // Neutral completion (OUT-14): each empty slot of `completedSlots` gets the neutral garment of
 // that slot nearest to a colour of the outfit, out of `pool`. An added pick has no colour and no
-// distance, so the score, the exact mark and the contrast stay those of the Wada colours.
+// distance, so the score, the exact mark and the contrast stay those of the colours of the set.
 const complete = (outfit, pool, season, match) => {
   let picks = outfit.picks;
   for (const slot of completedSlots(season)) {
@@ -90,8 +91,8 @@ const best = (outfits, { pool = [], season = 'any', match = MATCHING } = {}) => 
   return match.neutrals ? kept.map((outfit) => complete(outfit, pool, season, match)) : kept;
 };
 
-export const outfitsFor = (number, garments, { season = 'any', match = MATCHING } = {}) => {
-  const colors = combination(number);
+export const outfitsFor = (number, garments, { season = 'any', match = MATCHING, family = 'wada' } = {}) => {
+  const colors = familyOf(family).combination(number);
   if (!colors) return [];
   const fit = garments.filter((garment) => fitsSeason(garment, season));
   return best(search(colors.map((color) => candidates(color, fit)), match).map((picks) => outfitOf(number, picks)), { pool: fit, season, match });
@@ -102,17 +103,18 @@ export const countKey = (count) => (count >= MAX_OUTFITS ? 'combinations.countMa
 
 // The number of outfits of every combination under the season filter, each capped at MAX_OUTFITS.
 // `of` reads the outfits of one combination, so a caller can give a cached `outfitsFor`.
-export const countOutfits = (garments, { season = 'any', match = MATCHING, of = outfitsFor } = {}) =>
-  COMBINATIONS.reduce((n, { number }) => n + of(number, garments, { season, match }).length, 0);
+export const countOutfits = (garments, { season = 'any', match = MATCHING, family = 'wada', of = outfitsFor } = {}) =>
+  familyOf(family).combinations.reduce((n, { number }) => n + of(number, garments, { season, match, family }).length, 0);
 
 // The outfits that contain `garment`: for each combination of a colour near it, and each place
 // of that combination that it can take, the hero holds that place and the others are searched.
-export const outfitsWith = (garment, garments, { season = 'any', match = MATCHING } = {}) => {
+export const outfitsWith = (garment, garments, { season = 'any', match = MATCHING, family = 'wada' } = {}) => {
+  const fam = familyOf(family);
   if (!fitsSeason(garment, season)) return [];
   const others = garments.filter((other) => other.id !== garment.id && fitsSeason(other, season));
-  const numbers = [...new Set(colorsNear(garment.color, MATCH_MAX).flatMap((id) => colorOf(id).combinations))];
+  const numbers = [...new Set(colorsNear(garment.color, MATCH_MAX).flatMap((id) => fam.numbersOf(id)))];
   const outfits = numbers.flatMap((number) => {
-    const colors = combination(number);
+    const colors = fam.combination(number);
     return colors.flatMap((color, place) => {
       const d = distance(color, garment.color);
       if (d > MATCH_MAX) return [];
@@ -125,8 +127,8 @@ export const outfitsWith = (garment, garments, { season = 'any', match = MATCHIN
 
 // Why a combination gives no outfit: the first colour with no garment near it, or no set of
 // candidates that is wearable.
-export const whyNone = (number, garments, { season = 'any' } = {}) => {
-  const colors = combination(number) ?? [];
+export const whyNone = (number, garments, { season = 'any', family = 'wada' } = {}) => {
+  const colors = familyOf(family).combination(number) ?? [];
   const fit = garments.filter((garment) => fitsSeason(garment, season));
   const empty = colors.find((color) => candidates(color, fit).length === 0);
   return empty === undefined ? { key: 'outfits.noSet' } : { key: 'outfits.noColor', params: { color: colorOf(empty).name } };
@@ -134,8 +136,8 @@ export const whyNone = (number, garments, { season = 'any' } = {}) => {
 
 // One outfit at random among those of every combination, or null with none. `except` is the key
 // of the outfit in view, so that the next pick is another one while the wardrobe has another.
-export const randomOutfit = (garments, { season = 'any', match = MATCHING, except = null, random = Math.random } = {}) => {
-  const all = COMBINATIONS.flatMap(({ number }) => outfitsFor(number, garments, { season, match }));
+export const randomOutfit = (garments, { season = 'any', match = MATCHING, family = 'wada', except = null, random = Math.random } = {}) => {
+  const all = familyOf(family).combinations.flatMap(({ number }) => outfitsFor(number, garments, { season, match, family }));
   const others = all.filter((outfit) => outfitKey(outfit) !== except);
   const pool = others.length ? others : all;
   return pool.length ? pool[Math.floor(random() * pool.length)] : null;

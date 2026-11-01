@@ -23,11 +23,11 @@
 | `src/syncer.js` | The sync driver: the queue of each save, the run, the retries, the token refresh, the stream, the status and the check of a change by another tab (SYNC-2 to SYNC-4, SYNC-11, SYNC-12) | `records`, `sync`, `session`, `pocketbase`, `garments`, `storage` |
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
-| `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none, under the matching rules | `palette`, `matching` |
+| `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none, under the matching rules, in the family in use | `palette`, `matching`, `families` |
 | `src/matching.js` | The optional matching rules: their defaults, neutral colours, value contrast, formality and colour type | `palette`, `garments` |
 | `src/families.js` | The palette families: Sanzo Wada and the sets that colour theories build from the same colours, and the families in use and off | `palette`, `matching` |
 | `src/basics.js` | The seed list of basics, the basics that the wardrobe misses and the outfits that each one adds | `palette`, `outfits` |
-| `src/fill.js` | The ranked list of the Fill tab: the missing basics and the Wada colours that complete open palettes | `basics`, `garments`, `palette`, `outfits`, `matching` |
+| `src/fill.js` | The ranked list of the Fill tab: the missing basics and the Wada colours that complete open palettes | `basics`, `garments`, `palette`, `outfits`, `matching`, `families` |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
 | `src/ui/context.js` | The values that the views share, the toast, `render`, `commit`, `apply`, the hook of each save, the doc that the sync puts in place and the export file | `garments`, `storage`, `i18n`, `onboarding`, `matching` |

@@ -6,11 +6,12 @@ import { SLOTS } from '#garments';
 import { COMBINATIONS, combination, distance } from '#palette';
 import { MATCH_MAX, outfitsFor, outfitsWith } from '#outfits';
 import { MATCHING, suits } from '#matching';
+import { familyOf } from '#families';
 
 const garment = (id, slot, color, season = 'all') => ({ id, name: id, slot, season, color });
 const near = (a, b) => distance(a, b) <= MATCH_MAX;
 const asGarment = (s) => ({ id: `wada:${s.color}:${s.slot}`, name: 'wada', slot: s.slot, season: s.season, color: s.color });
-const wadaOf = (list) => list.filter((s) => s.kind === 'wada');
+const wadaOf = (list) => list.filter((s) => s.kind === 'set');
 
 // A 2-colour combination [x, y], far apart, with x far from every basic top: a bottom in y leaves
 // it open, and a top in x completes it.
@@ -166,4 +167,28 @@ test('a colour type filters the Wada rows too, before the cut (FIL-8)', () => {
     assert.ok(list.every((s) => suits(s.color, colorType)), colorType);
     assert.ok(list.length <= MAX_FILL);
   }
+});
+
+test('every row is a basic or a set (FIL-1)', () => {
+  const [a] = COMBINATIONS.find(({ colors }) => colors.length === 2).colors;
+  const list = fillSuggestions([garment('t', 'top', a)], { max: Infinity });
+  assert.ok(list.some((s) => s.kind === 'set'));
+  assert.ok(list.every((s) => s.kind === 'basic' || s.kind === 'set'));
+});
+
+test('Fill searches the family in use (FIL-9)', () => {
+  const comp = familyOf('complementary');
+  const [base] = comp.combinations[0].colors;
+  const garments = [garment('t', 'top', base)];
+  const list = fillSuggestions(garments, { max: Infinity, family: 'complementary' });
+  const sets = list.filter((s) => s.kind === 'set');
+  assert.ok(sets.length > 0);
+  for (const s of sets) {
+    for (const n of s.completes) {
+      assert.ok(comp.combination(n), `complementary ${n} exists`);
+      assert.equal(outfitsFor(n, garments, { family: 'complementary' }).length, 0, `${n} was open`);
+      assert.ok(outfitsFor(n, [...garments, asGarment(s)], { family: 'complementary' }).length > 0, `${n} closes`);
+    }
+  }
+  assert.deepEqual(fillSuggestions(garments, { max: Infinity, family: 'wada' }), fillSuggestions(garments, { max: Infinity }));
 });
