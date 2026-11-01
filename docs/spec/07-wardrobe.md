@@ -188,6 +188,34 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   of the doc: a JSON object of the fields that differ from `MATCHING`. The defaults remove the
   key. A value that cannot be read reads as `normalizeMatching` of it (MAT-1).
 
+## Families
+
+- **FAM-1** `src/families.js` holds the palette families, in this order: `wada` (the
+  combinations of the book), `complementary`, `analogous`, `triadic`, `split`
+  (split-complementary), `accent` (neutral and accent) and `mono` (monochrome). Every family is a
+  list of sets of the 159 colours of PAL-1. One family is in use at a time.
+- **FAM-2** `familyOf(id)` gives `{ id, combinations, combination(n), numbersOf(color) }`, built
+  once for each family: the sets `{ number, colors }`, the colours of the set of a number (null
+  for another number), and the numbers of the sets that hold a colour, in order. `wada` is
+  `COMBINATIONS` with the numbers of the book. An unknown id gives `wada`.
+- **FAM-3** The sets of a generated family come from each colour that is not neutral (MAT-2), as
+  a base, in colour id order. The base is the first colour of its set. A set whose colours are
+  those of an earlier set, in any order, is dropped. The sets are numbered 1, 2, 3… in that
+  order. With `FAMILY_MAX` 25 there are 54 complementary sets, 100 analogous, 60 triadic, 60
+  split, 103 accent and 89 mono.
+- **FAM-4** Each target of a base is the palette colour nearest (PAL-3) to an ideal Lab colour,
+  out of the colours already in the set. The set is dropped when a target is more than
+  `FAMILY_MAX` from its ideal. With the L\*, the chroma and the hue h of the base (PAL-6), the
+  ideals have the L\* and the chroma of the base and the hue: h + 180° (`complementary`), h − 30°
+  and h + 30° (`analogous`), h + 120° and h + 240° (`triadic`), h + 150° and h + 210° (`split`).
+  `mono` has the hue and the chroma of the base at L\* − 25 and L\* + 25, each kept from 5 to 98.
+  `accent` takes the neutral colour with L\* of 60 or more nearest to the base, then the neutral
+  colour with L\* under 40 nearest to it, with no distance limit.
+- **FAM-5** `switchFamily(off, id, on)` gives the families that are off after a switch, in the
+  order of `FAMILIES`; a switch that would turn off the last family that is on changes nothing.
+  `activeFamily(chosen, off)` gives `chosen` when it is a family that is on, else the first
+  family that is on.
+
 ## Basics
 
 - **BAS-1** `BASICS` of `src/basics.js` is the seed list of the basics of a wardrobe, the most
