@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { MAX_FILL, fillSuggestions } from '#fill';
 import { BASICS } from '#basics';
 import { SLOTS } from '#garments';
-import { COMBINATIONS, distance } from '#palette';
+import { COMBINATIONS, combination, distance } from '#palette';
 import { MATCH_MAX, outfitsFor, outfitsWith } from '#outfits';
 
 const garment = (id, slot, color, season = 'all') => ({ id, name: id, slot, season, color });
@@ -125,4 +125,16 @@ test('no row when nothing is missing (FIL-2)', () => {
 test('of is used to find the open palettes (FIL-3)', () => {
   assert.equal(wadaOf(fillSuggestions([bottomY], { max: 100, of: () => [{}] })).length, 0);
   assert.ok(wadaOf(fillSuggestions([bottomY], { max: 100, of: outfitsFor })).length > 0);
+});
+
+test('a candidate colour fills the one gap of an open palette, or is a colour of a palette with no gap (FIL-3)', () => {
+  const gapsOf = (n, wardrobe) => combination(n).filter((c) => !wardrobe.some((g) => near(g.color, c)));
+  for (const wardrobe of [[bottomY], mixed]) {
+    const open = COMBINATIONS.filter(({ number }) => outfitsFor(number, wardrobe).length === 0).map(({ number }) => number);
+    const allowed = new Set(open.flatMap((n) => {
+      const gaps = gapsOf(n, wardrobe);
+      return gaps.length === 0 ? combination(n) : gaps.length === 1 ? gaps : [];
+    }));
+    for (const s of wadaOf(fillSuggestions(wardrobe, { max: 100 }))) assert.ok(allowed.has(s.color), `colour ${s.color}`);
+  }
 });

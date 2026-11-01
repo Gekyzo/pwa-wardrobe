@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Fill tab** (FIL-1 to FIL-7, NAV-1, NAV-8, MOD-1): new section `fill` between `wardrobe` and `combinations` in `SECTIONS`, and the module `fill` in `MODULES`. New pure module `src/fill.js` (`MAX_FILL`, `fillSuggestions`) with `tests/fill.test.js`: one ranked list of the missing basics and of Sanzo Wada colours in a slot that complete open palettes. `completes` searches each open palette with the candidate added, since `outfitsWith` stops at `MAX_OUTFITS`; only the gap of a palette one colour short is a candidate, and a palette the candidate cannot close is not searched (60 garments: 81 ms → 40 ms in Node). New view `src/ui/fill.js` (`fillNow`, `renderFill`), `openNewGarment` exported from `src/ui/wardrobe.js`, component `fill` and token `--strip-small` in `styles.css`, keys `nav.fill` and `fill.*`.
 
 ## 0.1.22 - 2026-11-01
 

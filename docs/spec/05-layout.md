@@ -15,7 +15,7 @@ Combinations says `combinations.pick`.
 
 ## Navigation
 
-- **NAV-1** The sections are `wardrobe`, `combinations` and `settings`, in the order of
+- **NAV-1** The sections are `wardrobe`, `fill`, `combinations` and `settings`, in the order of
   `SECTIONS`. The navigation shows one item for each section that is on (MOD-1). The current one
   has `aria-current="page"`, and its title is the title of the header.
 - **NAV-2** A horizontal slide of at least 60 px that starts in the header or the content, out of
@@ -47,14 +47,15 @@ Combinations says `combinations.pick`.
   `wardrobe.summary` with `garments.count`, the count of garments with an image, and
   `combinations.count` of `countOutfits` (OUT-10) under the season filter, each count in its plural, and the
   348 combinations. Palettes: `combinations.summary` with the count of
-  combinations that have an outfit under the season filter, of the 348. Settings: the email of
+  combinations that have an outfit under the season filter, of the 348. Fill: `fill.summary`
+  with the count of rows of FIL-1, and none with no row. Settings: the email of
   the account with a session, else `nav.local`. With no garment, Wardrobe and Palettes show no
   summary.
 
 ## Modules
 
-- **MOD-1** `MODULES` lists the parts that Settings turns off: `combinations`, which shows the
-  Combinations section. With a module off, its sections leave the navigation, and a view of one
+- **MOD-1** `MODULES` lists the parts that Settings turns off, in this order: `combinations`,
+  which shows the Combinations section, and `fill`, which shows the Fill section. With a module off, its sections leave the navigation, and a view of one
   of them goes to the first section that is on.
 - **MOD-2** The modules that are off are a preference of the device under `wardrobe.modules`,
   not part of the doc. No module off removes the key.

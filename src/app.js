@@ -2,6 +2,7 @@ import { $, ui, state, storage, t, setRender, render, showToast, hideToast, toas
 import { bind as bindNav, renderNav, syncHistory } from '#ui/nav';
 import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
 import { bind as bindCombinations, renderCombinations } from '#ui/combinations';
+import { renderFill, fillNow } from '#ui/fill';
 import { bind as bindSettings, applyLanguage, renderSettings } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
@@ -24,6 +25,10 @@ const subtitle = () => {
     const user = sessionNow()?.user;
     return user ? user.email || user.name : t('nav.local');
   }
+  if (ui.view === 'fill') {
+    const count = fillNow().length;
+    return count ? t('fill.summary', { count }) : '';
+  }
   if (garments.length === 0) return '';
   if (ui.view === 'combinations') {
     const wearable = COMBINATIONS.filter(({ number }) => outfitsOf(number).length > 0).length;
@@ -45,6 +50,7 @@ const renderAll = () => {
   renderNav();
   renderHeader();
   renderWardrobe();
+  renderFill();
   renderCombinations();
   $('settings').hidden = ui.view !== 'settings';
   renderSettings();

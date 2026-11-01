@@ -233,6 +233,9 @@ const openSheet = (id = null, fill = null) => {
   $('garment-name').focus();
 };
 
+// A new garment filled with a suggestion of the Fill tab (FIL-7).
+export const openNewGarment = (fields) => openSheet(null, fields);
+
 export const closeGarmentSheet = () => {
   ui.sheetOpen = false;
   ui.editing = null;

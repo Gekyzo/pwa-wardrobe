@@ -35,6 +35,7 @@
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
+| `src/ui/fill.js` | The Fill tab: its season filter, its ranked rows and the tap that opens a filled garment | `fill`, `outfits`, `palette`, `ui/context`, `ui/outfit`, `ui/wardrobe` |
 | `src/ui/outfit.js` | The swatch, the image and the picture of a garment, the colour band, the strip, the colour fields, the looks, the season filter and the outfits of each combination, cached | `garments`, `palette`, `outfits`, `ui/context`, `ui/controls` |
 | `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail, its sheet and the missing basics | `ds/sheet`, `garments`, `brands`, `links`, `palette`, `outfits`, `basics`, `measures`, `ui/context`, `ui/controls`, `ui/outfit` |
 | `src/ui/settings.js` | Settings, Delete all data (SET-3), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |

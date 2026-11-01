@@ -165,10 +165,13 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **FIL-2** The basics of the list are all the basics of `missingBasics` (BAS-3, BAS-4) under the
   season filter, with their gain, even 0, and no `completes`.
 - **FIL-3** The open palettes are the combinations with no outfit under the season filter; the
-  option `of` reads the outfits of one combination in place of `outfitsFor`. Each colour of an
-  open palette, in each slot of GAR-2, is a Wada candidate: a garment of season `all`. Its
+  option `of` reads the outfits of one combination in place of `outfitsFor`. A gap of a palette
+  is a colour that no garment of the season filter is near. The one gap of an open palette, or
+  each colour of an open palette with no gap, in each slot of GAR-2, is a Wada candidate: a
+  garment of season `all`. A palette two gaps short gives no candidate. Its
   `completes` is the sorted numbers of the open palettes of its colour and of the colours within
-  `MATCH_MAX` that `outfitsFor` gives an outfit with the candidate added. A candidate with no
+  `MATCH_MAX` that `outfitsFor` gives an outfit with the candidate added; a palette with a colour
+  that neither a garment nor the candidate is near is not searched. A candidate with no
   `completes` is dropped. Its gain is the count of `outfitsWith` (OUT-8) of the candidate.
 - **FIL-4** A candidate is dropped when a garment that fits the season filter (OUT-7) covers it
   (BAS-2), or when a missing basic of its slot is within `MATCH_MAX` of its colour. Of two
@@ -177,6 +180,17 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   GAR-2.
 - **FIL-6** The list is sorted by the higher gain, then basics before Wada colours, then the order
   of `BASICS`, then the colour id, and cut to `max`.
+- **FIL-7** The Fill section (`nav.fill`, the `star` icon) shows the season filter shared with the
+  other views, the hint `fill.hint`, and the rows of `fillSuggestions` under the filter, computed
+  once for each doc and season filter, with the cached outfits of each combination as `of`. A
+  row is one button: a swatch of its colour; its name, `basic.<id>` for a basic or
+  `fill.wadaName` with the slot and the colour name for a Wada colour; a line of its slot and its
+  season; its gain, `fill.gain` (`fill.gainMax` at `MAX_OUTFITS`), on the end; the tag
+  `fill.basic` or `fill.completes` with the count of `completes`; and for a Wada colour the first
+  three palettes of `completes`, each `outfit.number` and its strip, the colours within
+  `MATCH_MAX` of the row outlined. A tap opens the sheet of a new garment (WAR-3) with the name,
+  the slot, the season and the colour of the row; **Save** adds it, and the view stays. With no
+  row it shows `fill.empty`.
 
 ## Wardrobe section
 
