@@ -200,14 +200,19 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Combinations section
 
 - **CMB-1** The Combinations section, named `nav.combinations` (Palettes) so that its label fits
-  the bottom bar, lists the 348 combinations by number. A row shows
-  `outfit.number`, the strip of its colours and the count of its outfits under the season filter;
-  a count of `MAX_OUTFITS` reads `combinations.countMax`.
+  the bottom bar, lists the 348 combinations by number. A row, 72px high, shows `outfit.number`,
+  the colours as one bar of `--strip-height`, and the count of its outfits under the season
+  filter (`countKey`: a count of `MAX_OUTFITS` reads `combinations.countMax`). A `--line` parts
+  the rows; the open row has `aria-current="true"` on `--secondary`. The size chips are outline,
+  the pressed one ink. From 840px the list and the detail share the width 5 to 7 (`pane wide`).
 - **CMB-2** The size filter keeps the combinations of 2, 3 or 4 colours, or all of them. The
   switch **Wearable only** keeps the combinations with at least one outfit. With no combination
   left, the list shows `combinations.empty` and **Show all**, which clears both filters. The
   filters are not stored.
-- **CMB-3** A tap on a row opens its detail (LAY-3): the number, the colours as equal blocks with
-  their names (PAL-2), and its outfits (OUT-5) under the season filter.
+- **CMB-3** A tap on a row opens its detail (LAY-3): a head with the number and
+  `combinations.size` with the count of its colours; the colours as equal fields, 180px high and
+  280px from 840px, each with its name (PAL-2) and its hex at the bottom, in dark or light text
+  (`inkOn`, PAL-5); then `combinations.outfits` with its outfits (OUT-5) as looks (WAR-5) under
+  the season filter.
 - **CMB-4** A combination with no outfit names why: `outfits.noColor` with the first colour that
   no garment matches, or `outfits.noSet` when no set of candidates is wearable (OUT-4).

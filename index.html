@@ -51,13 +51,13 @@
         </article>
       </section>
 
-      <section id="combinations" class="pane" hidden>
+      <section id="combinations" class="pane wide" hidden>
         <div class="pane-list">
           <div id="combination-sizes" class="cluster scroll size-filter"></div>
           <div class="list-group">
             <label class="switch"><span data-i18n="combinations.wearable"></span><input id="combination-wearable" class="switch-input" type="checkbox" role="switch"></label>
           </div>
-          <ul id="combination-list" class="item-list"></ul>
+          <ul id="combination-list" class="item-list combo-list"></ul>
           <div id="combinations-empty" class="empty-state" hidden>
             <p data-i18n="combinations.empty"></p>
             <button id="combinations-all" class="button primary" type="button" data-i18n="combinations.showAll"></button>
@@ -66,7 +66,7 @@
         <article id="combination-detail" class="pane-detail">
           <button id="combination-back" class="button quiet pane-back detail-back" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#back"/></svg><span data-i18n="action.back"></span></button>
           <p id="combination-detail-empty" class="empty-state inline" data-i18n="combinations.pick"></p>
-          <div id="combination-info" class="detail-head"></div>
+          <div id="combination-info"></div>
           <div id="combination-outfits" class="outfits"></div>
         </article>
       </section>

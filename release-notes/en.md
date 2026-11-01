@@ -9,6 +9,7 @@ What changes for you in each version of the app. The newest version is first.
 - To delete a garment, open it and tap **Delete**. A row no longer slides.
 - **Wardrobe** is a grid of photos grouped by slot. Each garment shows its colour and how many outfits it has. With no photo, it shows its colour.
 - The **detail of a garment** shows its photo large with a band of its colour, and the outfits show the photo of each garment.
+- **Palettes** shows each combination as a bar of its colours, and its detail shows the colours large with their name and code.
 
 ## 0.1.18 - 2026-10-31
 

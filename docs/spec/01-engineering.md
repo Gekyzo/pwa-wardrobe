@@ -33,7 +33,7 @@
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
-| `src/ui/outfit.js` | The swatch, the image and the picture of a garment, the colour band, the strip, the blocks, the looks and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
+| `src/ui/outfit.js` | The swatch, the image and the picture of a garment, the colour band, the strip, the colour fields, the looks and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
 | `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `brands`, `links`, `palette`, `outfits`, `measures`, `ui/context`, `ui/controls`, `ui/outfit` |
 | `src/ui/settings.js` | Settings, Delete all data (SET-3), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
@@ -120,7 +120,7 @@ in [09-sync.md](09-sync.md).
 | `tests/release-notes-files.test.js` | One release-notes file for each language, with the same versions (VER-19) |
 | `tests/i18n.test.js` | The language choice, the translator, the parity of the catalogs |
 | `tests/markup.test.js` | `index.html` holds no text of its own; the sheet, the walkthrough and the account markup |
-| `tests/aliases.test.js` | The import map against `package.json`; each `#ds/` alias names a vendored module |
+| `tests/aliases.test.js` | The import map against `package.json`; each `#ds/` alias names a vendored module; each named import of a module of src is an export of its target |
 | `tests/layers.test.js` | The layer rules and `SHELL` (ENG-16) |
 | `tests/context.test.js` | The save hook after the render, and the Undo that a merged doc hides (SYNC-2) |
 | `tests/design.test.js` | Each rule of `vendor/design-system/rules.js` over the two stylesheets, `index.html`, `icons.svg`, `src/ui/` and `designs/`; the components of the app |

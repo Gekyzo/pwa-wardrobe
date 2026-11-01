@@ -1,7 +1,7 @@
 import { COMBINATIONS, combination, combinationsBySize } from '#palette';
 import { outfitsFor, whyNone, countKey } from '#outfits';
 import { $, el, ui, state, t, textOf, render } from '#ui/context';
-import { strip, blocks, renderOutfits } from '#ui/outfit';
+import { strip, colorFields, renderOutfits } from '#ui/outfit';
 
 const SIZES = [null, 2, 3, 4];
 
@@ -21,17 +21,27 @@ const openCombination = (number) => {
   render();
 };
 
+// A row: the number, its colours as one bar, and the count of its outfits (CMB-1).
 const row = ({ number, colors }) => {
-  const name = el('button', { className: 'item-row-name', type: 'button', onclick: () => openCombination(number) }, [
-    el('span', {}, [`${t('outfit.number', { number })} `, strip(colors)]),
-    el('small', { className: 'item-row-meta', textContent: countText(outfitsOf(number).length) }),
+  const button = el('button', { className: 'combo-row', type: 'button', onclick: () => openCombination(number) }, [
+    el('span', { className: 'combo-row-number', textContent: t('outfit.number', { number }) }),
+    strip(colors),
+    el('span', { className: 'combo-row-count', textContent: countText(outfitsOf(number).length) }),
   ]);
-  return el('li', { className: 'item-row' }, [el('div', { className: 'item-row-body' }, [name])]);
+  if (number === ui.combination) button.setAttribute('aria-current', 'true');
+  return el('li', { className: 'combo-list-item' }, [button]);
 };
+
+// The head of a detail: the number and the count of its colours (CMB-3).
+const head = (number, colors) =>
+  el('div', { className: 'combo-head' }, [
+    el('h2', { className: 'combo-head-title', textContent: t('outfit.number', { number }) }),
+    el('span', { className: 'combo-head-count', textContent: t('combinations.size', { count: colors.length }) }),
+  ]);
 
 const sizeChips = () =>
   SIZES.map((size) => {
-    const chip = el('button', { className: 'chip surface', type: 'button', textContent: size ? t('combinations.size', { count: size }) : t('combinations.all'), onclick: () => {
+    const chip = el('button', { className: 'chip', type: 'button', textContent: size ? t('combinations.size', { count: size }) : t('combinations.all'), onclick: () => {
       ui.size = size;
       render();
     } });
@@ -55,7 +65,7 @@ export const renderCombinations = () => {
   if (colors) $('combinations').dataset.detail = '';
   else delete $('combinations').dataset.detail;
   $('combination-detail-empty').hidden = Boolean(colors);
-  $('combination-info').replaceChildren(...(colors ? [el('h2', { className: 'detail-head-title', textContent: t('outfit.number', { number: ui.combination }) }), blocks(colors)] : []));
+  $('combination-info').replaceChildren(...(colors ? [head(ui.combination, colors), colorFields(colors)] : []));
   $('combination-outfits').hidden = !colors;
   if (colors) {
     const outfits = outfitsOf(ui.combination);

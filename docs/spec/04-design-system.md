@@ -52,5 +52,6 @@ The parts of `styles.css`, by layer. The shared parts are in the design system.
 |---|---|
 | tokens | the catalogue look: `--screen-title` (`-phone`, `-weight`, `-track`), `--photo-ground`, `--grid-gap` (`-wide`), `--panel-width`, `--band-pad`, `--field-tall`, `--field-short`, `--strip-height`, `--topbar-height`, `--wordmark`. `--primary` is the ink of the design system; `--done` keeps progress and the checked state |
 | tokens | `--settings-max` (SET-2) |
-| components | `swatch`, `strip`, `blocks`, `swatch-grid`, `thumb`, `image-strip`, `image-grid`, `color-pick`, `detail-head`, `outfits`, `outfit` · versions of `nav-bar`, `app-header` (DSV-5) and `item-row` (DSV-3) |
-| screens | combinations: `size-filter` · settings: `settings` (`settings-section`, `settings-hint`, version of `list-group`), `about`, `version-status` · nav: `dust` · onboarding: `onboarding`, `onboarding-art` |
+| components | `swatch`, `strip`, `color-fields`, `swatch-grid`, `garment-picture`, `color-band`, `look`, `image-strip`, `image-grid`, `color-pick`, `detail-back`, `outfits` · versions of `nav-bar`, `app-header` (DSV-5) and `item-row` (DSV-3) |
+| layouts | version of `pane` with the variants `single` (Wardrobe) and `wide` (Combinations) (LAY-3) |
+| screens | wardrobe: `garment-groups`, `garment-card`, `random-panel`, `garment-detail`, `garment-facts` · combinations: `combo-row`, `combo-head`, `size-filter` · settings: `settings` (`settings-section`, `settings-hint`, version of `list-group`), `about`, `version-status` · nav: `dust` · onboarding: `onboarding`, `onboarding-art` |

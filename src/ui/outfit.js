@@ -43,13 +43,6 @@ export const strip = (colors) =>
     return block;
   }));
 
-// The colours of a combination as large blocks with their names, as the book shows them.
-export const blocks = (colors) =>
-  el('div', { className: 'blocks' }, colors.map((id) => el('div', { className: 'blocks-item' }, [
-    swatch(id, 'large'),
-    el('span', { className: 'blocks-name', textContent: colorOf(id).name }),
-  ])));
-
 export const seasonFilter = () =>
   el('div', { className: 'segmented' }, SEASON_FILTERS.map((season) => {
     const button = el('button', { className: 'segment', type: 'button', textContent: t(`season.${season}`), onclick: () => {
@@ -71,6 +64,16 @@ export const colorBand = (colorId) => {
   band.dataset.ink = inkOf(colorId);
   return band;
 };
+
+// The colours of a combination as tall fields, each with its name and its hex (CMB-3).
+export const colorFields = (colors) =>
+  el('div', { className: 'color-fields' }, colors.map((id) => {
+    const { name, hex } = colorOf(id);
+    const field = el('div', { className: 'color-fields-item' }, [el('span', { textContent: name }), el('span', { className: 'color-fields-hex', textContent: hex })]);
+    field.style.background = hex;
+    field.dataset.ink = inkOf(id);
+    return field;
+  }));
 
 // One outfit as a look: its number and the exact mark, then its garments side by side (WAR-5).
 export const look = (outfit) =>

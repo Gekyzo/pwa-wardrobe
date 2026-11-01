@@ -51,3 +51,21 @@ test('no module of src imports another one by a relative path', () => {
     assert.doesNotMatch(read(`src/${name}.js`), /from '\.{1,2}\//);
   }
 });
+
+// The views need a DOM, so no unit test loads them: this reads each named import of a module of
+// src and checks that the module it names exports it.
+test('each named import from a module of src is an export of that module', () => {
+  const exportsOf = (name) => {
+    const text = read(`src/${name}.js`);
+    return new Set([
+      ...[...text.matchAll(/export (?:const|function|let|class) ([\w$]+)/g)].map(([, id]) => id),
+      ...[...text.matchAll(/export \{([^}]*)\}/g)].flatMap(([, list]) => list.split(',').map((part) => part.trim().split(/\s+as\s+/).pop()).filter(Boolean)),
+    ]);
+  };
+  const missing = modules.flatMap((name) =>
+    [...read(`src/${name}.js`).matchAll(/import \{([^}]*)\} from '#([\w/]+)'/g)]
+      .filter(([, , target]) => modules.includes(target))
+      .flatMap(([, list, target]) => list.split(',').map((part) => part.trim().split(/\s+as\s+/)[0]).filter(Boolean)
+        .filter((id) => !exportsOf(target).has(id)).map((id) => `${name} imports ${id} from #${target}`)));
+  assert.deepEqual(missing, []);
+});

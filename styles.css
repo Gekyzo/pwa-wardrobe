@@ -24,6 +24,8 @@
     --on-field-light: #ffffff;
     --dot: 10px;
     --detail-gap: 48px;
+    --combo-number: 88px;
+    --combo-row: 72px;
     /* No rail (DSV-5): the start margin is the frame's side margin, as the end one. */
     --rail-width: var(--frame-side);
   }
@@ -116,27 +118,49 @@
     flex: 1;
   }
 
-  /* @component blocks
-     @summary The colours of a combination in a detail: large equal blocks with their names.
-     @part blocks-item  One colour: its swatch, then its name.
-     @part blocks-name  The name of the colour.
-     @example <div class="blocks" style="width: 100%"><div class="blocks-item"><span class="swatch large" style="background: #f9c1ce"></span><span class="blocks-name">Hermosa Pink</span></div><div class="blocks-item"><span class="swatch large" style="background: #2e5f8a"></span><span class="blocks-name">Cobalt Blue</span></div></div> */
-  .blocks {
+  /* @component color-fields
+     @summary The colours of a combination in its detail: tall equal fields, each with its name and hex at the bottom, in dark or light text (data-ink, PAL-5).
+     @part color-fields-item  One colour. The code sets its background.
+     @part color-fields-hex   The hex of the colour.
+     @state data-ink  On an item: dark or light, the colour of its text.
+     @example <div class="color-fields" style="width: 100%"><div class="color-fields-item" data-ink="light" style="background: #7c4226"><span>Brown</span><span class="color-fields-hex">#7c4226</span></div><div class="color-fields-item" data-ink="dark" style="background: #ffdd00"><span>Apricot Yellow</span><span class="color-fields-hex">#ffdd00</span></div></div> */
+  .color-fields {
     display: grid;
     grid-auto-columns: minmax(0, 1fr);
     grid-auto-flow: column;
-    gap: var(--space-2);
-    margin: var(--space-3) 0;
+    height: var(--field-short);
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+    border-radius: var(--radius-l);
   }
 
-  .blocks-item {
-    display: grid;
-    gap: var(--space-1);
+  .color-fields-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-half);
+    min-width: 0;
+    padding: var(--space-4);
+    font-size: var(--text-s);
+    overflow-wrap: anywhere;
   }
 
-  .blocks-name {
-    color: var(--muted);
-    font-size: var(--text-xs);
+  .color-fields-item[data-ink="dark"] {
+    color: var(--on-field-dark);
+  }
+
+  .color-fields-item[data-ink="light"] {
+    color: var(--on-field-light);
+  }
+
+  .color-fields-hex {
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 840px) {
+    .color-fields {
+      height: var(--field-tall);
+    }
   }
 
   /* @component swatch-grid
@@ -287,27 +311,6 @@
     gap: var(--space-1);
     margin: 0 0 var(--space-3) calc(-1 * var(--space-2));
     padding-inline: var(--space-2) var(--space-3);
-  }
-
-  /* @component detail-head
-     @summary The head of a detail: the colour, the title and a muted line.
-     @part detail-head-title  The name of the entry.
-     @part detail-head-meta   A muted line below the title.
-     @example <div class="detail-head" style="width: 100%"><span class="swatch large" style="background: #2e5f8a"></span><h2 class="detail-head-title">Linen shirt</h2><p class="detail-head-meta">Cobalt Blue · Top · All year</p></div> */
-  .detail-head {
-    display: grid;
-    gap: var(--space-1);
-  }
-
-  .detail-head-title {
-    margin: var(--space-2) 0 0;
-    font-size: var(--text-l);
-  }
-
-  .detail-head-meta {
-    margin: 0;
-    color: var(--muted);
-    font-size: var(--text-s);
   }
 
   /* @component outfits
@@ -548,18 +551,36 @@
 
 @layer layouts {
   /* @extends pane
+     @variant wide    Combinations: from 840px the list and the detail share the width 5 to 7.
      @variant single  The detail shows alone at every width, with its Back, and takes the full width;
                       with no entry open there is no detail. Wardrobe from 1024px: the grid and the random
                       panel side by side. */
   /* Below 600px main has no side padding, so the grid takes it here. */
-  .pane.single {
+  .pane.single,
+  .pane.wide {
     max-width: none;
     padding: var(--space-4) var(--space-4) 0;
   }
 
   @media (min-width: 600px) {
-    .pane.single {
+    .pane.single,
+    .pane.wide {
       padding: 0;
+    }
+  }
+
+  /* From 840px the list and the detail of the wide variant share the width 5 to 7, and the detail
+     stands on the page, not on a card. */
+  @media (min-width: 840px) {
+    .pane.wide {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: var(--space-7);
+    }
+
+    .pane.wide > .pane-detail {
+      margin-block: 0;
+      padding: 0 0 var(--space-4);
+      background: none;
     }
   }
 
@@ -568,7 +589,8 @@
     display: none;
   }
 
-  .pane.single > .pane-detail {
+  .pane.single > .pane-detail,
+  .pane.wide > .pane-detail {
     padding: 0 0 var(--space-4);
   }
 
@@ -658,12 +680,90 @@
     }
   }
 
+  /* @component combo-row
+     @scope combinations
+     @summary A combination of the list: its number, its colours as one bar and the count of its outfits, 72px high, a --line between rows. The open one has aria-current="true" on --secondary.
+     @part combo-list         The list of the rows.
+     @part combo-list-item    One row of the list.
+     @part combo-row-number   The number of the combination.
+     @part combo-row-count    The count of its outfits.
+     @example <ul class="item-list combo-list" style="width: 100%"><li class="combo-list-item"><button class="combo-row" type="button" aria-current="true"><span class="combo-row-number">No. 110</span><span class="strip"><span class="strip-block" style="background: #7c4226"></span><span class="strip-block" style="background: #4b3317"></span></span><span class="combo-row-count">1 outfit</span></button></li><li class="combo-list-item"><button class="combo-row" type="button"><span class="combo-row-number">No. 119</span><span class="strip"><span class="strip-block" style="background: #a5c8d1"></span><span class="strip-block" style="background: #12354e"></span></span><span class="combo-row-count">20+ outfits</span></button></li></ul> */
+  .combo-list {
+    margin-top: var(--space-2);
+  }
+
+  .combo-list-item + .combo-list-item {
+    border-top: 1px solid var(--line);
+  }
+
+  .combo-row {
+    display: grid;
+    grid-template-columns: var(--combo-number) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    min-height: var(--combo-row);
+    padding: 0 var(--space-2);
+    border: 0;
+    border-radius: var(--radius-s);
+    background: none;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .combo-row:hover,
+  .combo-row[aria-current="true"] {
+    background: var(--secondary);
+  }
+
+  .combo-row > .strip {
+    width: 100%;
+    height: var(--strip-height);
+    border: 0;
+    border-radius: 0;
+  }
+
+  .combo-row-count {
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
+  /* @component combo-head
+     @scope combinations
+     @summary The head of a combination detail: its number and the count of its colours.
+     @part combo-head-title  The number.
+     @part combo-head-count  The count of colours.
+     @example <div class="combo-head" style="width: 100%"><h2 class="combo-head-title">No. 110</h2><span class="combo-head-count">2 colours</span></div> */
+  .combo-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .combo-head-title {
+    margin: 0;
+    font-size: var(--text-m);
+    font-weight: var(--weight-book);
+  }
+
+  .combo-head-count {
+    color: var(--muted);
+    font-size: var(--text-s);
+  }
+
   /* @component size-filter
      @scope combinations
-     @summary The chips of the size filter of Combinations: a scroll cluster that keeps the margin of the rows.
+     @summary The chips of the size filter of Combinations: a scroll cluster of outline chips; the pressed one is ink.
      @example <div class="cluster scroll size-filter" style="width: 100%"><button class="chip surface" type="button" aria-pressed="true">All</button><button class="chip surface" type="button" aria-pressed="false">2 colours</button></div> */
   .size-filter {
-    padding-inline-start: var(--space-4);
+    margin-bottom: var(--space-3);
+  }
+
+  .size-filter > .chip:not([aria-pressed="true"]) {
+    border: 1px solid var(--control);
+    background: none;
   }
 
   /* @component garment-groups
