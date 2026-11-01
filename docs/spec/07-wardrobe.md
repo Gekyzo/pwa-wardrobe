@@ -24,6 +24,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   `rgb()` or `rgba()` with three values from 0 to 255 or three percentages, and `hsl()` or `hsla()`
   with a hue in degrees and two percentages from 0 to 100. Commas or spaces separate the values,
   and an alpha is read and ignored. Any other text gives null.
+- **PAL-5** `inkOn` gives the text colour on a field of a colour: `dark` when the WCAG relative
+  luminance of its hex is above 0.18, else `light`.
 
 ## Garments
 
@@ -126,6 +128,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   (OUT-5) under the season filter, or gives null when there is none. `except` is the key of an
   outfit (`outfitKey`: its combination and its garment ids); that outfit is not taken while
   another one is in the pool.
+- **OUT-10** `countOutfits` gives the number of outfits of the wardrobe under the season filter:
+  the sum of the outfits of each combination (OUT-5), so each combination counts at most
+  `MAX_OUTFITS`.
 
 ## Wardrobe section
 

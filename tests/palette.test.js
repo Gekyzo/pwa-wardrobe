@@ -13,6 +13,7 @@ import {
   combination,
   combinationsOf,
   combinationsBySize,
+  inkOn,
 } from '#palette';
 
 const close = (actual, expected, within) =>
@@ -110,4 +111,11 @@ test('parseColor gives null for a text that is not a colour (PAL-4)', () => {
   for (const text of ['', 'red', '#12', '#1234567', 'rgb(256, 0, 0)', 'rgb(1, 2)', 'rgb(-1, 0, 0)', 'hsl(0, 101%, 50%)', 'hsl(0, 50, 50)', 'rgb(1, 2, 3', null, 7]) {
     assert.equal(parseColor(text), null, String(text));
   }
+});
+
+test('inkOn gives dark text on a light colour and light text on a dark one (PAL-5)', () => {
+  assert.equal(inkOn('#ffdd00'), 'dark');
+  assert.equal(inkOn('#a5c8d1'), 'dark');
+  assert.equal(inkOn('#4b3317'), 'light');
+  assert.equal(inkOn('#111314'), 'light');
 });

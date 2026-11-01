@@ -67,6 +67,10 @@ export const outfitsFor = (number, garments, { season = 'any' } = {}) => {
   return best(search(colors.map((color) => candidates(color, fit))).map((picks) => outfitOf(number, picks)));
 };
 
+// The number of outfits of every combination under the season filter, each capped at MAX_OUTFITS.
+export const countOutfits = (garments, { season = 'any' } = {}) =>
+  COMBINATIONS.reduce((n, { number }) => n + outfitsFor(number, garments, { season }).length, 0);
+
 // The outfits that contain `garment`: for each combination of a colour near it, and each place
 // of that combination that it can take, the hero holds that place and the others are searched.
 export const outfitsWith = (garment, garments, { season = 'any' } = {}) => {

@@ -29,6 +29,12 @@ export const deltaE = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]
 // Computed once from the hex of each colour, so that every distance uses one conversion.
 const LABS = COLORS.map(({ hex }) => labOf(hex));
 
+// The text colour on a field of `hex`: dark above a WCAG relative luminance of 0.18, else light.
+export const inkOn = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => linear(parseInt(hex.slice(i, i + 2), 16)));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.18 ? 'dark' : 'light';
+};
+
 export const distance = (a, b) => deltaE(LABS[a], LABS[b]);
 
 export const colorOf = (id) => COLORS[id] ?? null;

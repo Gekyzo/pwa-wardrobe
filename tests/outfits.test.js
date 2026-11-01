@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { COMBINATIONS, combination, colorsNear, distance, colorOf } from '#palette';
-import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone, outfitKey, randomOutfit } from '#outfits';
+import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone, outfitKey, randomOutfit, countOutfits } from '#outfits';
 
 let next = 0;
 const g = (color, slot, extra = {}) => ({ id: `g${next++}`, name: `${slot} ${color}`, slot, season: 'all', color, ...extra });
@@ -223,4 +223,13 @@ test('randomOutfit gives another outfit than `except` while the pool has one (OU
   const [only, ...rest] = poolOf(single);
   assert.equal(rest.length, 0);
   assert.deepEqual(randomOutfit(single, { except: outfitKey(only) }), only);
+});
+
+test('countOutfits sums the outfits of every combination under the season filter (OUT-10)', () => {
+  const [a, b] = two.colors;
+  const garments = [g(a, 'top'), g(b, 'bottom'), g(a, 'top', { season: 'cold' })];
+  assert.equal(countOutfits(garments), COMBINATIONS.reduce((n, { number }) => n + outfitsFor(number, garments).length, 0));
+  assert.ok(countOutfits(garments) >= 2);
+  assert.equal(countOutfits([]), 0);
+  assert.ok(countOutfits(garments, { season: 'warm' }) < countOutfits(garments));
 });
