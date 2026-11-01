@@ -322,13 +322,29 @@
   }
 
   /* @component outfits
-     @summary The outfits of a detail: a title, the season filter, then the outfit cards.
+     @summary The outfits of a detail: a head of the title and the count, the season filter, then the outfit cards.
+     @part outfits-head   The title and the count, on one line.
      @part outfits-title  The title.
+     @part outfits-count  The count of the outfits.
      @part outfits-list   The list of the cards.
-     @example <div class="outfits" style="width: 100%"><h2 class="outfits-title">Outfits</h2><ul class="outfits-list"><li class="look"><div class="look-head"><span class="look-number">No. 12</span></div></li></ul></div> */
+     @example <div class="outfits" style="width: 100%"><div class="outfits-head"><h2 class="outfits-title">Outfits</h2><span class="outfits-count">1 outfit</span></div><ul class="outfits-list"><li class="look"><div class="look-head"><span class="look-number">No. 12</span></div></li></ul></div> */
+  .outfits-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-5);
+  }
+
   .outfits-title {
-    margin: var(--space-5) 0 0;
+    margin: 0;
     font-size: var(--text-m);
+  }
+
+  .outfits-count {
+    color: var(--muted);
+    font-size: var(--text-s);
   }
 
   .outfits-list {

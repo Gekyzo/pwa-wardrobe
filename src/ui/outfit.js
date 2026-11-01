@@ -1,6 +1,6 @@
 import { mainImage } from '#garments';
 import { colorOf, inkOn } from '#palette';
-import { SEASON_FILTERS } from '#outfits';
+import { SEASON_FILTERS, countKey } from '#outfits';
 import { el, ui, t, render } from '#ui/context';
 
 // A block of one palette colour.
@@ -102,7 +102,10 @@ export const look = (outfit) =>
 export const outfitList = (outfits, empty) =>
   outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map(look)) : el('p', { className: 'empty-state inline', textContent: empty });
 
-// The outfits of a detail: a title, the season filter, then the cards or the text of none.
+// The outfits of a detail: a head of the title and the count, the season filter, then the cards
+// or the text of none (WAR-5).
 export const renderOutfits = (box, title, outfits, empty) => {
-  box.replaceChildren(el('h2', { className: 'outfits-title', textContent: title }), seasonFilter(), outfitList(outfits, empty));
+  const count = outfits.length ? [el('span', { className: 'outfits-count', textContent: t(countKey(outfits.length), { count: outfits.length }) })] : [];
+  const head = el('div', { className: 'outfits-head' }, [el('h2', { className: 'outfits-title', textContent: title }), ...count]);
+  box.replaceChildren(head, seasonFilter(), outfitList(outfits, empty));
 };

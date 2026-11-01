@@ -5,6 +5,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 ## Unreleased
 
 - El **filtro de temporada** son tres botones separados, y el pulsado es negro. En **Conjunto al azar** ya no queda apretado.
+- Los **conjuntos de un detalle** muestran cuántos son junto al título.
 - Un nombre largo de una sola palabra ya no se sale de su columna.
 - En el detalle de una prenda, una imagen que no carga ya no aparece en la fila de imágenes.
 

@@ -177,7 +177,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   the rest are two columns, 7 to 5, and the media stays in sight; below, they stack.
 - **WAR-5** An outfit is a look on a `--surface` card: `outfit.number` and `outfit.exact` for an
   exact outfit, then its garments side by side, each with its picture (WAR-1, 3:4), its name and
-  a dot of its colour with the colour name. The season filter (OUT-7) is shared by the details,
+  a dot of its colour with the colour name. The outfits of a detail have a head of their title
+  and, when there is one or more, their count (`countKey`) on one line, then the season filter
+  and the looks. The season filter (OUT-7) is shared by the details,
   the random panel and the card counts of the app, and is not stored. It is a group named
   `wardrobe.season` of three outline chips, `season.any`, `season.warm` and `season.cold`; the
   pressed one is ink. A name of a card, a look or a detail that is longer than its column breaks
