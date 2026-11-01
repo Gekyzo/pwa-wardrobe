@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.1.24 - 2026-11-01
+
 - Nuevo grupo **Combinar** en **Ajustes**, con cuatro reglas opcionales sobre las combinaciones de Sanzo Wada. Todas empiezan apagadas.
 - **Completar con neutros** añade a cada conjunto unos zapatos neutros, y con **Frío** también un abrigo.
 - **Contraste** pone primero los conjuntos de contraste alto o suave.

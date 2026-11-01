@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.24 - 2026-11-01
+
 - New group **Matching** in **Settings**, with four optional rules over the Sanzo Wada combinations. All of them start off.
 - **Complete with neutrals** adds neutral shoes to each outfit, and under **Cold** a coat too.
 - **Contrast** puts the outfits of high or soft contrast first.
