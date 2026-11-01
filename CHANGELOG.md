@@ -4,6 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+- **New icon**: `icons/source.png` is a flat mark for the Blanco look: three lengths of fabric in the Wada colours Deep Lyons Blue, Yellow Ocher and Ivory Buff on an ink rail, in place of the 3D magenta hanger. The source is cropped so the art fills 0.88 of its square, which keeps its corners inside the maskable safe circle (radius 0.389 at the scale 0.64 of `make-icons.mjs`). `npm run icons` wrote `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` and `logo.png` again.
 - **Missing basics** (BAS-1 to BAS-4, WAR-1, WAR-9, WAR-10): new pure module `src/basics.js` (`BASICS`, `MAX_BASICS`, `covers`, `missingBasics`), in `SHELL` and the import map, with `tests/basics.test.js`. `#wardrobe-side` holds `#random-panel` and the new `#basics-panel` after the grid or the empty state, and is the sticky column from 1024px (the sticky rule moved from `random-panel`). A row calls `openSheet(null, fill)` of `src/ui/wardrobe.js`, which fills the name, slot, season and colour of a new garment. New keys `basic.*`, `wardrobe.basics`, `wardrobe.basicsHint`, `wardrobe.basicGain`, `wardrobe.basicGainMax`.
 
 ## 0.1.20 - 2026-11-01

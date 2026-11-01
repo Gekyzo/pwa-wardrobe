@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- La app tiene un icono nuevo: tres telas en colores de Sanzo Wada, a juego con el nuevo diseño.
 - **Básicos que faltan** te sugiere las prendas básicas que aún no tienes, como unos vaqueros o una camiseta blanca. Primero van las que te dan más conjuntos. Toca una para añadirla con su tipo, su temporada y su color ya puestos.
 
 ## 0.1.20 - 2026-11-01
