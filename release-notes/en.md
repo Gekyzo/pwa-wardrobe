@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.20 - 2026-11-01
+
 - On a phone, **Add garment** is a wide button under the title, and there is no floating + button. So **Settings** no longer has the **Hand** option.
 - On a phone, a bar at the top shows **ATTIRE**, and the bottom bar shows the sections by name only.
 - **Settings** explains **Account** and **Modules**, shows how many garments **Export** writes, and **Delete all data** has its arrow.

@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.20 - 2026-11-01
+
 - **Image slider** (WAR-4, NAV-3): `media()` of `src/ui/wardrobe.js` makes an `image-slider` (a scroll-snap track of hero pictures, arrows from 600px) in place of `image-strip`, and `colorBand` ends with `image-slider-count` (`wardrobe.imageCount`). New keys `wardrobe.prevImage`, `wardrobe.nextImage`. A slide that starts on the track no longer closes the detail. The strip and its broken-thumb hiding are gone; a broken slide shows the colour field.
 - **No floating +, no Hand** (NAV-4, NAV-6, SET-1): `#header-add` shows at every width, full width in a column title row below 600px; `#fab` is gone. The Hand preference is removed: `HAND_KEY`/`loadHand`/`saveHand` of `src/storage.js`, `hand`/`setHand` of `src/ui/context.js`, the `#hand` row, the keys `settings.hand*`, the `[data-hand="left"]` rule and their tests; `settings.preferencesHint` now names the language and the colours. A stored `wardrobe.hand` key is left unread.
 - **Blanco phone shell and Settings** (NAV-4, SET-1 to SET-3): new `phone-brand` (the wordmark bar below 600px); the bottom bar hides its icons and pill, `--nav-height: 56px`; the phone title row has no rule. Settings: `settings.accountHint` and `settings.modulesHint`, `#export-count` written by `renderSettings` of `src/ui/settings.js`, a chevron on `#reset` at normal weight.
