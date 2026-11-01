@@ -5,6 +5,7 @@ import { BASICS } from '#basics';
 import { SLOTS } from '#garments';
 import { COMBINATIONS, combination, distance } from '#palette';
 import { MATCH_MAX, outfitsFor, outfitsWith } from '#outfits';
+import { MATCHING, suits } from '#matching';
 
 const garment = (id, slot, color, season = 'all') => ({ id, name: id, slot, season, color });
 const near = (a, b) => distance(a, b) <= MATCH_MAX;
@@ -145,4 +146,24 @@ test('a missing basic out of the filter season does not hide a Wada colour (FIL-
   const wardrobe = [garment('t', 'top', 113, 'warm'), garment('b', 'bottom', 154, 'warm')];
   const list = fillSuggestions(wardrobe, { season: 'warm', max: 100 });
   assert.ok(wadaOf(list).some((s) => s.slot === 'outer' && near(s.color, navy.color)), 'a Wada outer near the navy coat');
+});
+
+test('a colour type keeps only the rows whose colour suits it (FIL-8)', () => {
+  const all = fillSuggestions([], { max: Infinity });
+  assert.ok(all.some((s) => s.basic === 'brownBelt'), 'the fixture: the brown belt is a missing basic');
+  assert.equal(suits(BASICS.find((b) => b.id === 'brownBelt').color, 'spring'), false);
+  const spring = fillSuggestions([], { max: Infinity, match: { ...MATCHING, colorType: 'spring' } });
+  assert.ok(!spring.some((s) => s.basic === 'brownBelt'));
+  assert.deepEqual(spring, all.filter((s) => suits(s.color, 'spring')));
+  assert.deepEqual(fillSuggestions([], { max: Infinity, match: MATCHING }), all);
+});
+
+test('a colour type filters the Wada rows too, before the cut (FIL-8)', () => {
+  const [a] = COMBINATIONS.find(({ colors }) => colors.length === 2).colors;
+  const garments = [{ id: 't', name: 't', slot: 'top', season: 'all', color: a }];
+  for (const colorType of ['spring', 'summer', 'autumn', 'winter']) {
+    const list = fillSuggestions(garments, { match: { ...MATCHING, colorType } });
+    assert.ok(list.every((s) => suits(s.color, colorType)), colorType);
+    assert.ok(list.length <= MAX_FILL);
+  }
 });

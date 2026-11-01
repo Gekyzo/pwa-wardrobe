@@ -31,9 +31,9 @@ const asGarment = (basic) => ({ id: `basic:${basic.id}`, name: basic.id, slot: b
 
 // The basics that no garment covers, each with the outfits that it would add under the season
 // filter: the higher gain first, then the order of BASICS; at most `max`.
-export const missingBasics = (garments, { season = 'any', max = MAX_BASICS } = {}) =>
+export const missingBasics = (garments, { season = 'any', max = MAX_BASICS, match } = {}) =>
   BASICS.filter((basic) => !garments.some((garment) => covers(garment, basic)))
-    .map((basic, order) => ({ basic, order, gain: outfitsWith(asGarment(basic), garments, { season }).length }))
+    .map((basic, order) => ({ basic, order, gain: outfitsWith(asGarment(basic), garments, { season, match }).length }))
     .sort((a, b) => b.gain - a.gain || a.order - b.order)
     .slice(0, max)
     .map(({ basic, gain }) => ({ basic, gain }));

@@ -237,6 +237,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   `MATCH_MAX` of the row outlined. A tap opens the sheet of a new garment (WAR-3) with the name,
   the slot, the season and the colour of the row; **Save** adds it, and the view stays. With no
   row it shows `fill.empty`.
+- **FIL-8** `fillSuggestions` and `missingBasics` take the matching choice as the option `match`
+  and give it to each outfit search (OUT-11). With a `colorType` other than `off`, a row whose
+  colour does not suit it (MAT-5) leaves the list, before the cut of FIL-6.
 
 ## Wardrobe section
 

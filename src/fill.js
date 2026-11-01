@@ -2,6 +2,7 @@ import { BASICS, covers, missingBasics } from '#basics';
 import { SLOTS } from '#garments';
 import { COLORS, COMBINATIONS, colorOf, colorsNear, combination, distance } from '#palette';
 import { MATCH_MAX, fitsSeason, outfitsFor, outfitsWith } from '#outfits';
+import { MATCHING, suits } from '#matching';
 
 // The rows of the Fill tab (FIL-1).
 export const MAX_FILL = 12;
@@ -38,21 +39,21 @@ const candidate = (color, slot) => ({ id: `wada:${color}:${slot}`, name: '', slo
 // The open palettes near `color` that the candidate gives an outfit, sorted (FIL-3).
 // A palette with a colour that no garment and not the candidate is near stays open: it is not
 // searched.
-const completesOf = (cand, open, fit, garments, season) => {
+const completesOf = (cand, open, fit, garments, season, match) => {
   const covered = (color) => near(cand.color, color) || fit.some((garment) => near(garment.color, color));
   return palettesNearOf(cand.color)
-    .filter((n) => open.has(n) && combination(n).every(covered) && outfitsFor(n, [...garments, cand], { season }).length > 0)
+    .filter((n) => open.has(n) && combination(n).every(covered) && outfitsFor(n, [...garments, cand], { season, match }).length > 0)
     .sort((a, b) => a - b);
 };
 
 // The missing basics and the Wada colours that complete open palettes, in one ranked list
 // (FIL-2 to FIL-6). `of` reads the outfits of one combination of the wardrobe, so a caller can
-// give a cached reader.
-export const fillSuggestions = (garments, { season = 'any', max = MAX_FILL, of = outfitsFor } = {}) => {
-  const basics = missingBasics(garments, { season, max: Infinity }).map(({ basic, gain }) => ({
+// give a cached reader. With a colour type, a row whose colour does not suit it leaves (FIL-8).
+export const fillSuggestions = (garments, { season = 'any', max = MAX_FILL, of = outfitsFor, match = MATCHING } = {}) => {
+  const basics = missingBasics(garments, { season, max: Infinity, match }).map(({ basic, gain }) => ({
     kind: 'basic', basic: basic.id, slot: basic.slot, season: basic.season, color: basic.color, gain, completes: [],
   }));
-  const open = new Set(COMBINATIONS.filter(({ number }) => of(number, garments, { season }).length === 0).map(({ number }) => number));
+  const open = new Set(COMBINATIONS.filter(({ number }) => of(number, garments, { season, match }).length === 0).map(({ number }) => number));
   const fit = garments.filter((garment) => fitsSeason(garment, season));
   // Only the one gap of an open palette, or any colour of an open palette with no gap, can
   // complete it: a palette two garments short stays open with one more (FIL-3).
@@ -64,9 +65,9 @@ export const fillSuggestions = (garments, { season = 'any', max = MAX_FILL, of =
     const cand = candidate(color, slot);
     if (fit.some((garment) => covers(garment, cand))) return [];
     if (basics.some((basic) => basic.slot === slot && fitsSeason(basic, season) && near(basic.color, color))) return [];
-    const completes = completesOf(cand, open, fit, garments, season);
+    const completes = completesOf(cand, open, fit, garments, season, match);
     if (completes.length === 0) return [];
-    return [{ kind: 'wada', basic: null, slot, season: 'all', color, gain: outfitsWith(cand, garments, { season }).length, completes }];
+    return [{ kind: 'wada', basic: null, slot, season: 'all', color, gain: outfitsWith(cand, garments, { season, match }).length, completes }];
   }));
   // Of two candidates of one slot within MATCH_MAX, the better one stays (FIL-4).
   const kept = [];
@@ -75,5 +76,5 @@ export const fillSuggestions = (garments, { season = 'any', max = MAX_FILL, of =
   }
   // Each colour keeps its best slot (FIL-5).
   const wada = kept.filter((s, _, all) => all.find((other) => other.color === s.color) === s);
-  return [...basics, ...wada].sort(byRank).slice(0, max);
+  return [...basics, ...wada].filter((s) => suits(s.color, match.colorType)).sort(byRank).slice(0, max);
 };
