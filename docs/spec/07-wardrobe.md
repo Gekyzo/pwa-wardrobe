@@ -171,10 +171,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   images, all the images in a row, where a tap on one shows it large; an image of the row that
   does not load is not shown. The info: the name at
   `--screen-title`, a line of slot, brand and season, then the facts in two columns, each a label
-  over its value: the size, the reference, the fit, each measure, the price in euros, the buy
+  over its value as plain text: the size, the reference, the fit, each measure, the price in euros, the buy
   date and `wardrobe.added` with the creation date, in the formats of the language, each one only
   when it is set. Then **Edit** (primary), **Open link** (outline) when the garment has a link,
-  which opens it in a new tab, and **Delete** (a danger text button), and the outfits that
+  which opens it in a new tab, and **Delete** (an underlined danger text button), and the outfits that
   contain it (OUT-8) under the season filter, or `wardrobe.noOutfits`. From 1024px the media and
   the rest are two columns, 7 to 5, and the media stays in sight; below, they stack.
 - **WAR-5** An outfit is a look on a `--surface` card: `outfit.number` and `outfit.exact` for an

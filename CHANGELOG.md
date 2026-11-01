@@ -4,6 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+- **Blanco neutral details** (DSV-3, WAR-4): `--done: var(--ink)` and `--done-soft: var(--surface-2)`; an `@extends switch` puts the knob in `--on-ink`; the fit fact is text (`fitPill` removed); Delete is underlined. Fix: the look variant of `garment-picture` was the class `look`, which also matched the `.look` card (padding, radius, surface); it is now `worn`.
 - **Blanco frame and header** (DSV-5, NAV-6, NAV-8, WAR-1, WAR-4): `--frame-max: 1200px`; the subtitle at `--text-m` with `--title-row-space` under the title row; `wardrobe.summary` takes `total`; `#header-add` is text only (the `plus` symbol is gone from `icons.svg`); `renderHeader` hides `.app-header` while a garment is open; grid gaps 24/16 from 1024px; section heads at `--section-title`; the current top-bar link is not bold.
 - **Season filter** (WAR-5): `seasonFilter()` of `src/ui/outfit.js` is a `cluster season-filter` group (`role="group"`, label `wardrobe.season`) of outline `chip`s, the pressed one ink, as the size filter. It replaces the `segmented` switch, whose knob was wider than its label in the 360px random panel head; there it has no margin and wraps under the title.
 - **Long names and broken thumbs** (WAR-4, WAR-5): `.look-name`, `.garment-card-name` and `.garment-detail-title` take `overflow-wrap: anywhere`, so a long one-word name stays in its column at 360px. `media()` of `src/ui/wardrobe.js` hides an image-strip thumb whose image fails, as the sheet does (WAR-6).

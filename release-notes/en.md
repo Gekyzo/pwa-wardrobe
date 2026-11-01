@@ -4,6 +4,8 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- The app no longer uses green: **Exact** is grey, the switches are black and **Fit** is text. **Delete** is underlined.
+- The pictures of an outfit fill their place, with square corners.
 - From a tablet, the app takes a centred frame, as the **Blanco de catálogo** proposal shows. The **Wardrobe** summary says of how many Sanzo Wada combinations your outfits come.
 - **Add garment** no longer has a + sign, and the detail of a garment does not repeat the title of the section.
 - The **season filter** is three separate buttons, and the pressed one is black. In **Random outfit** it is no longer cramped.

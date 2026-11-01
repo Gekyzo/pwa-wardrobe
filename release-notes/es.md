@@ -4,6 +4,8 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- La app ya no usa el verde: **Exacto** es gris, los interruptores son negros y **Cómo queda** es texto. **Borrar** está subrayado.
+- Las fotos de un conjunto ocupan todo su hueco, con esquinas rectas.
 - Desde la tablet, la app ocupa un marco centrado, como la propuesta **Blanco de catálogo**. El resumen de **Armario** dice de cuántas combinaciones de Sanzo Wada salen tus conjuntos.
 - **Añadir prenda** ya no lleva el signo +, y el detalle de una prenda no repite el título de la sección.
 - El **filtro de temporada** son tres botones separados, y el pulsado es negro. En **Conjunto al azar** ya no queda apretado.

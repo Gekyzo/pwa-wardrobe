@@ -109,8 +109,6 @@ const money = (value) => new Intl.NumberFormat(lang, { style: 'currency', curren
 const day = (date) => new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(date);
 const today = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 
-const fitPill = (fit) => el('span', { className: fit === 'good' ? 'pill' : 'pill ghost', textContent: t(`fit.${fit}`) });
-
 const fillList = (id, values) => $(id).replaceChildren(...values.map((value) => el('option', { value })));
 
 // The brands that start with the text of the brand field, none while it is empty (WAR-3).
@@ -247,7 +245,7 @@ const facts = (garment) => {
   const list = [
     ...(garment.size ? fact(t('wardrobe.size'), garment.size) : []),
     ...(garment.reference ? fact(t('wardrobe.reference'), garment.reference) : []),
-    ...(garment.fit ? fact(t('wardrobe.fit'), fitPill(garment.fit)) : []),
+    ...(garment.fit ? fact(t('wardrobe.fit'), t(`fit.${garment.fit}`)) : []),
     ...garment.measures.flatMap(({ name, value, unit }) => fact(name, `${number(value)}${unit ? ` ${unit}` : ''}`)),
     ...(garment.price != null ? fact(t('wardrobe.price'), money(garment.price)) : []),
     ...(garment.buy_date ? fact(t('wardrobe.buyDate'), day(new Date(`${garment.buy_date}T12:00:00`))) : []),

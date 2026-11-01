@@ -23,11 +23,11 @@ export const swatch = (colorId, variant = '') => {
 export const remoteImage = (src, className) => el('img', { className, referrerPolicy: 'no-referrer', loading: 'lazy', decoding: 'async', alt: '', src });
 
 // The picture of a garment: its main image (GAR-7), or `url`, on the photo ground, or a field of
-// its colour when it has none or when the image fails to load. `variant` is card, hero or look. A
-// card and a look have the name and the colour as text beside the picture, so there the picture
+// its colour when it has none or when the image fails to load. `variant` is card, hero or worn (in a
+// look). A card and a look have the name and the colour as text beside the picture, so there the picture
 // is hidden from a screen reader; the hero names the garment and its colour.
 export const picture = (garment, variant, url = mainImage(garment)) => {
-  const box = el('span', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'look' ? 'garment-picture look' : 'garment-picture card' });
+  const box = el('span', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'worn' ? 'garment-picture worn' : 'garment-picture card' });
   const named = variant === 'hero';
   if (!named) box.setAttribute('aria-hidden', 'true');
   const field = () => {
@@ -101,7 +101,7 @@ export const look = (outfit) =>
       ...(outfit.exact ? [el('span', { className: 'pill', textContent: t('outfit.exact') })] : []),
     ]),
     el('ul', { className: 'look-row' }, outfit.picks.map(({ garment }) => el('li', { className: 'look-item' }, [
-      picture(garment, 'look'),
+      picture(garment, 'worn'),
       el('span', { className: 'look-name', textContent: garment.name }),
       el('span', { className: 'look-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
     ]))),
