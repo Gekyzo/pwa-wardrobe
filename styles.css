@@ -977,13 +977,18 @@
   }
 
   /* @component wardrobe-cards
-     @scope wardrobe
-     @summary The switch over the cards of the wardrobe: Photos shows the main image of each garment, Colour shows the field of its colour only (WAR-11).
+     @scope settings
+     @summary The switch of the cards of the wardrobe, a row of Preferences in Settings: Photos shows the main image of each garment, Colour shows the field of its colour only (WAR-11).
      @example <div class="segmented wardrobe-cards" role="group" aria-label="Show" style="width: 100%"><button class="segment" type="button" aria-pressed="true">Photos</button><button class="segment" type="button" aria-pressed="false">Colour</button></div> */
   /* @extends segmented */
   .wardrobe-cards {
+    flex: 1 1 auto;
     max-width: var(--cards-switch-width);
-    margin: 0 0 var(--space-5) auto;
+    margin: var(--space-2) 0 var(--space-2) auto;
+  }
+
+  .settings-row:has(> .wardrobe-cards) > .settings-row-label {
+    flex: none;
   }
 
   /* @component garment-groups

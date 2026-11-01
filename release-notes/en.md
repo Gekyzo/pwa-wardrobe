@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- The **Photos** / **Colour** switch of the cards leaves **Wardrobe** and moves to **Settings**, under **Preferences**.
 
 ## 0.1.24 - 2026-11-01
 

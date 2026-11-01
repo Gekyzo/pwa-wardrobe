@@ -5,7 +5,7 @@ import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
 import { outfitsWith, outfitKey, randomOutfit, countKey } from '#outfits';
 import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
-import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, setCards, matching, family } from '#ui/context';
+import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, matching, family } from '#ui/context';
 import { icon } from '#ui/controls';
 import { swatch, remoteImage, renderOutfits, picture, smallPicture, colorBand, seasonFilter, outfitList } from '#ui/outfit';
 
@@ -315,23 +315,7 @@ const card = (garment) => {
   return node;
 };
 
-// The switch of the pictures of the cards: Photos or Colour (WAR-11).
-const cardsSwitch = () => {
-  const group = el('div', { className: 'segmented wardrobe-cards' }, ['photos', 'color'].map((value) => {
-    const segment = el('button', { className: 'segment', type: 'button', textContent: t(value === 'color' ? 'wardrobe.cardsColor' : 'wardrobe.cardsPhotos'), onclick: () => {
-      setCards(value);
-      render();
-    } });
-    segment.setAttribute('aria-pressed', String(cards === value));
-    return segment;
-  }));
-  group.setAttribute('role', 'group');
-  group.setAttribute('aria-label', t('wardrobe.cardsShow'));
-  return group;
-};
-
-// The garments by slot, in the order of SLOTS, each slot with its count (WAR-1), under the switch
-// of WAR-11.
+// The garments by slot, in the order of SLOTS, each slot with its count (WAR-1).
 const groups = () => {
   const sorted = sortGarments(state.garments);
   const list = SLOTS.map((slot) => sorted.filter((garment) => garment.slot === slot))
@@ -343,7 +327,7 @@ const groups = () => {
       ]),
       el('ul', { className: 'garment-groups-grid' }, list.map(card)),
     ]));
-  return [cardsSwitch(), ...list];
+  return list;
 };
 
 // The random outfit beside the grid, or after it below 1024px (WAR-9).

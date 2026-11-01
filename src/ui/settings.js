@@ -29,6 +29,8 @@ import {
   family,
   familiesOff,
   setFamiliesOff,
+  cards,
+  setCards,
   exportDoc,
 } from '#ui/context';
 import { runUpdate } from '#ui/update';
@@ -43,10 +45,23 @@ const renderValues = () => {
   }
 };
 
-// The count of garments beside Export (SET-1), and the group Palettes (SET-5): the family in use,
+// The pictures of the wardrobe cards, a row of Preferences: Photos or Colour (WAR-11).
+const renderCards = () => {
+  $('wardrobe-cards').replaceChildren(...['photos', 'color'].map((value) => {
+    const segment = el('button', { className: 'segment', type: 'button', textContent: t(value === 'color' ? 'wardrobe.cardsColor' : 'wardrobe.cardsPhotos'), onclick: () => {
+      setCards(value);
+      render();
+    } });
+    segment.setAttribute('aria-pressed', String(cards === value));
+    return segment;
+  }));
+};
+
+// The count of garments beside Export (SET-1), the cards of WAR-11, and the group Palettes (SET-5): the family in use,
 // and a switch for each family, the last one that is on disabled.
 export const renderSettings = () => {
   $('export-count').textContent = t('garments.count', { count: state.garments.length });
+  renderCards();
   $('family-in-use').replaceChildren(...familyOptions());
   $('family-in-use-value').textContent = t(`family.${family}`);
   const last = FAMILIES.length - familiesOff.length === 1;

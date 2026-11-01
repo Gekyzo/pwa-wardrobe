@@ -369,9 +369,10 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   one. The panel is no detail: it has no history entry (NAV-7), and an open garment hides it.
 - **WAR-10** Removed: the missing basics are rows of the Fill tab (FIL-2, FIL-7). Wardrobe has no
   panel of basics.
-- **WAR-11** With one garment or more, a segmented control of two (`wardrobe.cardsShow`),
-  **Photos** (`wardrobe.cardsPhotos`) and **Colour** (`wardrobe.cardsColor`), stands above the
-  groups of the grid, aligned to the end, at most `--cards-switch-width` wide. **Photos** is the
+- **WAR-11** A segmented control of two, **Photos** (`wardrobe.cardsPhotos`) and **Colour**
+  (`wardrobe.cardsColor`), is the row `settings.cards` of Preferences in Settings (SET-1), at the
+  end of the row, at most `--cards-switch-width` wide. The Wardrobe section has no switch of its
+  own. **Photos** is the
   picture of WAR-1. **Colour** shows the field of the colour of each garment, 2:1 in place of 3:4, in place of its
   image, in the cards and in the look of the random panel (WAR-9); the detail of a garment and
   the Combinations section keep their images. The choice is a preference of the device, the key

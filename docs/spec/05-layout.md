@@ -68,8 +68,8 @@ Combinations says `combinations.pick`.
 
 - **SET-1** Settings is a column of groups, each a `list-group-head` above a `list-group` of
   settings rows, as in pwa-shopping-list: **Backup** (**Export**, **Import**, **Delete all data**), **Preferences**
-  (**Language**, **Theme**), **Modules** (MOD-1), **Palette families** (SET-5), **Matching** (SET-4), **App** (INS-2) and **Help** (ONB-3),
-  then the version lines (VER-4). **Export** shows `garments.count` with the count of garments. A row of Preferences shows its current value and a chevron, and
+  (**Language**, **Theme**, **Wardrobe cards** of WAR-11), **Modules** (MOD-1), **Palette families** (SET-5), **Matching** (SET-4), **App** (INS-2) and **Help** (ONB-3),
+  then the version lines (VER-4). **Export** shows `garments.count` with the count of garments. A row of Preferences with a select shows its current value and a chevron, and
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.
 - **SET-2** **Account** (`settings.accountHint`), **Backup**, **Preferences**, **Modules**

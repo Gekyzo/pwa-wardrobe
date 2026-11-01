@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- El selector **Fotos** / **Color** de las tarjetas deja **Armario** y pasa a **Ajustes**, en **Preferencias**.
 
 ## 0.1.24 - 2026-11-01
 
