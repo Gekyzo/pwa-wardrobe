@@ -8,6 +8,7 @@ What changes for you in each version of the app. The newest version is first.
 - In **Wardrobe** you can choose **Photos** or **Colour**: with **Colour** each garment shows its colour in place of its photo.
 - The app has a new icon: three lengths of fabric in Sanzo Wada colours, to match the new design.
 - **Missing basics** suggests the basic garments that you do not have yet, such as jeans or a white T-shirt. The ones that give you more outfits come first. Tap one to add it with its type, its season and its colour already set.
+- The **introduction** is new: it explains the outfits, **Palettes** and **Missing basics**, says that the app works online and offline, and no longer names the slide to delete or the + button.
 
 ## 0.1.20 - 2026-11-01
 

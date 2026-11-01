@@ -5,15 +5,17 @@ import { $, el, storage, ui, t, guardClick } from '#ui/context';
 import { icon } from '#ui/controls';
 
 // A part of a page text: plain text, or a key with an optional icon. A key with an icon and no
-// text gets the name of its control (`onboarding.icon.<name>`).
-const keyNode = ({ text, key, icon: name }) => {
-  if (!key) return text;
-  const node = el('span', { className: 'onboarding-key' }, name ? [icon(name, 'small'), text] : [text]);
-  if (name && !text) {
-    node.setAttribute('role', 'img');
-    node.setAttribute('aria-label', t(`onboarding.icon.${name}`));
+// text gets the name of its control (`onboarding.icon.<name>`). A bold part is in a <strong>.
+const keyNode = ({ text, key, icon: name, strong }) => {
+  let node = text;
+  if (key) {
+    node = el('span', { className: 'onboarding-key' }, name ? [icon(name, 'small'), text] : [text]);
+    if (name && !text) {
+      node.setAttribute('role', 'img');
+      node.setAttribute('aria-label', t(`onboarding.icon.${name}`));
+    }
   }
-  return node;
+  return strong ? el('strong', {}, [node]) : node;
 };
 
 export const renderOnboarding = () => {

@@ -91,7 +91,10 @@ Combinations says `combinations.pick`.
 
 - **ONB-1** The walkthrough shows at the start of a new install only: no `wardrobe.onboarded`
   flag and no stored doc. A storage that cannot be read counts as seen.
-- **ONB-2** It has the pages of `PAGES`, each with a drawing, a title and a text. **Next** goes
+- **ONB-2** It has the pages of `PAGES`, each with a drawing, a title and a text: `welcome` (add a
+  garment with its colour), `outfits` (the outfits of the combinations, **Random outfit**),
+  `palettes` (Palettes and Missing basics) and `offline` (the use with and with no network, the sync of an account, install). A
+  text names each control by its label in the catalog, as a key or in bold (`textParts`). **Next** goes
   forward, **Skip** and Escape close it, a slide or the arrow keys turn a page. The last page has
   **Start** in place of **Next**, and no **Skip**.
 - **ONB-3** A close stores the flag. **Show the introduction** in Settings opens it again.

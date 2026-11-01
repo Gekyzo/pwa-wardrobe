@@ -1460,6 +1460,15 @@
     position: relative;
   }
 
+  /* A row that holds one action button: the button fills the row, with the same inset on each side. */
+  .settings .settings-row:has(> .button) {
+    padding: var(--space-3);
+  }
+
+  .settings .settings-row > .button {
+    flex: 1;
+  }
+
   /* The select is invisible: the row shows the ring when the select has the keyboard focus. */
   .settings .settings-row:has(> .select:focus-visible) {
     outline: 2px solid var(--text);
@@ -1546,8 +1555,6 @@
      @part onboarding-dots     One dot for each page.
      @part onboarding-dot      One dot.
      @part onboarding-actions  Saltar and the next button, side by side. On the last page the next button fills the bar.
-     @part onboarding-switch   The switch of the sample data on the last page. It keeps its room on each page.
-     @state away               On onboarding-switch: a page with no switch. The room stays, so nothing moves.
      @state on                 On onboarding-dot: the page in view.
      @state enter-next         On onboarding-page: it comes in from the right.
      @state enter-previous     On onboarding-page: it comes in from the left.
@@ -1622,16 +1629,6 @@
     min-height: 5lh;
     margin: 0;
     color: var(--muted);
-  }
-
-  .onboarding-switch {
-    align-self: stretch;
-    border-radius: var(--radius-l);
-    background: var(--surface);
-  }
-
-  .onboarding-switch.away {
-    visibility: hidden;
   }
 
   .onboarding-key {
