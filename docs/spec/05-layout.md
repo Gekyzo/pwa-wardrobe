@@ -67,8 +67,10 @@ Combinations says `combinations.pick`.
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.
 - **SET-2** **Backup** and **Preferences** have a line of help below their head at every width.
-  From 840px Settings takes a column of at most 960px (`--page-max`, LAY-1), and each group is a
-  row: its head and its help at the left, its rows at the right, the groups split by a line.
+  The groups are rounded cards on `--surface`, under heads of 16px. From 840px Settings is a
+  column of at most 1040px (`--settings-max`) at the start of the frame, and each group is a row:
+  its head and its help in a column of `--panel-width` at the left, its rows at the right, the
+  groups split by a line.
 - **SET-3** **Delete all data** is the last row of Backup, in the colour of danger, with no
   chevron. It asks `reset.confirm`, or `reset.confirmLocal` with a session, which also says that
   the session closes and that the garments of the account stay on the server. A yes first stops the

@@ -10,6 +10,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 - **Armario** es una cuadrícula de fotos agrupada por parte del cuerpo. Cada prenda muestra su color y cuántos conjuntos tiene. Sin foto, muestra su color.
 - El **detalle de una prenda** muestra su foto grande con una banda de su color, y los conjuntos muestran la foto de cada prenda.
 - **Paletas** muestra cada combinación como una barra de sus colores, y su detalle muestra los colores grandes con su nombre y su código.
+- **Ajustes** agrupa cada opción en una tarjeta, e **Instalar la aplicación** es un botón.
 
 ## 0.1.18 - 2026-10-31
 

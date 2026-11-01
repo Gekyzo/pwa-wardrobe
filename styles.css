@@ -32,7 +32,7 @@
 
   /* The column of Settings from 840px (SET-2). */
   :root {
-    --settings-max: 960px;
+    --settings-max: 1040px;
   }
 }
 
@@ -1081,40 +1081,51 @@
      @part settings-hint    A line of help below a group head.
      @part settings-section A group head, its hint and its group. From 840px (SET-2) the head and the hint form a column beside the group.
      @example <section class="settings" style="width: 100%"><h2 class="list-group-head">Preferences</h2><div class="list-group"><div class="settings-row"><span class="settings-row-label">Language</span><span class="settings-row-value">English</span><span class="chevron" aria-hidden="true">›</span><select class="select" aria-label="Language"><option>English</option></select></div></div></section> */
+  /* The groups are rounded cards on --surface with the margin of the page at every width. */
   .settings {
     width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  .settings-section > .list-group-head {
+    margin-inline: 0;
+    font-size: var(--text-m);
+    font-weight: var(--weight-book);
+  }
+
+  .settings-section > .list-group {
+    border: 0;
+    border-radius: var(--radius-l);
   }
 
   .settings-hint {
     margin: 0;
-    padding: 0 var(--space-4) var(--space-2);
+    padding: 0 0 var(--space-2);
     color: var(--muted);
     font-size: var(--text-s);
     text-align: start;
     hyphens: auto;
   }
 
-  /* From 840px (SET-2) Settings takes a wider column, and each section is a row: its head and its
-     hint at the left, its group at the right, sections split by a line. The header and main follow
-     the column through --page-max (LAY-1). */
+  /* From 840px (SET-2) Settings is a column of at most --settings-max at the start of the frame,
+     under the title, and each section is a row: its head and its hint at the left, its group at the
+     right, sections split by a line. */
   @media (min-width: 840px) {
-    body:has(main > .settings:not([hidden])) {
-      --page-max: var(--settings-max);
-    }
-
     .settings {
-      max-width: none;
+      max-width: var(--settings-max);
+      margin-inline: 0;
+      padding-inline: 0;
     }
 
     .settings-section {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      grid-template-columns: var(--panel-width) minmax(0, 1fr);
       grid-template-rows: auto 1fr;
-      column-gap: var(--space-6);
+      column-gap: var(--detail-gap);
       align-items: start;
-      padding-block: var(--space-5);
+      padding-block: var(--space-7);
     }
 
     .settings-section + .settings-section {
