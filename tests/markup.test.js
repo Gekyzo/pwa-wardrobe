@@ -121,8 +121,8 @@ test('the header has the title and the subtitle of the view (NAV-8)', () => {
   assert.match(body, /<h1 id="title" class="app-header-title"><\/h1>\s*<p id="subtitle" class="app-header-subtitle"><\/p>/);
 });
 
-test('Wardrobe has the grid of groups and the random panel in its list (WAR-1, WAR-9)', () => {
-  assert.match(body, /<div class="pane-list">\s*<div id="garment-groups" class="garment-groups"><\/div>\s*<aside id="random-panel" class="random-panel" aria-labelledby="random-title" hidden><\/aside>/);
+test('Wardrobe has the grid of groups, the empty state, then the side with the random panel and the basics (WAR-1, WAR-9, WAR-10)', () => {
+  assert.match(body, /<div class="pane-list">\s*<div id="garment-groups" class="garment-groups"><\/div>\s*<div id="wardrobe-empty" class="empty-state" hidden>[\s\S]*?<\/div>\s*<div id="wardrobe-side" class="wardrobe-side">\s*<aside id="random-panel" class="random-panel" aria-labelledby="random-title" hidden><\/aside>\s*<aside id="basics-panel" class="basics-panel" aria-labelledby="basics-title" hidden><\/aside>\s*<\/div>\s*<\/div>/);
   assert.doesNotMatch(body, /id="wardrobe-random"|id="random-outfit"|id="garment-list"|id="garment-detail-empty"/);
 });
 

@@ -161,8 +161,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   image, or whose image fails to load, shows a field of its colour. In a card and in a look the
   picture is hidden from a screen reader, since the name and the colour stand beside it as text;
   the picture of the detail has the alt text of the name, or as a field `role="img"` and the label
-  "name, colour name". With no garment the section shows only `wardrobe.empty` and **Add
-  garment**, which opens the sheet of WAR-3.
+  "name, colour name". With no garment the section shows `wardrobe.empty` and **Add
+  garment**, which opens the sheet of WAR-3, and the basics of WAR-10.
 - **WAR-2** **Delete** is in the detail of a garment (WAR-4, GAR-4); the toast
   `toast.garmentDeleted` offers **Undo** for 5 seconds. A doc that the sync puts in place hides an open **Undo** (SYNC-2).
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
@@ -219,11 +219,21 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   measures of its slot (GAR-10), with their units and no value; a change of the slot changes
   them.
 - **WAR-9** With one garment or more, the panel **Random outfit** follows the grid, and from
-  1024px is a column of `--panel-width` beside it that stays in sight. It holds its title, the
+  1024px is in a column of `--panel-width` beside it that stays in sight, with the basics of
+  WAR-10 under it. It holds its title, the
   season filter, one outfit of OUT-9 as a card of WAR-5, and **Another**, which takes another
   outfit (OUT-9 `except`). With no outfit it shows `wardrobe.noRandom` and no **Another**. The
   first render takes an outfit, and a change of the season filter or of the garments takes a new
   one. The panel is no detail: it has no history entry (NAV-7), and an open garment hides it.
+- **WAR-10** The panel **Missing basics** (`wardrobe.basics`) follows the random panel, or the
+  empty state with no garment, and shares its column from 1024px. It shows the basics of
+  `missingBasics` (BAS-3, BAS-4) under the season filter, cached for each doc and season filter,
+  with the hint `wardrobe.basicsHint`; with none it is hidden, and an open garment hides it. A row
+  is one button: a swatch of the colour of the basic, its name, and a line of its slot, its
+  season and, with a gain above 0, `wardrobe.basicGain` (`wardrobe.basicGainMax` at
+  `MAX_OUTFITS`). A tap opens the sheet of a new garment (WAR-3) with the name, the slot, the
+  season and the colour of the basic; **Save** adds it as any garment, and the basic is then
+  covered (BAS-2).
 
 ## Combinations section
 

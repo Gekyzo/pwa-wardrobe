@@ -1037,9 +1037,32 @@
     height: var(--dot);
   }
 
+  /* @component wardrobe-side
+     @scope wardrobe
+     @summary The side of the wardrobe: the random outfit and the missing basics. After the grid or the empty state, and from 1024px a column beside it that stays in sight.
+     @example <div class="wardrobe-side" style="width: 360px"><aside class="random-panel"><div class="random-panel-head"><h2 class="random-panel-title">Random outfit</h2></div><p class="empty-state inline">No outfit with these garments.</p></aside><aside class="basics-panel"><h2 class="basics-panel-title">Missing basics</h2></aside></div> */
+  .wardrobe-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+    margin-top: var(--space-7);
+  }
+
+  .wardrobe-side:not(:has(> :not([hidden]))) {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .wardrobe-side {
+      position: sticky;
+      top: var(--space-4);
+      margin-top: 0;
+    }
+  }
+
   /* @component random-panel
      @scope wardrobe
-     @summary The random outfit of the wardrobe: its head with the season filter, one outfit and Another. After the grid, and from 1024px a column beside it that stays in sight.
+     @summary The random outfit of the wardrobe: its head with the season filter, one outfit and Another. The first part of wardrobe-side.
      @part random-panel-head   The title and the season filter.
      @part random-panel-title  The title.
      @example <aside class="random-panel" style="width: 360px"><div class="random-panel-head"><h2 class="random-panel-title">Random outfit</h2></div><p class="empty-state inline">No outfit with these garments.</p></aside> */
@@ -1047,7 +1070,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-    margin-top: var(--space-7);
   }
 
   .random-panel-head {
@@ -1063,18 +1085,79 @@
     margin: 0;
   }
 
-  .random-panel-title {
+  .random-panel-title,
+  .basics-panel-title {
     margin: 0;
     font-size: var(--section-title);
     font-weight: var(--weight-book);
   }
 
-  @media (min-width: 1024px) {
-    .random-panel:not([hidden]) {
-      position: sticky;
-      top: var(--space-4);
-      margin-top: 0;
-    }
+  /* @component basics-panel
+     @scope wardrobe
+     @summary The basics that the wardrobe misses: the title, a hint, and one row for each basic, a swatch of its colour, its name and a line of slot, season and the outfits it adds. A tap opens a new garment filled with it.
+     @part basics-panel-title  The title.
+     @part basics-panel-hint   The hint under the title.
+     @part basics-panel-list   The rows.
+     @part basics-panel-row    One basic of the list.
+     @part basics-panel-item   Its button.
+     @part basics-panel-name   The name of the basic.
+     @part basics-panel-meta   Its slot, its season and its gain.
+     @example <aside class="basics-panel" style="width: 360px"><h2 class="basics-panel-title">Missing basics</h2><p class="basics-panel-hint">Tap one to add it.</p><ul class="basics-panel-list"><li class="basics-panel-row"><button class="basics-panel-item" type="button"><span class="swatch" style="background: #12354e"></span><span class="basics-panel-name">Jeans</span><span class="basics-panel-meta">Bottom · All year · +3 outfits</span></button></li><li class="basics-panel-row"><button class="basics-panel-item" type="button"><span class="swatch" style="background: #ffffff"></span><span class="basics-panel-name">White sneakers</span><span class="basics-panel-meta">Shoes · All year</span></button></li></ul></aside> */
+  .basics-panel:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .basics-panel-hint {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .basics-panel-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .basics-panel-row + .basics-panel-row {
+    border-top: 1px solid var(--line);
+  }
+
+  .basics-panel-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: var(--space-4);
+    align-items: center;
+    width: 100%;
+    min-height: var(--combo-row);
+    padding: var(--space-2);
+    border: 0;
+    border-radius: var(--radius-s);
+    background: none;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .basics-panel-item:hover {
+    background: var(--secondary);
+  }
+
+  .basics-panel-item > .swatch {
+    grid-row: 1 / 3;
+  }
+
+  .basics-panel-name {
+    align-self: end;
+    overflow-wrap: anywhere;
+  }
+
+  .basics-panel-meta {
+    align-self: start;
+    color: var(--muted);
+    font-size: var(--text-s);
   }
 
   /* @component fit-pick

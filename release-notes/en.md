@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- **Missing basics** suggests the basic garments that you do not have yet, such as jeans or a white T-shirt. The ones that give you more outfits come first. Tap one to add it with its type, its season and its colour already set.
 
 ## 0.1.20 - 2026-11-01
 

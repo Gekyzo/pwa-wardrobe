@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Missing basics** (BAS-1 to BAS-4, WAR-1, WAR-9, WAR-10): new pure module `src/basics.js` (`BASICS`, `MAX_BASICS`, `covers`, `missingBasics`), in `SHELL` and the import map, with `tests/basics.test.js`. `#wardrobe-side` holds `#random-panel` and the new `#basics-panel` after the grid or the empty state, and is the sticky column from 1024px (the sticky rule moved from `random-panel`). A row calls `openSheet(null, fill)` of `src/ui/wardrobe.js`, which fills the name, slot, season and colour of a new garment. New keys `basic.*`, `wardrobe.basics`, `wardrobe.basicsHint`, `wardrobe.basicGain`, `wardrobe.basicGainMax`.
 
 ## 0.1.20 - 2026-11-01
 

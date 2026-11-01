@@ -2,7 +2,8 @@ import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, bran
 import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
-import { outfitsWith, outfitKey, randomOutfit, countKey } from '#outfits';
+import { outfitsWith, outfitKey, randomOutfit, countKey, MAX_OUTFITS } from '#outfits';
+import { missingBasics } from '#basics';
 import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
 import { $, el, ui, state, t, lang, textOf, apply, render, showToast } from '#ui/context';
@@ -170,14 +171,17 @@ const offerMeasures = () => {
   $('garment-measures').replaceChildren(...(known.length ? known : [{}]).map(measureLine));
 };
 
-const openSheet = (id = null) => {
+// `id` edits a garment; with no id, `fill` gives the name, the slot, the season and the colour of a
+// new one, such as a missing basic (WAR-10).
+const openSheet = (id = null, fill = null) => {
   const garment = id ? findGarment(state, id) : null;
+  const base = garment ?? fill;
   ui.sheetOpen = true;
   ui.editing = id;
-  ui.draftColor = garment?.color ?? null;
+  ui.draftColor = base?.color ?? null;
   clearColorText();
   $('garment-sheet-title').textContent = t(id ? 'wardrobe.editTitle' : 'wardrobe.new');
-  $('garment-name').value = garment?.name ?? '';
+  $('garment-name').value = base?.name ?? '';
   $('garment-brand').value = garment?.brand ?? '';
   $('garment-reference').value = garment?.reference ?? '';
   showBrands();
@@ -188,8 +192,8 @@ const openSheet = (id = null) => {
   ui.loadingImages = false;
   showLoad();
   showImages();
-  options($('garment-slot'), SLOTS, 'slot', garment?.slot ?? 'top');
-  options($('garment-season'), SEASONS, 'season', garment?.season ?? 'all');
+  options($('garment-slot'), SLOTS, 'slot', base?.slot ?? 'top');
+  options($('garment-season'), SEASONS, 'season', base?.season ?? 'all');
   showColor();
   $('garment-buy-date').value = garment ? garment.buy_date : today();
   $('garment-buy-date').max = today();
@@ -304,6 +308,35 @@ const randomPanel = () => {
   ];
 };
 
+// The missing basics of one doc and one season filter, computed once for each (WAR-10).
+let basics = { garments: null, season: null, list: [] };
+const basicsNow = () => {
+  if (basics.garments !== state.garments || basics.season !== ui.season) {
+    basics = { garments: state.garments, season: ui.season, list: missingBasics(state.garments, { season: ui.season }) };
+  }
+  return basics.list;
+};
+
+const gainText = (gain) => t(gain >= MAX_OUTFITS ? 'wardrobe.basicGainMax' : 'wardrobe.basicGain', { count: gain });
+
+// A missing basic: a tap opens a new garment filled with it (WAR-10).
+const basicItem = ({ basic, gain }) => {
+  const name = t(`basic.${basic.id}`);
+  const meta = [t(`slot.${basic.slot}`), t(`season.${basic.season}`), gain > 0 && gainText(gain)].filter(Boolean).join(' · ');
+  const open = () => openSheet(null, { name, slot: basic.slot, season: basic.season, color: basic.color });
+  return el('li', { className: 'basics-panel-row' }, [el('button', { className: 'basics-panel-item', type: 'button', onclick: open }, [
+    swatch(basic.color),
+    el('span', { className: 'basics-panel-name', textContent: name }),
+    el('span', { className: 'basics-panel-meta', textContent: meta }),
+  ])]);
+};
+
+const basicsPanel = (list) => [
+  el('h2', { id: 'basics-title', className: 'basics-panel-title', textContent: t('wardrobe.basics') }),
+  el('p', { className: 'basics-panel-hint', textContent: t('wardrobe.basicsHint') }),
+  el('ul', { className: 'basics-panel-list' }, list.map(basicItem)),
+];
+
 // The media of a detail: the image shown large, the band of its colour and, with two images or
 // more, the strip of all of them, where a tap on one shows it large (WAR-4).
 const sliderArrow = (className, label, onclick) => {
@@ -366,6 +399,9 @@ export const renderWardrobe = () => {
   $('garment-groups').replaceChildren(...(some && visible && !garment ? groups() : []));
   $('random-panel').hidden = !some;
   $('random-panel').replaceChildren(...(some && visible && !garment ? randomPanel() : []));
+  const missing = visible && !garment ? basicsNow() : [];
+  $('basics-panel').hidden = missing.length === 0;
+  $('basics-panel').replaceChildren(...(missing.length ? basicsPanel(missing) : []));
   $('garment-media').replaceChildren(...(garment ? media(garment) : []));
   $('garment-info').replaceChildren(...(garment ? info(garment) : []));
   $('garment-actions').hidden = !garment;
