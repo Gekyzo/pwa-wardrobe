@@ -18,6 +18,8 @@
     --chip-compact: 36px;
     --title-row-space: 40px;
     --panel-width: 360px;
+    /* The Photos or Colour switch over the cards (WAR-11). */
+    --cards-switch-width: 256px;
     --band-pad: 14px;
     --field-tall: 280px;
     --field-short: 180px;
@@ -934,6 +936,16 @@
      @example <label class="switch wearable-switch" style="width: 100%"><span>Only the ones I can wear</span><input class="switch-input" type="checkbox" role="switch" checked></label> */
   .wearable-switch {
     padding: 0;
+  }
+
+  /* @component wardrobe-cards
+     @scope wardrobe
+     @summary The switch over the cards of the wardrobe: Photos shows the main image of each garment, Colour shows the field of its colour only (WAR-11).
+     @example <div class="segmented wardrobe-cards" role="group" aria-label="Show" style="width: 100%"><button class="segment" type="button" aria-pressed="true">Photos</button><button class="segment" type="button" aria-pressed="false">Colour</button></div> */
+  /* @extends segmented */
+  .wardrobe-cards {
+    max-width: var(--cards-switch-width);
+    margin: 0 0 var(--space-5) auto;
   }
 
   /* @component garment-groups

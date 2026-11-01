@@ -137,6 +137,29 @@ export const saveTheme = (storage, theme) => {
   }
 };
 
+// The pictures of the wardrobe cards (WAR-11): `photos`, the main image or the colour, or `color`,
+// the colour only. A preference of the device, as the theme is.
+export const CARDS_KEY = keyOf('cards');
+
+export const loadCards = (storage) => {
+  try {
+    return storage.getItem(CARDS_KEY) === 'color' ? 'color' : 'photos';
+  } catch {
+    return 'photos';
+  }
+};
+
+// `photos` is the app with no choice: it removes the key.
+export const saveCards = (storage, cards) => {
+  try {
+    if (cards === 'color') storage.setItem(CARDS_KEY, 'color');
+    else storage.removeItem(CARDS_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 // The modules that the user turned off (MOD-2). A preference of the device, as the theme is.
 export const MODULES_KEY = keyOf('modules');
 

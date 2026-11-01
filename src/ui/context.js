@@ -6,6 +6,8 @@ import {
   saveLanguage,
   loadTheme,
   saveTheme,
+  loadCards,
+  saveCards,
   loadModules,
   saveModules,
   loadOnboarded,
@@ -55,6 +57,9 @@ export let t = translator(lang);
 // The colours: `light` or `dark` override the phone, in styles.css; `system` follows it.
 export let theme = storage ? loadTheme(storage) : 'system';
 document.documentElement.dataset.theme = theme;
+
+// The pictures of the wardrobe cards: `photos` or `color` (WAR-11).
+export let cards = storage ? loadCards(storage) : 'photos';
 
 // The modules that the user turned off (MOD-2).
 export let off = storage ? loadModules(storage) : [];
@@ -215,6 +220,11 @@ export const setTheme = (value) => {
   theme = ['light', 'dark'].includes(value) ? value : 'system';
   if (storage) saveTheme(storage, theme);
   document.documentElement.dataset.theme = theme;
+};
+
+export const setCards = (value) => {
+  cards = value === 'color' ? 'color' : 'photos';
+  if (storage) saveCards(storage, cards);
 };
 
 export const setModules = (next) => {

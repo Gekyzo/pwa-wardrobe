@@ -16,6 +16,9 @@ import {
   THEME_KEY,
   loadTheme,
   saveTheme,
+  CARDS_KEY,
+  loadCards,
+  saveCards,
   MODULES_KEY,
   loadModules,
   saveModules,
@@ -193,6 +196,29 @@ test('the theme functions do not throw when the storage does', () => {
   assert.equal(loadTheme(brokenStorage()), 'system');
   assert.equal(saveTheme(brokenStorage(), 'dark'), false);
   assert.equal(saveTheme(brokenStorage(), 'system'), false);
+});
+
+test('loadCards returns the stored view, photos for no value and for an unknown value', () => {
+  assert.equal(loadCards(fakeStorage({ [CARDS_KEY]: 'color' })), 'color');
+  assert.equal(loadCards(fakeStorage()), 'photos');
+  assert.equal(loadCards(fakeStorage({ [CARDS_KEY]: 'photos' })), 'photos');
+  assert.equal(loadCards(fakeStorage({ [CARDS_KEY]: 'blue' })), 'photos');
+});
+
+test('saveCards stores color and photos or an unknown value removes the key', () => {
+  const storage = fakeStorage();
+  assert.equal(saveCards(storage, 'color'), true);
+  assert.equal(storage.getItem(CARDS_KEY), 'color');
+  assert.equal(saveCards(storage, 'photos'), true);
+  assert.equal(storage.getItem(CARDS_KEY), null);
+  storage.setItem(CARDS_KEY, 'color');
+  assert.equal(saveCards(storage, 'blue'), true);
+  assert.equal(storage.getItem(CARDS_KEY), null);
+});
+
+test('the cards functions do not throw when the storage does', () => {
+  assert.equal(loadCards(brokenStorage()), 'photos');
+  assert.equal(saveCards(brokenStorage(), 'color'), false);
 });
 
 test('loadModules returns the stored ids that are modules', () => {

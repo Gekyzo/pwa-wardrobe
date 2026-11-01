@@ -43,6 +43,6 @@ test('the components of the app are documented in styles.css (DSV-3)', () => {
   }
 });
 
-test('styles.css has the versions of a shared component: switch, nav-bar, app-header, pane in Wardrobe, segmented in fit-pick, list-group in settings (DSV-3)', () => {
-  assert.deepEqual([...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name), ['switch', 'nav-bar', 'app-header', 'pane', 'segmented', 'list-group']);
+test('styles.css has the versions of a shared component: switch, nav-bar, app-header, pane in Wardrobe, segmented in wardrobe-cards and fit-pick, list-group in settings (DSV-3)', () => {
+  assert.deepEqual([...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name), ['switch', 'nav-bar', 'app-header', 'pane', 'segmented', 'segmented', 'list-group']);
 });

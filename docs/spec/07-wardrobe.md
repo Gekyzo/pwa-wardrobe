@@ -158,7 +158,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   filter (`countKey`: `combinations.countMax` at `MAX_OUTFITS`, else `combinations.count`, so 0
   reads "0 conjuntos"), each one if it has one. The counts are cached for each doc and season
   filter. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
-  image, or whose image fails to load, shows a field of its colour. In a card and in a look the
+  image, or whose image fails to load, shows a field of its colour; with **Colour** of WAR-11 every
+  card shows the field. In a card and in a look the
   picture is hidden from a screen reader, since the name and the colour stand beside it as text;
   the picture of the detail has the alt text of the name, or as a field `role="img"` and the label
   "name, colour name". With no garment the section shows `wardrobe.empty` and **Add
@@ -221,7 +222,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-9** With one garment or more, the panel **Random outfit** follows the grid, and from
   1024px is in a column of `--panel-width` beside it that stays in sight, with the basics of
   WAR-10 under it. It holds its title, the
-  season filter, one outfit of OUT-9 as a card of WAR-5, and **Another**, which takes another
+  season filter, one outfit of OUT-9 as a card of WAR-5 (its pictures follow WAR-11), and **Another**, which takes another
   outfit (OUT-9 `except`). With no outfit it shows `wardrobe.noRandom` and no **Another**. The
   first render takes an outfit, and a change of the season filter or of the garments takes a new
   one. The panel is no detail: it has no history entry (NAV-7), and an open garment hides it.
@@ -234,6 +235,14 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   `MAX_OUTFITS`). A tap opens the sheet of a new garment (WAR-3) with the name, the slot, the
   season and the colour of the basic; **Save** adds it as any garment, and the basic is then
   covered (BAS-2).
+- **WAR-11** With one garment or more, a segmented control of two (`wardrobe.cardsShow`),
+  **Photos** (`wardrobe.cardsPhotos`) and **Colour** (`wardrobe.cardsColor`), stands above the
+  groups of the grid, aligned to the end, at most `--cards-switch-width` wide. **Photos** is the
+  picture of WAR-1. **Colour** shows the field of the colour of each garment in place of its
+  image, in the cards and in the look of the random panel (WAR-9); the detail of a garment and
+  the Combinations section keep their images. The choice is a preference of the device, the key
+  `wardrobe.cards` (ENG-8, `CARDS_KEY`): `color`, or no key for **Photos**, the default; an unknown value
+  reads as **Photos**.
 
 ## Combinations section
 

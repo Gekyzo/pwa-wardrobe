@@ -1,4 +1,4 @@
-import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, isWebUrl, SLOTS, SEASONS } from '#garments';
+import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, mainImage, isWebUrl, SLOTS, SEASONS } from '#garments';
 import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
@@ -6,7 +6,7 @@ import { outfitsWith, outfitKey, randomOutfit, countKey, MAX_OUTFITS } from '#ou
 import { missingBasics } from '#basics';
 import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
-import { $, el, ui, state, t, lang, textOf, apply, render, showToast } from '#ui/context';
+import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, setCards } from '#ui/context';
 import { icon } from '#ui/controls';
 import { swatch, remoteImage, renderOutfits, picture, colorBand, seasonFilter, outfitList } from '#ui/outfit';
 
@@ -274,7 +274,7 @@ const cardMeta = (garment) => {
 // A card opens its garment; Delete is in the detail (WAR-2).
 const card = (garment) => {
   const open = el('button', { className: 'garment-card-open', type: 'button', onclick: () => openGarment(garment.id) }, [
-    picture(garment, 'card'),
+    picture(garment, 'card', cards === 'color' ? null : mainImage(garment)),
     el('span', { className: 'garment-card-name', textContent: garment.name }),
     el('span', { className: 'garment-card-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
     el('span', { className: 'garment-card-meta', textContent: cardMeta(garment) }),
@@ -284,10 +284,26 @@ const card = (garment) => {
   return node;
 };
 
-// The garments by slot, in the order of SLOTS, each slot with its count (WAR-1).
+// The switch of the pictures of the cards: Photos or Colour (WAR-11).
+const cardsSwitch = () => {
+  const group = el('div', { className: 'segmented wardrobe-cards' }, ['photos', 'color'].map((value) => {
+    const segment = el('button', { className: 'segment', type: 'button', textContent: t(value === 'color' ? 'wardrobe.cardsColor' : 'wardrobe.cardsPhotos'), onclick: () => {
+      setCards(value);
+      render();
+    } });
+    segment.setAttribute('aria-pressed', String(cards === value));
+    return segment;
+  }));
+  group.setAttribute('role', 'group');
+  group.setAttribute('aria-label', t('wardrobe.cardsShow'));
+  return group;
+};
+
+// The garments by slot, in the order of SLOTS, each slot with its count (WAR-1), under the switch
+// of WAR-11.
 const groups = () => {
   const sorted = sortGarments(state.garments);
-  return SLOTS.map((slot) => sorted.filter((garment) => garment.slot === slot))
+  const list = SLOTS.map((slot) => sorted.filter((garment) => garment.slot === slot))
     .filter((list) => list.length)
     .map((list) => el('section', { className: 'garment-groups-group' }, [
       el('div', { className: 'garment-groups-head' }, [
@@ -296,6 +312,7 @@ const groups = () => {
       ]),
       el('ul', { className: 'garment-groups-grid' }, list.map(card)),
     ]));
+  return [cardsSwitch(), ...list];
 };
 
 // The random outfit beside the grid, or after it below 1024px (WAR-9).
@@ -303,7 +320,7 @@ const randomPanel = () => {
   const { outfit } = ui.random;
   return [
     el('div', { className: 'random-panel-head' }, [el('h2', { id: 'random-title', className: 'random-panel-title', textContent: t('wardrobe.random') }), seasonFilter()]),
-    outfitList(outfit ? [outfit] : [], t('wardrobe.noRandom')),
+    outfitList(outfit ? [outfit] : [], t('wardrobe.noRandom'), { colorOnly: cards === 'color' }),
     ...(outfit ? [el('button', { className: 'button outline', type: 'button', textContent: t('wardrobe.randomAgain'), onclick: anotherRandom })] : []),
   ];
 };

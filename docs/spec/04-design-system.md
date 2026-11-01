@@ -25,7 +25,7 @@ This document holds the rules of the app only.
   `/* @extends <name> */`, in the same layer, so that it wins; the block documents the parts,
   variants and states that the app adds. No other rule of `components` or `layouts` repeats a
   selector of the shared sheet. The app has a version of
-  `list-group` in `settings`: the select of a row of Preferences lies over the row (SET-1), and
+  `segmented` in `wardrobe-cards` (WAR-11) and `fit-pick`, of `list-group` in `settings`: the select of a row of Preferences lies over the row (SET-1), and
   versions of `nav-bar` and `app-header` for the top bar (DSV-5), and a version of `switch` with
   an ink track.
 - **DSV-4** A change of a shared part is made in `pwa-design-system`, then `npm run ds` here.

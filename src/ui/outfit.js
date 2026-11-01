@@ -94,22 +94,23 @@ export const colorFields = (colors) =>
   }));
 
 // One outfit as a look: its number and the exact mark, then its garments side by side (WAR-5).
-export const look = (outfit) =>
+// With `colorOnly`, each picture is the field of its colour (WAR-11).
+export const look = (outfit, { colorOnly = false } = {}) =>
   el('li', { className: 'look' }, [
     el('div', { className: 'look-head' }, [
       el('span', { className: 'look-number', textContent: t('outfit.number', { number: outfit.combination }) }),
       ...(outfit.exact ? [el('span', { className: 'pill', textContent: t('outfit.exact') })] : []),
     ]),
     el('ul', { className: 'look-row' }, outfit.picks.map(({ garment }) => el('li', { className: 'look-item' }, [
-      picture(garment, 'worn'),
+      picture(garment, 'worn', colorOnly ? null : mainImage(garment)),
       el('span', { className: 'look-name', textContent: garment.name }),
       el('span', { className: 'look-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
     ]))),
   ]);
 
 // The cards of some outfits, or the text of none.
-export const outfitList = (outfits, empty) =>
-  outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map(look)) : el('p', { className: 'empty-state inline', textContent: empty });
+export const outfitList = (outfits, empty, options = {}) =>
+  outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map((outfit) => look(outfit, options))) : el('p', { className: 'empty-state inline', textContent: empty });
 
 // The outfits of a detail, then the cards or the text of none (WAR-5). The head holds the title and
 // the count, with the season filter under it; with `inline`, the head holds the title and the filter.
