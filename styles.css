@@ -450,6 +450,7 @@
      @part look-item    One garment.
      @part look-name    The name of the garment.
      @part look-color   A small dot and the name of the colour.
+     @part look-added   The mark of a neutral that completion added (OUT-14).
      @example <ul class="outfits-list" style="width: 320px"><li class="look"><div class="look-head"><span class="look-number">No. 69</span><span class="pill">Exact</span></div><ul class="look-row"><li class="look-item"><span class="garment-picture worn" style="background: #a1a39a" aria-hidden="true"></span><span class="look-name">Jumper</span><span class="look-color"><span class="swatch dot" style="background: #a1a39a"></span>Warm Gray</span></li><li class="look-item"><span class="garment-picture worn" style="background: #111314" aria-hidden="true"></span><span class="look-name">Trousers</span><span class="look-color"><span class="swatch dot" style="background: #111314"></span>Black</span></li></ul></li></ul> */
   .look {
     padding: var(--space-4);
@@ -505,6 +506,12 @@
   .look-color > .swatch.dot {
     width: var(--dot);
     height: var(--dot);
+  }
+
+  .look-added {
+    color: var(--muted);
+    font-size: var(--text-s);
+    font-style: italic;
   }
 
   /* @component color-band

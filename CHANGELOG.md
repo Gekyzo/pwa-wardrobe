@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Matching rules** (MAT-1 to MAT-6, OUT-11 to OUT-14, FIL-8, GAR-15, SET-4, WAR-3 to WAR-5, PAL-6): four optional rules over the Wada outfits, all off by default. New pure module `src/matching.js` with `tests/matching.test.js`; `lchOf` in `src/palette.js`. `outfitsFor`, `outfitsWith`, `countOutfits`, `randomOutfit`, `missingBasics` and `fillSuggestions` take the option `match`: formality drops sets that span more than one level, a contrast band ranks its outfits after the exact ones, neutral completion adds the nearest neutral shoes (and outer under `cold`) after the `MAX_OUTFITS` cut, and a colour type drops the Fill rows whose colour does not suit it. Each outfit carries `contrast`. New device key `wardrobe.matching` (`loadMatching`, `saveMatching`), `matching` and `setMatching` in `ui/context.js`; the caches of `ui/outfit`, `ui/fill` and `ui/wardrobe` key on it. New optional garment field `formality` (`FORMALITIES`, `error.formalityInvalid`), doc still version 4; a device on an older version drops the field on its next save. New Settings group **Matching**, select `#garment-formality`, part `look-added`, keys `settings.matching*`, `matching.*`, `outfit.contrast.*`, `outfit.neutral`, `wardrobe.formality`, `formality.*`.
 
 ## 0.1.23 - 2026-11-01
 

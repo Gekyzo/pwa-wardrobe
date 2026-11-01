@@ -1,11 +1,11 @@
-import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, isWebUrl, SLOTS, SEASONS } from '#garments';
+import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, brandsOf, toggleImage, makeMain, isWebUrl, SLOTS, SEASONS, FORMALITIES } from '#garments';
 import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
 import { outfitsWith, outfitKey, randomOutfit, countKey } from '#outfits';
 import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
-import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, setCards } from '#ui/context';
+import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, setCards, matching } from '#ui/context';
 import { icon } from '#ui/controls';
 import { swatch, remoteImage, renderOutfits, picture, smallPicture, colorBand, seasonFilter, outfitList } from '#ui/outfit';
 
@@ -216,6 +216,9 @@ const openSheet = (id = null, fill = null) => {
   showImages();
   options($('garment-slot'), SLOTS, 'slot', base?.slot ?? 'top');
   options($('garment-season'), SEASONS, 'season', base?.season ?? 'all');
+  // Kept in the hidden select while the rule is off, so that a save keeps the stored level (GAR-15).
+  options($('garment-formality'), FORMALITIES.map((level) => level || 'unknown'), 'formality', garment?.formality || 'unknown');
+  $('garment-formality').hidden = !matching.formality;
   showColor();
   $('garment-buy-date').value = garment ? garment.buy_date : today();
   $('garment-buy-date').max = today();
@@ -249,7 +252,7 @@ const openGarment = (id) => {
 
 // A pick for the doc and the season filter in view; a change of either picks again (WAR-9).
 const pickRandom = (except = null) => {
-  ui.random = { garments: state.garments, season: ui.season, outfit: randomOutfit(state.garments, { season: ui.season, except }) };
+  ui.random = { garments: state.garments, season: ui.season, matching, outfit: randomOutfit(state.garments, { season: ui.season, match: matching, except }) };
 };
 
 // Picks another outfit than the one in view.
@@ -275,6 +278,7 @@ const facts = (garment) => {
     ...(garment.size ? fact(t('wardrobe.size'), garment.size) : []),
     ...(garment.reference ? fact(t('wardrobe.reference'), garment.reference) : []),
     ...(garment.fit ? fact(t('wardrobe.fit'), t(`fit.${garment.fit}`)) : []),
+    ...(garment.formality ? fact(t('wardrobe.formality'), t(`formality.${garment.formality}`)) : []),
     ...garment.measures.flatMap(({ name, value, unit }) => fact(name, `${number(value)}${unit ? ` ${unit}` : ''}`)),
     ...(garment.price != null ? fact(t('wardrobe.price'), money(garment.price)) : []),
     ...(garment.buy_date ? fact(t('wardrobe.buyDate'), day(new Date(`${garment.buy_date}T12:00:00`))) : []),
@@ -284,10 +288,12 @@ const facts = (garment) => {
 };
 
 // The count of outfits of each garment, for one doc and one season filter (WAR-1).
-let counts = { garments: null, season: null, byId: new Map() };
+let counts = { garments: null, season: null, matching: null, byId: new Map() };
 const outfitCount = (garment) => {
-  if (counts.garments !== state.garments || counts.season !== ui.season) counts = { garments: state.garments, season: ui.season, byId: new Map() };
-  if (!counts.byId.has(garment.id)) counts.byId.set(garment.id, outfitsWith(garment, state.garments, { season: ui.season }).length);
+  if (counts.garments !== state.garments || counts.season !== ui.season || counts.matching !== matching) {
+    counts = { garments: state.garments, season: ui.season, matching, byId: new Map() };
+  }
+  if (!counts.byId.has(garment.id)) counts.byId.set(garment.id, outfitsWith(garment, state.garments, { season: ui.season, match: matching }).length);
   return counts.byId.get(garment.id);
 };
 
@@ -404,7 +410,7 @@ export const renderWardrobe = () => {
   if (!garment) ui.garmentId = null;
   // The random outfit is picked at the first render, and again on a change of the doc or the filter.
   if (!some) ui.random = null;
-  else if (!ui.random || ui.random.garments !== state.garments || ui.random.season !== ui.season) pickRandom();
+  else if (!ui.random || ui.random.garments !== state.garments || ui.random.season !== ui.season || ui.random.matching !== matching) pickRandom();
   // The detail of a garment shows alone at every width (LAY-3, WAR-4).
   if (garment) $('wardrobe').dataset.detail = '';
   else delete $('wardrobe').dataset.detail;
@@ -419,7 +425,7 @@ export const renderWardrobe = () => {
   if (garment?.link) $('garment-open').href = garment.link;
   $('garment-outfits').hidden = !garment;
   if (garment && visible) {
-    const outfits = outfitsWith(garment, state.garments, { season: ui.season });
+    const outfits = outfitsWith(garment, state.garments, { season: ui.season, match: matching });
     renderOutfits($('garment-outfits'), t('wardrobe.outfits'), outfits, t('wardrobe.noOutfits'));
   }
   $('garment-sheet').hidden = !ui.sheetOpen;
@@ -497,6 +503,7 @@ export const bind = () => {
       size: $('garment-size').value,
       fit: ui.draftFit,
       measures: readMeasures(),
+      formality: $('garment-formality').value === 'unknown' ? '' : $('garment-formality').value,
     };
     const result = ui.editing ? editGarment(state, ui.editing, fields) : addGarment(state, fields);
     if (apply(result)) closeGarmentSheet();

@@ -1,15 +1,18 @@
 import { mainImage, shapeOf } from '#garments';
 import { colorOf, inkOn } from '#palette';
 import { SEASON_FILTERS, countKey, outfitsFor } from '#outfits';
-import { el, ui, state, t, render } from '#ui/context';
+import { el, ui, state, t, render, matching } from '#ui/context';
+import { inBand } from '#matching';
 import { icon } from '#ui/controls';
 
 // The outfits of each combination for the doc and the season filter of now, computed once each.
 // The header and Combinations read them at each render; a new doc or a new filter starts again.
-let cache = { garments: null, season: null, outfits: new Map() };
+let cache = { garments: null, season: null, matching: null, outfits: new Map() };
 export const outfitsOf = (number) => {
-  if (cache.garments !== state.garments || cache.season !== ui.season) cache = { garments: state.garments, season: ui.season, outfits: new Map() };
-  if (!cache.outfits.has(number)) cache.outfits.set(number, outfitsFor(number, state.garments, { season: ui.season }));
+  if (cache.garments !== state.garments || cache.season !== ui.season || cache.matching !== matching) {
+    cache = { garments: state.garments, season: ui.season, matching, outfits: new Map() };
+  }
+  if (!cache.outfits.has(number)) cache.outfits.set(number, outfitsFor(number, state.garments, { season: ui.season, match: matching }));
   return cache.outfits.get(number);
 };
 
@@ -127,18 +130,21 @@ export const colorFields = (colors) =>
     return field;
   }));
 
-// One outfit as a look: its number and the exact mark, then its garments side by side (WAR-5).
+// One outfit as a look: its number, the exact mark and the mark of the contrast band, then its
+// garments side by side, a neutral that completion added marked as such (WAR-5).
 // With `colorOnly`, each picture is the field of its colour (WAR-11).
 export const look = (outfit, { colorOnly = false } = {}) =>
   el('li', { className: 'look' }, [
     el('div', { className: 'look-head' }, [
       el('span', { className: 'look-number', textContent: t('outfit.number', { number: outfit.combination }) }),
       ...(outfit.exact ? [el('span', { className: 'pill', textContent: t('outfit.exact') })] : []),
+      ...(inBand(outfit.contrast, matching.contrast) ? [el('span', { className: 'pill', textContent: t(`outfit.contrast.${matching.contrast}`) })] : []),
     ]),
-    el('ul', { className: 'look-row' }, outfit.picks.map(({ garment }) => el('li', { className: 'look-item' }, [
+    el('ul', { className: 'look-row' }, outfit.picks.map(({ garment, added }) => el('li', { className: 'look-item' }, [
       smallPicture(garment, 'worn', colorOnly),
       el('span', { className: 'look-name', textContent: garment.name }),
       el('span', { className: 'look-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
+      ...(added ? [el('span', { className: 'look-added', textContent: t('outfit.neutral') })] : []),
     ]))),
   ]);
 

@@ -126,6 +126,26 @@
             <label class="switch"><span data-i18n="nav.fill"></span><input class="switch-input" type="checkbox" role="switch" data-module="fill"></label>
           </div>
         </div>
+        <div class="settings-section">
+          <h2 class="list-group-head" data-i18n="settings.matching"></h2>
+          <p class="settings-hint" data-i18n="settings.matchingHint"></p>
+          <div class="list-group">
+            <label class="switch"><span data-i18n="matching.neutrals"></span><input class="switch-input" type="checkbox" role="switch" data-matching="neutrals"></label>
+            <div class="settings-row">
+              <span class="settings-row-label" data-i18n="matching.contrast"></span>
+              <span id="matching-contrast-value" class="settings-row-value"></span>
+              <span class="chevron" aria-hidden="true">›</span>
+              <select id="matching-contrast" class="select" data-i18n-attr="aria-label:matching.contrast"></select>
+            </div>
+            <div class="settings-row">
+              <span class="settings-row-label" data-i18n="matching.colorType"></span>
+              <span id="matching-colorType-value" class="settings-row-value"></span>
+              <span class="chevron" aria-hidden="true">›</span>
+              <select id="matching-colorType" class="select" data-i18n-attr="aria-label:matching.colorType"></select>
+            </div>
+            <label class="switch"><span data-i18n="matching.formality"></span><input class="switch-input" type="checkbox" role="switch" data-matching="formality"></label>
+          </div>
+        </div>
         <div id="install-group" class="settings-section" hidden>
           <h2 class="list-group-head" data-i18n="settings.app"></h2>
           <div class="list-group">
@@ -189,6 +209,7 @@
           <label class="field"><input id="garment-reference" class="input field-input" type="text" maxlength="40" autocapitalize="off" spellcheck="false" data-i18n-attr="placeholder:wardrobe.reference"><span class="field-label" data-i18n="wardrobe.reference"></span></label>
           <select id="garment-slot" class="select" data-i18n-attr="aria-label:wardrobe.slot"></select>
           <select id="garment-season" class="select" data-i18n-attr="aria-label:wardrobe.season"></select>
+          <select id="garment-formality" class="select" data-i18n-attr="aria-label:wardrobe.formality" hidden></select>
           <div class="color-pick">
             <input id="garment-color-input" class="color-pick-input" type="color" data-i18n-attr="aria-label:wardrobe.color">
             <span id="garment-color-name" class="color-pick-name"></span>

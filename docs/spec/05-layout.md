@@ -67,12 +67,12 @@ Combinations says `combinations.pick`.
 
 - **SET-1** Settings is a column of groups, each a `list-group-head` above a `list-group` of
   settings rows, as in pwa-shopping-list: **Backup** (**Export**, **Import**, **Delete all data**), **Preferences**
-  (**Language**, **Theme**), **Modules** (MOD-1), **App** (INS-2) and **Help** (ONB-3),
+  (**Language**, **Theme**), **Modules** (MOD-1), **Matching** (SET-4), **App** (INS-2) and **Help** (ONB-3),
   then the version lines (VER-4). **Export** shows `garments.count` with the count of garments. A row of Preferences shows its current value and a chevron, and
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.
-- **SET-2** **Account** (`settings.accountHint`), **Backup**, **Preferences** and **Modules**
-  (`settings.modulesHint`) have a line of help below their head at every width.
+- **SET-2** **Account** (`settings.accountHint`), **Backup**, **Preferences**, **Modules**
+  (`settings.modulesHint`) and **Matching** (`settings.matchingHint`) have a line of help below their head at every width.
   The groups are rounded cards on `--surface`, under heads of 16px. From 840px Settings is a
   column of at most 1040px (`--settings-max`) at the start of the frame, and each group is a row:
   its head and its help in a column of `--panel-width` at the left, its rows at the right, the
@@ -87,6 +87,12 @@ Combinations says `combinations.pick`.
   the sync has already removed the session, the sync state and the queue, and put the empty doc in
   place, as far as the storage let it (SYNC-10). A key that `resetAll` did not reach stays. The
   caches of the worker stay, the images of the garments (SW-14) too.
+- **SET-4** **Matching** (`settings.matching`) holds the controls of the matching rules (MAT-1),
+  in this order: the switch `matching.neutrals` (OUT-14), the row `matching.contrast` with a
+  select of `CONTRASTS` (OUT-13), the row `matching.colorType` with a select of `COLOR_TYPES`
+  (FIL-8), and the switch `matching.formality` (OUT-12, WAR-3). A row with a select is drawn as a
+  row of Preferences (SET-1). A change stores the choice (MAT-6) and builds the screen again: the
+  outfits, the counts, the random outfit and Fill follow it at once.
 
 ## Walkthrough
 

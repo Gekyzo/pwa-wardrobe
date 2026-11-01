@@ -1,7 +1,7 @@
 import { fillSuggestions } from '#fill';
 import { MATCH_MAX, MAX_OUTFITS } from '#outfits';
 import { colorOf, combination, distance } from '#palette';
-import { $, el, ui, state, t } from '#ui/context';
+import { $, el, ui, state, t, matching } from '#ui/context';
 import { swatch, strip, seasonFilter, outfitsOf } from '#ui/outfit';
 import { openNewGarment } from '#ui/wardrobe';
 
@@ -9,10 +9,11 @@ import { openNewGarment } from '#ui/wardrobe';
 const SHOWN_PALETTES = 3;
 
 // The list of one doc and one season filter, computed once for each.
-let cache = { garments: null, season: null, list: [] };
+let cache = { garments: null, season: null, matching: null, list: [] };
 export const fillNow = () => {
-  if (cache.garments !== state.garments || cache.season !== ui.season) {
-    cache = { garments: state.garments, season: ui.season, list: fillSuggestions(state.garments, { season: ui.season, of: (n) => outfitsOf(n) }) };
+  if (cache.garments !== state.garments || cache.season !== ui.season || cache.matching !== matching) {
+    const list = fillSuggestions(state.garments, { season: ui.season, match: matching, of: (n) => outfitsOf(n) });
+    cache = { garments: state.garments, season: ui.season, matching, list };
   }
   return cache.list;
 };

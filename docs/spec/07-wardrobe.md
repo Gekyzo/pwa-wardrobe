@@ -228,7 +228,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   of `BASICS`, then the colour id, and cut to `max`.
 - **FIL-7** The Fill section (`nav.fill`, the `star` icon) shows the season filter shared with the
   other views, the hint `fill.hint`, and the rows of `fillSuggestions` under the filter, computed
-  once for each doc and season filter, with the cached outfits of each combination as `of`. A
+  once for each doc, season filter and matching choice, with the cached outfits of each combination as `of`. A
   row is one button: a swatch of its colour; its name, `basic.<id>` for a basic or
   `fill.wadaName` with the slot and the colour name for a Wada colour; a line of its slot and its
   season; with a gain above 0, its gain, `fill.gain` (`fill.gainMax` at `MAX_OUTFITS`), on the end; the tag
@@ -249,8 +249,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   of the garment, 3:4, with square corners; the name; a dot of the colour and its name; and the
   brand, `wardrobe.sizeShort` with the size, and the count of `outfitsWith` under the season
   filter (`countKey`: `combinations.countMax` at `MAX_OUTFITS`, else `combinations.count`, so 0
-  reads "0 conjuntos"), each one if it has one. The counts are cached for each doc and season
-  filter. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
+  reads "0 conjuntos"), each one if it has one. The counts are cached for each doc, season
+  filter and matching choice. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
   image, or whose image fails to load, shows the drawing of its shape (GAR-14) on the same ground,
   filled with its colour, at 76% of the box with a `--muted` outline; with **Colour** of WAR-11
   every card shows a field of its colour. In a card and in a look the
@@ -262,7 +262,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   `toast.garmentDeleted` offers **Undo** for 5 seconds. A doc that the sync puts in place hides an open **Undo** (SYNC-2).
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
   **Save**; **Close**, a tap on the veil or a drag down of the head closes it with no save. The
-  sheet holds the name, the brand, the reference (GAR-13), the slot, the season,
+  sheet holds the name, the brand, the reference (GAR-13), the slot, the season, the formality
+  (GAR-15) as a select of `formality.<level>` (`formality.unknown` for `''`), shown only while the
+  rule `formality` is on (SET-4) and kept as it is in a save while it is hidden,
   the colour, the link, the images, under `wardrobe.purchase` the buy date, which is not after
   today and is today for a new garment, and the price in euros (GAR-12) and, under `wardrobe.sizing`, the size, the fit (GAR-8) as one segmented control
   in one line, each segment an icon over its name, the measure lines, each with a name, a value, a unit and a button that removes it, and
@@ -285,15 +287,17 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   `wardrobe.imageCount` ("2 / 3"). An image that does not load shows the drawing of its shape (WAR-1).
   The shown image stays while the detail is open. The info: the name at
   `--screen-title`, a line of slot, brand and season, then the facts in two columns, each a label
-  over its value as plain text: the size, the reference, the fit, each measure, the price in euros, the buy
+  over its value as plain text: the size, the reference, the fit, the formality, each measure, the price in euros, the buy
   date and `wardrobe.added` with the creation date, in the formats of the language, each one only
   when it is set. Then **Edit** (primary), **Open link** (outline) when the garment has a link,
   which opens it in a new tab, and **Delete** (an underlined danger text button), and the outfits that
   contain it (OUT-8) under the season filter, or `wardrobe.noOutfits`. From 1024px the media and
   the rest are two columns, 7 to 5, and the media stays in sight; below, they stack.
-- **WAR-5** An outfit is a look on a `--surface` card: `outfit.number` and `outfit.exact` for an
-  exact outfit, then its garments side by side, each with its picture (WAR-1, 3:4), its name and
-  a dot of its colour with the colour name. The outfits of a detail have a head of their title
+- **WAR-5** An outfit is a look on a `--surface` card: `outfit.number`, `outfit.exact` for an
+  exact outfit and `outfit.contrast.<band>` for an outfit in the band of the rule `contrast`
+  (OUT-13), then its garments side by side, each with its picture (WAR-1, 3:4), its name and
+  a dot of its colour with the colour name; a garment that completion added (OUT-14) ends with
+  `outfit.neutral`. The outfits of a detail have a head of their title
   and, when there is one or more, their count (`countKey`) on one line, then the season filter
   and the looks. The season filter (OUT-7) is shared by the details,
   the random panel and the card counts of the app, and is not stored. It is a group named
@@ -320,7 +324,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   1024px is in a column of `--panel-width` beside it that stays in sight. It holds its title, the
   season filter, one outfit of OUT-9 as a card of WAR-5 (its pictures follow WAR-11), and **Another**, which takes another
   outfit (OUT-9 `except`). With no outfit it shows `wardrobe.noRandom` and no **Another**. The
-  first render takes an outfit, and a change of the season filter or of the garments takes a new
+  first render takes an outfit, and a change of the season filter, of the matching choice or of the garments takes a new
   one. The panel is no detail: it has no history entry (NAV-7), and an open garment hides it.
 - **WAR-10** Removed: the missing basics are rows of the Fill tab (FIL-2, FIL-7). Wardrobe has no
   panel of basics.

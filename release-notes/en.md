@@ -4,7 +4,11 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- New group **Matching** in **Settings**, with four optional rules over the Sanzo Wada combinations. All of them start off.
+- **Complete with neutrals** adds neutral shoes to each outfit, and under **Cold** a coat too.
+- **Contrast** puts the outfits of high or soft contrast first.
+- **Colour type** (spring, summer, autumn or winter) keeps in **Fill** only the colours that suit you.
+- **Formality** adds a level to each garment and removes outfits that mix levels far apart, such as a suit with trainers.
 
 ## 0.1.23 - 2026-11-01
 

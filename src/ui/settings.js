@@ -2,6 +2,7 @@ import { normalizeGarments } from '#garments';
 import { importJson, resetAll } from '#storage';
 import { LANGUAGES, LANGUAGE_NAMES } from '#i18n';
 import { switchModule } from '#modules';
+import { CONTRASTS, COLOR_TYPES } from '#matching';
 import {
   $,
   el,
@@ -21,6 +22,8 @@ import {
   setTheme,
   setModules,
   setNavMotion,
+  matching,
+  setMatching,
   exportDoc,
 } from '#ui/context';
 import { runUpdate } from '#ui/update';
@@ -29,7 +32,7 @@ import { signedIn, stopSync } from '#ui/account';
 
 // The value of a row of Preferences is the text of the option that its select has.
 const renderValues = () => {
-  for (const id of ['language', 'theme']) {
+  for (const id of ['language', 'theme', 'matching-contrast', 'matching-colorType']) {
     $(`${id}-value`).textContent = $(id).selectedOptions[0]?.textContent ?? '';
   }
 };
@@ -69,6 +72,13 @@ export const applyLanguage = () => {
   document.querySelectorAll('[data-module]').forEach((box) => {
     box.checked = isOn(box.dataset.module);
   });
+  // The rules of Matching (SET-4): two switches and two selects.
+  const ruleOption = (name, value) => el('option', { value, textContent: t(`matching.${name}.${value}`), selected: value === matching[name] });
+  $('matching-contrast').replaceChildren(...CONTRASTS.map((value) => ruleOption('contrast', value)));
+  $('matching-colorType').replaceChildren(...COLOR_TYPES.map((value) => ruleOption('colorType', value)));
+  document.querySelectorAll('[data-matching]').forEach((box) => {
+    box.checked = matching[box.dataset.matching];
+  });
   renderValues();
   render();
   renderOnboarding();
@@ -105,6 +115,19 @@ export const bind = () => {
       setNavMotion(false);
     });
   });
+  document.querySelectorAll('[data-matching]').forEach((box) => {
+    box.addEventListener('change', () => {
+      setMatching({ [box.dataset.matching]: box.checked });
+      render();
+    });
+  });
+  for (const name of ['contrast', 'colorType']) {
+    $(`matching-${name}`).addEventListener('change', (event) => {
+      setMatching({ [name]: event.target.value });
+      renderValues();
+      render();
+    });
+  }
   $('update').addEventListener('click', () => runUpdate($('update')));
   $('import-file').addEventListener('change', async (event) => {
     const [file] = event.target.files;
