@@ -5,6 +5,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 ## Unreleased
 
 - **Season filter** (WAR-5): `seasonFilter()` of `src/ui/outfit.js` is a `cluster season-filter` group (`role="group"`, label `wardrobe.season`) of outline `chip`s, the pressed one ink, as the size filter. It replaces the `segmented` switch, whose knob was wider than its label in the 360px random panel head; there it has no margin and wraps under the title.
+- **Long names and broken thumbs** (WAR-4, WAR-5): `.look-name`, `.garment-card-name` and `.garment-detail-title` take `overflow-wrap: anywhere`, so a long one-word name stays in its column at 360px. `media()` of `src/ui/wardrobe.js` hides an image-strip thumb whose image fails, as the sheet does (WAR-6).
 
 ## 0.1.19 - 2026-11-01
 

@@ -315,6 +315,8 @@ const media = (garment) => {
       ui.detailImage = url;
       render();
     } }, [remoteImage(url, 'image-grid-img')]);
+    // A thumb that does not load is not shown, as in the sheet (WAR-6).
+    button.firstChild.addEventListener('error', () => { button.hidden = true; }, { once: true });
     button.setAttribute('aria-pressed', String(url === (shown ?? garment.images[0])));
     button.setAttribute('aria-label', t('wardrobe.image', { number: index + 1 }));
     return button;

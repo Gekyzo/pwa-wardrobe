@@ -166,7 +166,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   grid and the panel (LAY-3, `pane single`). **Back** reads `nav.wardrobe`. The media: the
   picture of the garment, 4:5 (WAR-1), with the image shown large; under it a band of its colour
   with the colour name and its hex, in dark or light text (`inkOn`, PAL-5); and with two or more
-  images, all the images in a row, where a tap on one shows it large. The info: the name at
+  images, all the images in a row, where a tap on one shows it large; an image of the row that
+  does not load is not shown. The info: the name at
   `--screen-title`, a line of slot, brand and season, then the facts in two columns, each a label
   over its value: the size, the reference, the fit, each measure, the price in euros, the buy
   date and `wardrobe.added` with the creation date, in the formats of the language, each one only
@@ -179,7 +180,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   a dot of its colour with the colour name. The season filter (OUT-7) is shared by the details,
   the random panel and the card counts of the app, and is not stored. It is a group named
   `wardrobe.season` of three outline chips, `season.any`, `season.warm` and `season.cold`; the
-  pressed one is ink.
+  pressed one is ink. A name of a card, a look or a detail that is longer than its column breaks
+  inside a word.
 - **WAR-6** **Load images** of the sheet is on while the link is an `http` or `https` URL and no
   load runs; during a load it reads `wardrobe.loading`. The images of the page (LNK-2) join the
   images of the sheet, which shows them as a grid; a failure shows `error.linkFailed`. A tap on

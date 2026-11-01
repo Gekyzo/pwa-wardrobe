@@ -5,6 +5,8 @@ What changes for you in each version of the app. The newest version is first.
 ## Unreleased
 
 - The **season filter** is three separate buttons, and the pressed one is black. In **Random outfit** it is no longer cramped.
+- A long name of one word no longer runs out of its column.
+- In the detail of a garment, an image that does not load is no longer shown in the row of images.
 
 ## 0.1.19 - 2026-11-01
 

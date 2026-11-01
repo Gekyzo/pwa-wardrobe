@@ -388,6 +388,7 @@
 
   .look-name {
     font-weight: var(--weight-book);
+    overflow-wrap: anywhere;
   }
 
   .look-color {
@@ -852,6 +853,7 @@
 
   .garment-card-name {
     font-weight: var(--weight-book);
+    overflow-wrap: anywhere;
   }
 
   .garment-card-color,
@@ -1033,6 +1035,7 @@
     font-weight: var(--screen-title-weight);
     letter-spacing: var(--screen-title-track);
     line-height: 1.1;
+    overflow-wrap: anywhere;
   }
 
   .garment-detail-meta {
