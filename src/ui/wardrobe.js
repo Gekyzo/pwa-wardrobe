@@ -2,12 +2,12 @@ import { addGarment, editGarment, deleteGarment, findGarment, sortGarments, bran
 import { bindSheetDrag } from '#ds/sheet';
 import { loadPageImages } from '#links';
 import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
-import { outfitsWith, outfitKey, randomOutfit } from '#outfits';
+import { outfitsWith, outfitKey, randomOutfit, countKey } from '#outfits';
 import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
 import { $, el, ui, state, t, lang, textOf, apply, render, showToast } from '#ui/context';
 import { icon } from '#ui/controls';
-import { swatch, thumb, remoteImage, renderOutfits } from '#ui/outfit';
+import { swatch, remoteImage, renderOutfits, picture, seasonFilter, outfitList } from '#ui/outfit';
 
 const options = (select, values, prefix, chosen) =>
   select.replaceChildren(...values.map((value) => el('option', { value, textContent: t(`${prefix}.${value}`), selected: value === chosen })));
@@ -217,7 +217,6 @@ export const closeGarmentSheet = () => {
 const openGarment = (id) => {
   ui.garmentId = id;
   ui.detailImage = null;
-  ui.random = null;
   render();
 };
 
@@ -226,9 +225,8 @@ const pickRandom = (except = null) => {
   ui.random = { garments: state.garments, season: ui.season, outfit: randomOutfit(state.garments, { season: ui.season, except }) };
 };
 
-// Opens the random outfit, or picks another one than the outfit in view.
-const openRandom = () => {
-  ui.garmentId = null;
+// Picks another outfit than the one in view.
+const anotherRandom = () => {
   pickRandom(ui.random?.outfit ? outfitKey(ui.random.outfit) : null);
   render();
 };
@@ -259,15 +257,54 @@ const facts = (garment) => {
   return list.length ? [el('dl', { className: 'garment-facts' }, list)] : [];
 };
 
-// A row opens its garment; Delete is in the detail (WAR-2).
-const row = (garment) => {
-  const name = el('button', { className: 'item-row-name', type: 'button', onclick: () => openGarment(garment.id) }, [
-    el('span', {}, [swatch(garment.color, 'dot'), ` ${garment.name}`]),
-    el('small', { className: 'item-row-meta', textContent: metaOf(garment) }),
+// The count of outfits of each garment, for one doc and one season filter (WAR-1).
+let counts = { garments: null, season: null, byId: new Map() };
+const outfitCount = (garment) => {
+  if (counts.garments !== state.garments || counts.season !== ui.season) counts = { garments: state.garments, season: ui.season, byId: new Map() };
+  if (!counts.byId.has(garment.id)) counts.byId.set(garment.id, outfitsWith(garment, state.garments, { season: ui.season }).length);
+  return counts.byId.get(garment.id);
+};
+
+const cardMeta = (garment) => {
+  const count = outfitCount(garment);
+  return [garment.brand, garment.size && t('wardrobe.sizeShort', { size: garment.size }), t(countKey(count), { count })].filter(Boolean).join(' · ');
+};
+
+// A card opens its garment; Delete is in the detail (WAR-2).
+const card = (garment) => {
+  const open = el('button', { className: 'garment-card-open', type: 'button', onclick: () => openGarment(garment.id) }, [
+    picture(garment, 'card'),
+    el('span', { className: 'garment-card-name', textContent: garment.name }),
+    el('span', { className: 'garment-card-color' }, [swatch(garment.color, 'dot'), colorOf(garment.color).name]),
+    el('span', { className: 'garment-card-meta', textContent: cardMeta(garment) }),
   ]);
-  const node = el('li', { className: 'item-row' }, [el('div', { className: 'item-row-body' }, [...[thumb(garment)].filter(Boolean), name])]);
+  const node = el('li', { className: 'garment-card' }, [open]);
   node.dataset.id = garment.id;
   return node;
+};
+
+// The garments by slot, in the order of SLOTS, each slot with its count (WAR-1).
+const groups = () => {
+  const sorted = sortGarments(state.garments);
+  return SLOTS.map((slot) => sorted.filter((garment) => garment.slot === slot))
+    .filter((list) => list.length)
+    .map((list) => el('section', { className: 'garment-groups-group' }, [
+      el('div', { className: 'garment-groups-head' }, [
+        el('h2', { className: 'garment-groups-title', textContent: t(`slot.${list[0].slot}`) }),
+        el('span', { className: 'garment-groups-count', textContent: t('garments.count', { count: list.length }) }),
+      ]),
+      el('ul', { className: 'garment-groups-grid' }, list.map(card)),
+    ]));
+};
+
+// The random outfit beside the grid, or after it below 1024px (WAR-9).
+const randomPanel = () => {
+  const { outfit } = ui.random;
+  return [
+    el('div', { className: 'random-panel-head' }, [el('h2', { id: 'random-title', className: 'random-panel-title', textContent: t('wardrobe.random') }), seasonFilter()]),
+    outfitList(outfit ? [outfit] : [], t('wardrobe.noRandom')),
+    ...(outfit ? [el('button', { className: 'button outline', type: 'button', textContent: t('wardrobe.randomAgain'), onclick: anotherRandom })] : []),
+  ];
 };
 
 // The images of a detail: one large, and the others below it; a tap on one shows it large.
@@ -301,21 +338,24 @@ export const renderWardrobe = () => {
   const visible = ui.view === 'wardrobe';
   $('wardrobe').hidden = !visible;
   $('fab').hidden = !visible || ui.sheetOpen;
-  $('garment-list').replaceChildren(...sortGarments(state.garments).map(row));
-  $('wardrobe-empty').hidden = state.garments.length > 0;
-  $('wardrobe-random').hidden = state.garments.length === 0;
+  const some = state.garments.length > 0;
+  $('wardrobe-empty').hidden = some;
   // From 600px the add is the button of the header (NAV-6), and the fab is hidden there. The add of
   // the empty state replaces it.
   $('header-add').hidden = $('fab').hidden || !$('wardrobe-empty').hidden;
   const garment = ui.garmentId === null ? null : findGarment(state, ui.garmentId);
   if (!garment) ui.garmentId = null;
-  if (ui.random && (ui.random.garments !== state.garments || ui.random.season !== ui.season)) pickRandom();
-  const random = garment ? null : ui.random;
-  // The pane shows the detail alone below 840px, and beside the list from 840px (LAY-3).
-  if (garment || random) $('wardrobe').dataset.detail = '';
+  // The random outfit is picked at the first render, and again on a change of the doc or the filter.
+  if (!some) ui.random = null;
+  else if (!ui.random || ui.random.garments !== state.garments || ui.random.season !== ui.season) pickRandom();
+  // The detail of a garment shows alone at every width (LAY-3, WAR-4).
+  if (garment) $('wardrobe').dataset.detail = '';
   else delete $('wardrobe').dataset.detail;
+  $('garment-groups').hidden = !some;
+  $('garment-groups').replaceChildren(...(some && visible && !garment ? groups() : []));
+  $('random-panel').hidden = !some;
+  $('random-panel').replaceChildren(...(some && visible && !garment ? randomPanel() : []));
   $('garment-info').replaceChildren(...(garment ? info(garment) : []));
-  $('garment-detail-empty').hidden = Boolean(garment || random);
   $('garment-actions').hidden = !garment;
   $('garment-open').hidden = !garment?.link;
   if (garment?.link) $('garment-open').href = garment.link;
@@ -323,11 +363,6 @@ export const renderWardrobe = () => {
   if (garment && visible) {
     const outfits = outfitsWith(garment, state.garments, { season: ui.season });
     renderOutfits($('garment-outfits'), t('wardrobe.outfits'), outfits, t('wardrobe.noOutfits'));
-  }
-  $('random-outfit').hidden = !random;
-  if (random && visible) {
-    renderOutfits($('random-outfit'), t('wardrobe.random'), random.outfit ? [random.outfit] : [], t('wardrobe.noRandom'));
-    if (random.outfit) $('random-outfit').append(el('button', { className: 'button outline', type: 'button', textContent: t('wardrobe.randomAgain'), onclick: openRandom }));
   }
   $('garment-sheet').hidden = !ui.sheetOpen;
 };
@@ -340,7 +375,6 @@ export const bind = () => {
   $('garment-close').addEventListener('click', closeGarmentSheet);
   bindSheetDrag($('garment-sheet'), { close: closeGarmentSheet });
   $('garment-back').addEventListener('click', () => openGarment(null));
-  $('wardrobe-random').addEventListener('click', openRandom);
   $('garment-edit').addEventListener('click', () => openSheet(ui.garmentId));
   $('garment-delete').addEventListener('click', () => remove(ui.garmentId));
   // The grid of the palette: built once, the names are data (PAL-2).

@@ -23,6 +23,29 @@ export const thumb = (garment, variant = '') => {
   return image;
 };
 
+// The picture of a garment: its main image (GAR-7) on the photo ground, or a field of its colour
+// when it has none or when the image fails to load. `variant` is card, hero or look.
+export const picture = (garment, variant) => {
+  const figure = el('figure', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'look' ? 'garment-picture look' : 'garment-picture card' });
+  const field = () => {
+    const color = colorOf(garment.color);
+    figure.replaceChildren();
+    figure.style.background = color.hex;
+    figure.setAttribute('role', 'img');
+    figure.setAttribute('aria-label', `${garment.name}, ${color.name}`);
+  };
+  const url = mainImage(garment);
+  if (!url) {
+    field();
+    return figure;
+  }
+  const image = remoteImage(url, 'garment-picture-img');
+  image.alt = garment.name;
+  image.addEventListener('error', field, { once: true });
+  figure.append(image);
+  return figure;
+};
+
 // The colours of a combination as equal blocks in one row.
 export const strip = (colors) =>
   el('span', { className: 'strip' }, colors.map((id) => {
@@ -38,7 +61,7 @@ export const blocks = (colors) =>
     el('span', { className: 'blocks-name', textContent: colorOf(id).name }),
   ])));
 
-const seasonFilter = () =>
+export const seasonFilter = () =>
   el('div', { className: 'segmented' }, SEASON_FILTERS.map((season) => {
     const button = el('button', { className: 'segment', type: 'button', textContent: t(`season.${season}`), onclick: () => {
       ui.season = season;
@@ -63,11 +86,11 @@ const card = (outfit) =>
     ]))),
   ]);
 
+// The cards of some outfits, or the text of none.
+export const outfitList = (outfits, empty) =>
+  outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map(card)) : el('p', { className: 'empty-state inline', textContent: empty });
+
 // The outfits of a detail: a title, the season filter, then the cards or the text of none.
 export const renderOutfits = (box, title, outfits, empty) => {
-  box.replaceChildren(
-    el('h2', { className: 'outfits-title', textContent: title }),
-    seasonFilter(),
-    outfits.length ? el('ul', { className: 'outfits-list' }, outfits.map(card)) : el('p', { className: 'empty-state inline', textContent: empty }),
-  );
+  box.replaceChildren(el('h2', { className: 'outfits-title', textContent: title }), seasonFilter(), outfitList(outfits, empty));
 };

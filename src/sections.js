@@ -32,6 +32,10 @@ export const direction = (from, to, sections = SECTIONS) => {
   return a < 0 || b < 0 ? 0 : Math.sign(b - a);
 };
 
+// Whether an open detail shows alone, so that a slide right closes it (NAV-3): the detail of a
+// garment at every width, the detail of a combination below 840px.
+export const detailAlone = ({ garment, combination }, wide) => garment || (combination && !wide);
+
 // What the history needs so that the Back of the phone closes an open detail (NAV-7): 'push' adds
 // the entry of a detail that opened, 'back' leaves the entry of a detail that the app closed, null
 // when the history already matches.

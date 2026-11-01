@@ -1,5 +1,5 @@
 import { COMBINATIONS, combination, combinationsBySize } from '#palette';
-import { outfitsFor, whyNone, MAX_OUTFITS } from '#outfits';
+import { outfitsFor, whyNone, countKey } from '#outfits';
 import { $, el, ui, state, t, textOf, render } from '#ui/context';
 import { strip, blocks, renderOutfits } from '#ui/outfit';
 
@@ -14,7 +14,7 @@ const outfitsOf = (number) => {
   return cache.outfits.get(number);
 };
 
-const countText = (count) => t(count >= MAX_OUTFITS ? 'combinations.countMax' : 'combinations.count', { count });
+const countText = (count) => t(countKey(count), { count });
 
 const openCombination = (number) => {
   ui.combination = number;

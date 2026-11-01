@@ -7,6 +7,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 - El **botón principal** es negro.
 - Desde la tablet, las secciones están en una **barra superior**, y cada sección muestra un resumen bajo su título.
 - Para borrar una prenda, ábrela y pulsa **Borrar**. Una fila ya no se desliza.
+- **Armario** es una cuadrícula de fotos agrupada por parte del cuerpo. Cada prenda muestra su color y cuántos conjuntos tiene. Sin foto, muestra su color.
 
 ## 0.1.18 - 2026-10-31
 

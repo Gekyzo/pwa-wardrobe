@@ -120,3 +120,8 @@ test('Backup ends with Delete all data, a danger row with no chevron (SET-3)', (
 test('the header has the title and the subtitle of the view (NAV-8)', () => {
   assert.match(body, /<h1 id="title" class="app-header-title"><\/h1>\s*<p id="subtitle" class="app-header-subtitle"><\/p>/);
 });
+
+test('Wardrobe has the grid of groups and the random panel in its list (WAR-1, WAR-9)', () => {
+  assert.match(body, /<div class="pane-list">\s*<div id="garment-groups" class="garment-groups"><\/div>\s*<aside id="random-panel" class="random-panel" aria-labelledby="random-title" hidden><\/aside>/);
+  assert.doesNotMatch(body, /id="wardrobe-random"|id="random-outfit"|id="garment-list"|id="garment-detail-empty"/);
+});

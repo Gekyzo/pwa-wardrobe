@@ -9,7 +9,9 @@ The size classes, the navigation element, the `pane` layout and the safe areas a
 LAY-1 to LAY-5 of the design system (04-design-system), with the one exception of DSV-5: four
 width classes, a top bar in place of the rail from 600px, and from 1024px a centred frame.
 From 840px the detail of the pane is a card beside the list. In this app the Wardrobe and Combinations sections use the `pane` layout
-(LAY-3). From 840px, with no entry open, the detail says `wardrobe.pick` or `combinations.pick`.
+(LAY-3). Wardrobe uses the variant `single`: its detail shows alone at every width, and with no
+garment open there is no detail. From 840px, with no combination open, the detail of
+Combinations says `combinations.pick`.
 
 ## Navigation
 
@@ -19,10 +21,10 @@ From 840px the detail of the pane is a card beside the list. In this app the War
 - **NAV-2** A horizontal slide of at least 60 px that starts in the header or the content, out of
   a row and of a field, goes to the next section (slide left) or the previous one (slide right).
   It stops at the first and the last section. The content comes in from its side.
-- **NAV-3** Below 840px, where a detail shows alone (LAY-3), a slide to the right of NAV-2 closes
-  the detail of a garment or of a combination and shows its list again, which comes in from the
-  left. A slide to the left still goes to the next section. The **Back** of a detail starts with
-  an arrow that lines up with the content edge.
+- **NAV-3** Where a detail shows alone (`detailAlone`: a garment at every width, a combination
+  below 840px), a slide to the right of NAV-2 closes it and shows its list again, which comes in
+  from the left. A slide to the left still goes to the next section. The **Back** of a detail
+  starts with an arrow that lines up with the content edge.
 - **NAV-4** Below 600px the navigation is the bottom bar, with the icon and the name of each
   section. From 600px it is a top bar of `--topbar-height` above the title row, with **Right** and
   with **Left** (DSV-5). **Left** still puts the `+` of a phone at the left and the buttons of the
@@ -34,7 +36,7 @@ From 840px the detail of the pane is a card beside the list. In this app the War
 - **NAV-6** Below 600px the add of Wardrobe is the floating `+`. From 600px it is the button
   **Add garment** of the header, with the same conditions, and the `+` does not float. While the
   empty state shows its own **Add garment**, the header has no add.
-- **NAV-7** An open detail of a garment, of the random outfit or of a combination has its own entry
+- **NAV-7** An open detail of a garment or of a combination has its own entry
   of the history. The **Back** of the phone, also the slide from the edge of the screen, closes the
   detail and shows its list again; it does not close the app. A detail that the app closes leaves
   its entry, so the next **Back** acts as before the detail opened.

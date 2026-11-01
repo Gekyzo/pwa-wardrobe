@@ -10,7 +10,7 @@
 | `src/version.js` | Version rules and the update offer rule | nothing |
 | `src/whatsnew.js` | The parse of the release notes and the versions that a user has not seen | `version` |
 | `src/i18n.js` | The language choice and the translator | `locales/*` |
-| `src/sections.js` | The order of the sections and the rule of the slide between them | nothing |
+| `src/sections.js` | The order of the sections, the rule of the slide between them, when a detail shows alone, and the history step of a detail | nothing |
 | `src/modules.js` | The modules that Settings turns off, and the visible sections | `sections` |
 | `src/storage.js` | Load, save, validation hook, export, import, device preferences | `config`, `modules` |
 | `src/install.js` | The install offer state machine | nothing |
@@ -33,7 +33,7 @@
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
 | `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
-| `src/ui/outfit.js` | The swatch, the image of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
+| `src/ui/outfit.js` | The swatch, the image and the picture of a garment, the strip, the blocks, the outfit cards and the season filter | `garments`, `palette`, `outfits`, `ui/context` |
 | `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail and its sheet | `ds/sheet`, `garments`, `brands`, `links`, `palette`, `outfits`, `measures`, `ui/context`, `ui/controls`, `ui/outfit` |
 | `src/ui/settings.js` | Settings, Delete all data (SET-3), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |

@@ -1,4 +1,4 @@
-import { direction, slideTo, slideBack, historyStep } from '#sections';
+import { direction, slideTo, slideBack, historyStep, detailAlone } from '#sections';
 import { visibleSections } from '#modules';
 import { ui, off, render, scroller, guardClick } from '#ui/context';
 import { checkVersion } from '#ui/update';
@@ -16,17 +16,18 @@ const enter = (way) => {
 export const setView = (view) => {
   if (view === ui.view) return;
   const way = direction(ui.view, view, visibleSections(off));
-  Object.assign(ui, { view, garmentId: null, random: null, combination: null });
+  Object.assign(ui, { view, garmentId: null, combination: null });
   scroller.scrollTop = 0;
   render();
   enter(way);
   if (view === 'settings') checkVersion();
 };
 
-const detailOpen = () => ui.garmentId !== null || ui.random !== null || ui.combination !== null;
+// The random panel of Wardrobe is no detail (WAR-9): it has no history entry.
+const detailOpen = () => ui.garmentId !== null || ui.combination !== null;
 
 const closeDetail = () => {
-  Object.assign(ui, { garmentId: null, detailImage: null, random: null, combination: null });
+  Object.assign(ui, { garmentId: null, detailImage: null, combination: null });
   render();
   enter(-1);
 };
@@ -76,8 +77,9 @@ export const bind = () => {
     if (sectionSlide?.pointerId !== event.pointerId) return;
     const [dx, dy] = [event.clientX - sectionSlide.x, event.clientY - sectionSlide.y];
     sectionSlide = null;
-    // Below 840px a detail shows alone: a slide to the right goes back to its list (NAV-3).
-    if (slideBack(dx, dy, detailOpen() && matchMedia('(max-width: 839px)').matches)) {
+    // A detail that shows alone closes on a slide to the right (NAV-3).
+    const open = { garment: ui.garmentId !== null, combination: ui.combination !== null };
+    if (slideBack(dx, dy, detailAlone(open, matchMedia('(min-width: 840px)').matches))) {
       guardClick();
       closeDetail();
       return;

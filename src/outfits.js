@@ -67,6 +67,9 @@ export const outfitsFor = (number, garments, { season = 'any' } = {}) => {
   return best(search(colors.map((color) => candidates(color, fit))).map((picks) => outfitOf(number, picks)));
 };
 
+// The catalog key of a count of outfits: a full count reads `combinations.countMax` (20+).
+export const countKey = (count) => (count >= MAX_OUTFITS ? 'combinations.countMax' : 'combinations.count');
+
 // The number of outfits of every combination under the season filter, each capped at MAX_OUTFITS.
 export const countOutfits = (garments, { season = 'any' } = {}) =>
   COMBINATIONS.reduce((n, { number }) => n + outfitsFor(number, garments, { season }).length, 0);

@@ -15,7 +15,6 @@ export default {
   'wardrobe.color': 'Color',
   'wardrobe.colorCode': 'Código de color (#hex, rgb, hsl)',
   'wardrobe.colorNone': 'Elige un color',
-  'wardrobe.pick': 'Elige una prenda.',
   'wardrobe.outfits': 'Conjuntos con esta prenda',
   'wardrobe.noOutfits': 'Ningún conjunto con esta prenda.',
   'wardrobe.random': 'Conjunto al azar',

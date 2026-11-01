@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { SECTIONS, direction, slideDirection, slideTo, slideBack, historyStep } from '#sections';
+import { SECTIONS, direction, slideDirection, slideTo, slideBack, historyStep, detailAlone } from '#sections';
 
 // A longer list than the template's, so that a slide has a middle section to pass.
 const FIVE = ['a', 'b', 'c', 'd', 'settings'];
@@ -102,4 +102,21 @@ test('historyStep goes back over the entry when a detail closes in the app (NAV-
 test('historyStep does nothing when the history already matches the detail (NAV-7)', () => {
   assert.equal(historyStep(true, true), null);
   assert.equal(historyStep(false, false), null);
+});
+
+test('a garment detail shows alone at every width, a combination detail only below 840px (NAV-3)', () => {
+  assert.equal(detailAlone({ garment: true, combination: false }, true), true);
+  assert.equal(detailAlone({ garment: true, combination: false }, false), true);
+  assert.equal(detailAlone({ garment: false, combination: true }, false), true);
+  assert.equal(detailAlone({ garment: false, combination: true }, true), false);
+  assert.equal(detailAlone({ garment: false, combination: false }, false), false);
+});
+
+test('a slide right closes a garment detail open at 1280px (NAV-3)', () => {
+  assert.equal(slideBack(120, 5, detailAlone({ garment: true, combination: false }, true)), true);
+});
+
+test('the random panel is no detail, so it pushes no history entry (NAV-7)', () => {
+  const open = { garment: false, combination: false };
+  assert.equal(historyStep(open.garment || open.combination, false), null);
 });

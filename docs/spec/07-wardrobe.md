@@ -134,11 +134,17 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 
 ## Wardrobe section
 
-- **WAR-1** The Wardrobe section lists the garments in the order of the slots, then by name. A
-  row shows the main image of the garment (GAR-7), if it has one, the colour as a dot, the name,
-  and the slot, the season, and the brand and `wardrobe.sizeShort` with the size, each one if it
-  has one. With no garment it shows
-  `wardrobe.empty` and **Add garment**, which opens the sheet of WAR-3.
+- **WAR-1** The Wardrobe section shows the garments as a grid of cards, grouped by slot in the
+  order of `SLOTS`, then by name. Each group has a head with the slot name and `garments.count`.
+  The grid has 2 columns, 4 from 600px. A card is one button that opens the detail: the picture
+  of the garment, 3:4, with square corners; the name; a dot of the colour and its name; and the
+  brand, `wardrobe.sizeShort` with the size, and the count of `outfitsWith` under the season
+  filter (`countKey`: `combinations.countMax` at `MAX_OUTFITS`, else `combinations.count`, so 0
+  reads "0 conjuntos"), each one if it has one. The counts are cached for each doc and season
+  filter. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
+  image, or whose image fails to load, shows a field of its colour with `role="img"` and the label
+  "name, colour name". With no garment the section shows only `wardrobe.empty` and **Add
+  garment**, which opens the sheet of WAR-3.
 - **WAR-2** **Delete** is in the detail of a garment (WAR-4, GAR-4); the toast
   `toast.garmentDeleted` offers **Undo** for 5 seconds. A doc that the sync puts in place hides an open **Undo** (SYNC-2).
 - **WAR-3** **+** opens the sheet of a new garment. Its head has the title and **Close**, its foot
@@ -154,7 +160,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   swatch of the grid of the 159 colours takes that colour. The sheet shows the name of the chosen
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.
-- **WAR-4** A tap on a row opens its detail (LAY-3): the main image large and, with two or more
+- **WAR-4** A tap on a card opens its detail, which shows alone at every width, in place of the
+  grid and the panel (LAY-3, `pane single`): the main image large and, with two or more
   images, all the images in a row below it, where a tap on one shows it large; the colour, the
   name, the colour name, slot, season, brand and size, then the reference, the fit, each measure, the price in
   euros, the buy date and `wardrobe.added` with the creation date, in the formats of the language,
@@ -178,11 +185,12 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-8** While a new garment has no measure line with a name or a value, the lines are the
   measures of its slot (GAR-10), with their units and no value; a change of the slot changes
   them.
-- **WAR-9** With one garment or more, **Random outfit** above the list opens a detail (LAY-3)
-  with one outfit of OUT-9 as a card of WAR-5, the season filter and **Another**, which takes
-  another outfit (OUT-9 `except`). With no outfit the detail shows `wardrobe.noRandom` and no
-  **Another**. A change of the season filter or of the garments takes a new outfit. A tap on a
-  garment row closes it.
+- **WAR-9** With one garment or more, the panel **Random outfit** follows the grid, and from
+  1024px is a column of `--panel-width` beside it that stays in sight. It holds its title, the
+  season filter, one outfit of OUT-9 as a card of WAR-5, and **Another**, which takes another
+  outfit (OUT-9 `except`). With no outfit it shows `wardrobe.noRandom` and no **Another**. The
+  first render takes an outfit, and a change of the season filter or of the garments takes a new
+  one. The panel is no detail: it has no history entry (NAV-7), and an open garment hides it.
 
 ## Combinations section
 

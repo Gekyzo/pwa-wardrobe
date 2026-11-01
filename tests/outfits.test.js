@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { COMBINATIONS, combination, colorsNear, distance, colorOf } from '#palette';
-import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone, outfitKey, randomOutfit, countOutfits } from '#outfits';
+import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone, outfitKey, randomOutfit, countOutfits, countKey } from '#outfits';
 
 let next = 0;
 const g = (color, slot, extra = {}) => ({ id: `g${next++}`, name: `${slot} ${color}`, slot, season: 'all', color, ...extra });
@@ -232,4 +232,11 @@ test('countOutfits sums the outfits of every combination under the season filter
   assert.ok(countOutfits(garments) >= 2);
   assert.equal(countOutfits([]), 0);
   assert.ok(countOutfits(garments, { season: 'warm' }) < countOutfits(garments));
+});
+
+test('countKey reads a full count as 20+ and any other count, 0 too, by its plural (WAR-1)', () => {
+  assert.equal(countKey(MAX_OUTFITS), 'combinations.countMax');
+  assert.equal(countKey(MAX_OUTFITS + 3), 'combinations.countMax');
+  assert.equal(countKey(0), 'combinations.count');
+  assert.equal(countKey(MAX_OUTFITS - 1), 'combinations.count');
 });
