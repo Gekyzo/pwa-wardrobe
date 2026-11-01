@@ -6,8 +6,8 @@ Rules of `src/sections.js`, `src/modules.js`, `src/onboarding.js` and the views 
 ## Size classes
 
 The size classes, the navigation element, the `pane` layout and the safe areas are the rules
-LAY-1 to LAY-5 of the design system (04-design-system, DSV-5): four width classes, the rail at
-the start with either hand from 600px, and from 1024px a centred frame with a labelled sidebar.
+LAY-1 to LAY-5 of the design system (04-design-system), with the one exception of DSV-5: four
+width classes, a top bar in place of the rail from 600px, and from 1024px a centred frame.
 From 840px the detail of the pane is a card beside the list. In this app the Wardrobe and Combinations sections use the `pane` layout
 (LAY-3). From 840px, with no entry open, the detail says `wardrobe.pick` or `combinations.pick`.
 
@@ -23,13 +23,14 @@ From 840px the detail of the pane is a card beside the list. In this app the War
   the detail of a garment or of a combination and shows its list again, which comes in from the
   left. A slide to the left still goes to the next section. The **Back** of a detail starts with
   an arrow that lines up with the content edge.
-- **NAV-4** Below 600px the navigation is the bottom bar. From 600px it is a rail at the left with
-  **Right** and with **Left** (DSV-5). **Left** still puts the `+` of a phone at the left and the
-  buttons of the header before its text.
-- **NAV-5** From 1024px the rail is a sidebar of 232px at the left of a centred frame of at most
-  1280px. It shows the mark and the name of the app (`app.name`) above the sections, one row for
-  each section with its icon and its name, and the current section on a pill. With no session
-  (ACC-10) the foot of the rail shows the offline icon, and from 1024px the text `nav.local`.
+- **NAV-4** Below 600px the navigation is the bottom bar, with the icon and the name of each
+  section. From 600px it is a top bar of `--topbar-height` above the title row, with **Right** and
+  with **Left** (DSV-5). **Left** still puts the `+` of a phone at the left and the buttons of the
+  header before its text.
+- **NAV-5** The top bar spans the frame, over a `--line` rule. From start to end it shows the
+  wordmark (`app.name` in capitals), the sections as text with no icon, the current one in
+  `--text` and the others in `--muted`, and with no session (ACC-10) the text `nav.local` at the
+  end.
 - **NAV-6** Below 600px the add of Wardrobe is the floating `+`. From 600px it is the button
   **Add garment** of the header, with the same conditions, and the `+` does not float. While the
   empty state shows its own **Add garment**, the header has no add.
@@ -37,6 +38,12 @@ From 840px the detail of the pane is a card beside the list. In this app the War
   of the history. The **Back** of the phone, also the slide from the edge of the screen, closes the
   detail and shows its list again; it does not close the app. A detail that the app closes leaves
   its entry, so the next **Back** acts as before the detail opened.
+- **NAV-8** Under the title of each view the header shows its summary. Wardrobe:
+  `wardrobe.summary` with the count of garments, of garments with an image, and `countOutfits`
+  (OUT-10) under the season filter. Palettes: `combinations.summary` with the count of
+  combinations that have an outfit under the season filter, of the 348. Settings: the email of
+  the account with a session, else `nav.local`. With no garment, Wardrobe and Palettes show no
+  summary.
 
 ## Modules
 

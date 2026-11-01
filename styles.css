@@ -18,6 +18,8 @@
     --strip-height: 40px;
     --topbar-height: 56px;
     --wordmark: 1.375rem;
+    /* No rail (DSV-5): the start margin is the frame's side margin, as the end one. */
+    --rail-width: var(--frame-side);
   }
 
   /* The column of Settings from 840px (SET-2). */
@@ -36,7 +38,7 @@
     color: var(--text);
     font: var(--text-m)/1.4 var(--font);
     -webkit-tap-highlight-color: transparent;
-    /* The page keeps out of a cutout on either side (LAY-4); from 600px the rail takes its side. */
+    /* The page keeps out of a cutout on either side (LAY-4). */
     padding-inline-start: env(safe-area-inset-left);
     padding-inline-end: env(safe-area-inset-right);
   }
@@ -47,10 +49,11 @@
     color: inherit;
   }
 
-  /* From 600px the fixed rail stands at the start with either hand (LAY-2): the body pads the rail at
-     the start and the frame's end margin at the end (LAY-4). */
+  /* From 600px the top bar and the content share the frame (DSV-5): the body pads the frame's side
+     margins (LAY-4), and the content takes the full width of the frame. */
   @media (min-width: 600px) {
     body {
+      --page-max: 100%;
       padding-left: calc(var(--rail-width) + env(safe-area-inset-left));
       padding-right: calc(var(--frame-side) + env(safe-area-inset-right));
     }
@@ -392,6 +395,96 @@
   .outfit-slot {
     color: var(--muted);
     font-size: var(--text-xs);
+  }
+
+  /* @extends nav-bar */
+  /* From 600px the bar is a top bar across the frame (NAV-4, NAV-5): the wordmark, the sections as
+     text, and the account foot at the end, over a --line rule. Below 600px it stays the bottom bar.
+     These rules follow the shared ones of 600px and 1024px, so they win at both. */
+  @media (min-width: 600px) {
+    .nav-bar {
+      position: static;
+      order: -1;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--space-6);
+      width: auto;
+      min-height: calc(var(--topbar-height) + env(safe-area-inset-top));
+      padding: env(safe-area-inset-top) var(--gutter) 0;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      padding: 0;
+      font-size: var(--wordmark);
+      font-weight: var(--weight-strong);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .nav-brand > img,
+    .nav-item > .icon,
+    .nav-bar > .nav-foot > .icon {
+      display: none;
+    }
+
+    .nav-item,
+    .nav-item:hover,
+    .nav-item[aria-current="page"] {
+      flex: none;
+      flex-direction: row;
+      gap: 0;
+      height: var(--tap);
+      padding: 0;
+      border-radius: 0;
+      background: none;
+      font-size: var(--text-m);
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+    }
+
+    .nav-bar > .nav-foot:not([hidden]) {
+      position: static;
+      margin: 0 0 0 auto;
+      padding: 0;
+      font-size: var(--text-s);
+    }
+
+    .nav-foot-text {
+      display: inline;
+    }
+  }
+
+  /* @extends app-header */
+  /* The title row of a view: a light title at --screen-title, the summary of the view, and Add
+     garment at the end. From 600px it stands under the top bar, which takes the cutout at the top. */
+  .app-header-title {
+    font-size: var(--screen-title-phone);
+    font-weight: var(--screen-title-weight);
+    letter-spacing: var(--screen-title-track);
+  }
+
+  .app-header-subtitle:empty {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .app-header {
+      align-items: flex-end;
+      padding-top: var(--space-6);
+      padding-bottom: var(--space-5);
+      border-bottom: 0;
+    }
+
+    .app-header-title {
+      font-size: var(--screen-title);
+    }
   }
 
   /* @extends item-row */

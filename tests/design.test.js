@@ -29,10 +29,11 @@ test('the design system has rules to run', () => {
 
 for (const rule of RULES) test(rule.title, () => assert.deepEqual(rule.check(files), []));
 
-test('styles.css leaves the rail, the header and the sheets to the design system (LAY-2, LAY-5)', () => {
+test('styles.css has a top bar version of nav-bar and of app-header, and leaves the sheets to the design system (DSV-5)', () => {
   const app = read('styles.css');
-  assert.doesNotMatch(app, /\.nav-bar\s*[{,]/);
-  assert.doesNotMatch(app, /@extends (nav-bar|app-header|sheet)\b/);
+  assert.match(app, /\/\* @extends nav-bar \*\//);
+  assert.match(app, /\/\* @extends app-header \*\//);
+  assert.doesNotMatch(app, /@extends sheet\b/);
 });
 
 test('the components of the app are documented in styles.css (DSV-3)', () => {
@@ -42,6 +43,6 @@ test('the components of the app are documented in styles.css (DSV-3)', () => {
   }
 });
 
-test('styles.css has the versions of a shared component: item-row, segmented in fit-pick, list-group in settings (DSV-3)', () => {
-  assert.deepEqual([...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name), ['item-row', 'segmented', 'list-group']);
+test('styles.css has the versions of a shared component: nav-bar, app-header, item-row, segmented in fit-pick, list-group in settings (DSV-3)', () => {
+  assert.deepEqual([...read('styles.css').matchAll(/\/\*\s*@extends\s+([\w-]+)/g)].map(([, name]) => name), ['nav-bar', 'app-header', 'item-row', 'segmented', 'list-group']);
 });

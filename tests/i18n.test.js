@@ -132,3 +132,14 @@ test('app.title is a descriptor in each language, then the brand, as the fallbac
   const [, lang] = html.match(/<html lang="(\w+)"/);
   assert.equal(html.match(/<title>(.*)<\/title>/)[1], CATALOGS[lang]['app.title']);
 });
+
+test('each catalog has the summaries of the header, with the plural of the wardrobe (NAV-8)', () => {
+  for (const lang of LANGUAGES) {
+    const catalog = CATALOGS[lang];
+    assert.deepEqual(Object.keys(catalog['wardrobe.summary'] ?? {}).sort(), ['one', 'other'], lang);
+    assert.equal(typeof catalog['combinations.summary'], 'string', lang);
+  }
+  const t = translator('es');
+  assert.equal(t('wardrobe.summary', { count: 8, garments: 8, photos: 4, outfits: 4 }), '8 prendas, 4 con foto · 4 conjuntos');
+  assert.equal(t('combinations.summary', { wearable: 12, total: 348 }), '12 de 348 combinaciones de Sanzo Wada se pueden poner con tu ropa');
+});

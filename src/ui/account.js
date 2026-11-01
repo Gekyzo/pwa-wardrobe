@@ -37,7 +37,7 @@ let status = { online: true, pending: 0, lastSync: null, auth: false, reached: 0
 // A logout in progress, so that a second tap starts no second one.
 let leaving = false;
 
-const sessionNow = () => (client ? loadSession(storage) : null);
+export const sessionNow = () => (client ? loadSession(storage) : null);
 
 // True while a session is saved: Delete all data then also logs out (SET-3).
 export const signedIn = () => sessionNow() !== null;

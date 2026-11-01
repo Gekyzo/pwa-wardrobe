@@ -187,7 +187,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Combinations section
 
 - **CMB-1** The Combinations section, named `nav.combinations` (Palettes) so that its label fits
-  the rail, lists the 348 combinations by number. A row shows
+  the bottom bar, lists the 348 combinations by number. A row shows
   `outfit.number`, the strip of its colours and the count of its outfits under the season filter;
   a count of `MAX_OUTFITS` reads `combinations.countMax`.
 - **CMB-2** The size filter keeps the combinations of 2, 3 or 4 colours, or all of them. The

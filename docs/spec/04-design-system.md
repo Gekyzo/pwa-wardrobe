@@ -26,16 +26,20 @@ This document holds the rules of the app only.
   variants and states that the app adds. No other rule of `components` or `layouts` repeats a
   selector of the shared sheet. The app has its own version of `item-row`: no row is lifted, so
   the row has no transition, and the app sets no `lifted` class. It also has a version of
-  `list-group` in `settings`: the select of a row of Preferences lies over the row (SET-1).
+  `list-group` in `settings`: the select of a row of Preferences lies over the row (SET-1), and
+  versions of `nav-bar` and `app-header` for the top bar (DSV-5).
 - **DSV-4** A change of a shared part is made in `pwa-design-system`, then `npm run ds` here.
   Nothing edits `vendor/` by hand, and `npm run init` copies it as it is (ENG-17).
 
 ## Layout
 
-- **DSV-5** The app follows LAY-1 to LAY-5 with no exception: four width classes, the rail at the
-  start with either hand from 600px, and from 1024px a centred frame with a labelled sidebar
-  (NAV-4, NAV-5). The `body` rule pads `--rail-width` at the start and `--frame-side` at the end
-  (LAY-4). `styles.css` has no version of `nav-bar`, `app-header` or `sheet`.
+- **DSV-5** The app follows LAY-1 to LAY-5 with one exception: it has no rail. From 600px the
+  navigation is a top bar (NAV-4, NAV-5), a version of `nav-bar`, and the content takes the full
+  width of a centred frame of at most `--frame-max`. `--rail-width` is `--frame-side`, so the
+  `body` rule pads the frame's side margin at the start and at the end (LAY-4), and the shared
+  toast, `+` and sheets stay inside the frame. The version of `app-header` is the title row: a
+  title at `--screen-title` (`--screen-title-phone` below 600px) and the summary of the view
+  (NAV-8). `styles.css` has no version of `sheet`.
 - **DSV-6** The garment sheet and the What's new sheet have a head, so from 840px each is the card
   of LAY-5 at the end of the frame. `src/app.js` writes the height of the header to
   `--header-height` with a `ResizeObserver`.
@@ -48,5 +52,5 @@ The parts of `styles.css`, by layer. The shared parts are in the design system.
 |---|---|
 | tokens | the catalogue look: `--screen-title` (`-phone`, `-weight`, `-track`), `--photo-ground`, `--grid-gap` (`-wide`), `--panel-width`, `--band-pad`, `--field-tall`, `--field-short`, `--strip-height`, `--topbar-height`, `--wordmark`. `--primary` is the ink of the design system; `--done` keeps progress and the checked state |
 | tokens | `--settings-max` (SET-2) |
-| components | `swatch`, `strip`, `blocks`, `swatch-grid`, `thumb`, `image-strip`, `image-grid`, `color-pick`, `detail-head`, `outfits`, `outfit` · version of `item-row` (DSV-3) |
+| components | `swatch`, `strip`, `blocks`, `swatch-grid`, `thumb`, `image-strip`, `image-grid`, `color-pick`, `detail-head`, `outfits`, `outfit` · versions of `nav-bar`, `app-header` (DSV-5) and `item-row` (DSV-3) |
 | screens | combinations: `size-filter` · settings: `settings` (`settings-section`, `settings-hint`, version of `list-group`), `about`, `version-status` · nav: `dust` · onboarding: `onboarding`, `onboarding-art` |

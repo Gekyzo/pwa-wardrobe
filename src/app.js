@@ -7,16 +7,39 @@ import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
 import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onboarding';
 import { bind as bindWhatsNew, startWhatsNew, isWhatsNewOpen, closeWhatsNew } from '#ui/whatsnew';
-import { bind as bindAccount, renderAccount, startAccount, goOnline, goOffline, goVisible, goStale, isAccountOpen, closeAccount } from '#ui/account';
+import { bind as bindAccount, renderAccount, startAccount, goOnline, goOffline, goVisible, goStale, isAccountOpen, closeAccount, sessionNow } from '#ui/account';
 import { readOAuthReturn } from '#session';
+import { COMBINATIONS } from '#palette';
+import { countOutfits, outfitsFor } from '#outfits';
 
 // The return of the Google sign-in (ACC-4): `code`, `state` and `error` leave the URL at once.
 const { oauth, clean } = readOAuthReturn(new URL(location.href));
 if (oauth) history.replaceState(history.state, '', clean);
 
+// The summary under the title of each view (NAV-8). An empty wardrobe has none.
+const subtitle = () => {
+  const { garments } = state;
+  if (ui.view === 'settings') {
+    const user = sessionNow()?.user;
+    return user ? user.email || user.name : t('nav.local');
+  }
+  if (garments.length === 0) return '';
+  if (ui.view === 'combinations') {
+    const wearable = COMBINATIONS.filter(({ number }) => outfitsFor(number, garments, { season: ui.season }).length > 0).length;
+    return t('combinations.summary', { wearable, total: COMBINATIONS.length });
+  }
+  const photos = garments.filter((garment) => garment.images.length > 0).length;
+  return t('wardrobe.summary', { count: garments.length, garments: garments.length, photos, outfits: countOutfits(garments, { season: ui.season }) });
+};
+
+const renderHeader = () => {
+  $('title').textContent = t(`nav.${ui.view}`);
+  $('subtitle').textContent = subtitle();
+};
+
 const renderAll = () => {
   renderNav();
-  $('title').textContent = t(`nav.${ui.view}`);
+  renderHeader();
   renderWardrobe();
   renderCombinations();
   $('settings').hidden = ui.view !== 'settings';

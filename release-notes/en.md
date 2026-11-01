@@ -5,6 +5,7 @@ What changes for you in each version of the app. The newest version is first.
 ## Unreleased
 
 - The **main button** is black.
+- From a tablet, the sections are in a **top bar**, and each section shows a summary under its title.
 
 ## 0.1.18 - 2026-10-31
 

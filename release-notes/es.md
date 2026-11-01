@@ -5,6 +5,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 ## Unreleased
 
 - El **botón principal** es negro.
+- Desde la tablet, las secciones están en una **barra superior**, y cada sección muestra un resumen bajo su título.
 
 ## 0.1.18 - 2026-10-31
 
