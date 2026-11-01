@@ -4,6 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- The **Monochrome** and **Analogous** palettes no longer hold two nearly equal colours in one combination.
 No change.
 
 ## 0.1.25 - 2026-11-01

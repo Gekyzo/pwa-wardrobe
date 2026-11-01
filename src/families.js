@@ -7,13 +7,19 @@ export const FAMILIES = ['wada', 'complementary', 'analogous', 'triadic', 'split
 
 // The largest CIE76 distance of a target colour from its ideal (FAM-4).
 export const FAMILY_MAX = 25;
+// No two colours of a set are this near: the MATCH_MAX of the outfits, so that each colour of a
+// set needs a garment of its own (FAM-4).
+export const DISTINCT_MIN = 10;
+// The least step of L* of the darker and the lighter colour of a monochrome set from its base.
+export const MONO_STEP_MIN = 12;
 
 const LABS = COLORS.map(({ hex }) => labOf(hex));
 const ideal = (l, c, h) => [l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)];
 
-// The palette colour nearest to `lab` among `ids`, out of the colours of the set, and its distance.
+// The palette colour nearest to `lab` among `ids`, out of the colours of the set and of the colours
+// within DISTINCT_MIN of them, and its distance.
 const nearestOf = (lab, ids, set) =>
-  ids.filter((id) => !set.includes(id)).reduce(
+  ids.filter((id) => set.every((other) => other !== id && deltaE(LABS[id], LABS[other]) > DISTINCT_MIN)).reduce(
     (best, id) => {
       const d = deltaE(lab, LABS[id]);
       return d < best.d ? { id, d } : best;
@@ -34,7 +40,11 @@ const TARGETS = {
   analogous: hue([-30, 30]),
   triadic: hue([120, 240]),
   split: hue([150, 210]),
-  mono: (l, c, h) => [-25, 25].map((dl) => ({ lab: ideal(clamp(l + dl), c, h), ids: ALL, max: FAMILY_MAX })),
+  mono: (l, c, h) => [-25, 25].map((dl) => ({
+    lab: ideal(clamp(l + dl), c, h),
+    ids: ALL.filter((id) => (dl < 0 ? lchOf(id)[0] <= l - MONO_STEP_MIN : lchOf(id)[0] >= l + MONO_STEP_MIN)),
+    max: FAMILY_MAX,
+  })),
   accent: (l, c, h) => [LIGHT, DARK].map((ids) => ({ lab: ideal(l, c, h), ids, max: Infinity })),
 };
 

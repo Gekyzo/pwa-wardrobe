@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- Las paletas **Monocromo** y **Análogos** ya no repiten dos colores casi iguales en una misma combinación.
 No change.
 
 ## 0.1.25 - 2026-11-01

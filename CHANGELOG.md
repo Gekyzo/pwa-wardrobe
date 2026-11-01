@@ -4,6 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+- **Distinct colours in a palette family** (FAM-3, FAM-4): a target colour of a generated set is never within `DISTINCT_MIN` (10, the `MATCH_MAX` of the outfits) of a colour already in the set, and the darker and lighter colours of a monochrome set are at least `MONO_STEP_MIN` (12) of L\* from the base. 16 of 89 monochrome sets and 8 of 100 analogous sets held two colours a person could not tell apart. Monochrome now has 57 sets; the analogous sets take another colour and stay 100.
 No change.
 
 ## 0.1.25 - 2026-11-01

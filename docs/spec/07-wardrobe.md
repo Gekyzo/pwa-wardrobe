@@ -206,13 +206,16 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   a base, in colour id order. The base is the first colour of its set. A set whose colours are
   those of an earlier set, in any order, is dropped. The sets are numbered 1, 2, 3… in that
   order. With `FAMILY_MAX` 25 there are 54 complementary sets, 100 analogous, 60 triadic, 60
-  split, 103 accent and 89 mono.
+  split, 103 accent and 57 mono.
 - **FAM-4** Each target of a base is the palette colour nearest (PAL-3) to an ideal Lab colour,
-  out of the colours already in the set. The set is dropped when a target is more than
+  out of the colours already in the set and of the colours within `DISTINCT_MIN`, 10 (the
+  `MATCH_MAX` of OUT-1), of one of them: each colour of a set needs a garment of its own. The set is dropped when a target is more than
   `FAMILY_MAX` from its ideal. With the L\*, the chroma and the hue h of the base (PAL-6), the
   ideals have the L\* and the chroma of the base and the hue: h + 180° (`complementary`), h − 30°
   and h + 30° (`analogous`), h + 120° and h + 240° (`triadic`), h + 150° and h + 210° (`split`).
-  `mono` has the hue and the chroma of the base at L\* − 25 and L\* + 25, each kept from 5 to 98.
+  `mono` has the hue and the chroma of the base at L\* − 25 and L\* + 25, each kept from 5 to 98;
+  its darker target has an L\* at least `MONO_STEP_MIN`, 12, under the base, and its lighter
+  target one at least 12 over it.
   `accent` takes the neutral colour with L\* of 60 or more nearest to the base, then the neutral
   colour with L\* under 40 nearest to it, with no distance limit.
 - **FAM-5** `switchFamily(off, id, on)` gives the families that are off after a switch, in the

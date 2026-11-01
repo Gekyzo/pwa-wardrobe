@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { FAMILIES, FAMILY_MAX, familyOf, switchFamily, activeFamily } from '#families';
+import { FAMILIES, FAMILY_MAX, DISTINCT_MIN, MONO_STEP_MIN, familyOf, switchFamily, activeFamily } from '#families';
+import { MATCH_MAX } from '#outfits';
 import { COLORS, COMBINATIONS, deltaE, labOf, lchOf } from '#palette';
 import { isNeutral } from '#matching';
 
@@ -62,14 +63,15 @@ test('mono takes the same hue and chroma at L* - 25 and L* + 25, clamped (FAM-4)
   }
 });
 
-test('accent is the base, the nearest light neutral and the nearest dark neutral (FAM-4)', () => {
+test('accent is the base, the nearest light neutral and the nearest dark neutral, each distinct (FAM-4)', () => {
   const neutrals = COLORS.map(({ id }) => id).filter(isNeutral);
+  const distinct = (set) => (id) => set.every((other) => deltaE(LABS[id], LABS[other]) > DISTINCT_MIN);
   const nearestOf = (base, list) => list.reduce((a, b) => (deltaE(LABS[b], LABS[base]) < deltaE(LABS[a], LABS[base]) ? b : a));
   for (const { number, colors } of familyOf('accent').combinations) {
     const [base, light, dark] = colors;
     assert.equal(colors.length, 3, `accent ${number}`);
-    assert.equal(light, nearestOf(base, neutrals.filter((id) => lchOf(id)[0] >= 60)));
-    assert.equal(dark, nearestOf(base, neutrals.filter((id) => lchOf(id)[0] < 40)));
+    assert.equal(light, nearestOf(base, neutrals.filter((id) => lchOf(id)[0] >= 60).filter(distinct([base]))));
+    assert.equal(dark, nearestOf(base, neutrals.filter((id) => lchOf(id)[0] < 40).filter(distinct([base, light]))));
   }
 });
 
@@ -78,7 +80,7 @@ test('the counts at FAMILY_MAX, as measured for the design (FAM-3)', () => {
   assert.equal(familyOf('analogous').combinations.length, 100);
   assert.equal(familyOf('triadic').combinations.length, 60);
   assert.equal(familyOf('split').combinations.length, 60);
-  assert.equal(familyOf('mono').combinations.length, 89);
+  assert.equal(familyOf('mono').combinations.length, 57);
   assert.equal(familyOf('accent').combinations.length, 103);
 });
 
@@ -110,4 +112,24 @@ test('activeFamily falls back to the first family that is on (FAM-5)', () => {
   assert.equal(activeFamily('triadic', ['triadic']), 'wada');
   assert.equal(activeFamily('wada', ['wada']), 'complementary');
   assert.equal(activeFamily('nope', []), 'wada');
+});
+
+test('no two colours of a generated set are within DISTINCT_MIN, the MATCH_MAX of the outfits (FAM-4)', () => {
+  assert.equal(DISTINCT_MIN, MATCH_MAX);
+  for (const id of FAMILIES.slice(1)) {
+    for (const { number, colors } of familyOf(id).combinations) {
+      colors.forEach((a, i) => colors.slice(i + 1).forEach((b) => {
+        assert.ok(deltaE(LABS[a], LABS[b]) > DISTINCT_MIN, `${id} ${number}: ${a} and ${b}`);
+      }));
+    }
+  }
+});
+
+test('mono takes a darker and a lighter colour, each at least MONO_STEP_MIN from the base (FAM-4)', () => {
+  assert.equal(MONO_STEP_MIN, 12);
+  for (const { number, colors: [base, dark, light] } of familyOf('mono').combinations) {
+    const l = lchOf(base)[0];
+    assert.ok(lchOf(dark)[0] <= l - MONO_STEP_MIN, `mono ${number}: darker`);
+    assert.ok(lchOf(light)[0] >= l + MONO_STEP_MIN, `mono ${number}: lighter`);
+  }
 });
