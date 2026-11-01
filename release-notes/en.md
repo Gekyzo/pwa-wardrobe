@@ -15,7 +15,7 @@ What changes for you in each version of the app. The newest version is first.
 - The **season filter** is three separate buttons, and the pressed one is black. In **Random outfit** it is no longer cramped.
 - The **outfits of a detail** show how many there are beside their title.
 - A long name of one word no longer runs out of its column.
-- In the detail of a garment, an image that does not load is no longer shown in the row of images.
+- In the detail of a garment with several images, the large photo slides to the next one (or with the arrows from a tablet), and the colour band says which one it is, as "2 / 3". The row of thumbnails is gone.
 
 ## 0.1.19 - 2026-11-01
 

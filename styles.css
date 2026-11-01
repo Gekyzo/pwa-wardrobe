@@ -195,33 +195,81 @@
     outline-offset: 2px;
   }
 
-  /* @component image-strip
-     @summary The other images of a detail, in one row that scrolls. The image shown large has
-       aria-pressed="true".
-     @part image-strip-item  One image as a button, with a label. It holds an image-grid-img.
-     @example <div class="image-strip" style="width: 100%"><button class="image-strip-item" type="button" aria-pressed="true" aria-label="Image 1"><img class="image-grid-img" alt="" src="icons/logo.png"></button><button class="image-strip-item" type="button" aria-pressed="false" aria-label="Image 2"><img class="image-grid-img" alt="" src="icons/icon-192.png"></button></div> */
-  .image-strip {
+  /* @component image-slider
+     @summary The images of a garment in its detail, one at a time in a row that snaps: a swipe, or an arrow from 600px, shows the next. The colour band under it counts them.
+     @part image-slider-track  The row of pictures, each the full width.
+     @part image-slider-prev   The arrow to the image before, from 600px; it shows on hover or focus.
+     @part image-slider-next   The arrow to the image after.
+     @part image-slider-count  The place of the shown image and the count, in the colour band.
+     @example <div class="image-slider" style="width: 240px"><div class="image-slider-track"><span class="garment-picture hero" style="background: #4b3317" role="img" aria-label="Chinos"></span><span class="garment-picture hero" style="background: #848061" role="img" aria-label="Chinos"></span></div><button class="image-slider-prev" type="button" aria-label="Previous image" disabled><svg class="icon" aria-hidden="true"><use href="icons.svg#back"/></svg></button><button class="image-slider-next" type="button" aria-label="Next image"><svg class="icon" aria-hidden="true"><use href="icons.svg#back"/></svg></button></div> */
+  .image-slider {
+    position: relative;
+  }
+
+  .image-slider-track {
     display: flex;
-    gap: var(--space-2);
-    margin: var(--space-2) 0;
-    padding: var(--space-1);
     overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
   }
 
-  .image-strip-item {
-    flex: none;
-    width: var(--tap-l);
-    aspect-ratio: 3 / 4;
-    padding: 0;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-s);
-    background: var(--bg);
+  .image-slider-track > .garment-picture {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
   }
 
-  .image-strip-item[aria-pressed="true"] {
-    outline: 2px solid var(--ink);
-    outline-offset: 2px;
+  .image-slider-prev,
+  .image-slider-next {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .image-slider-prev,
+    .image-slider-next {
+      position: absolute;
+      top: 50%;
+      display: grid;
+      place-items: center;
+      width: var(--tap);
+      height: var(--tap);
+      padding: 0;
+      border: 0;
+      border-radius: var(--radius-round);
+      background: var(--surface);
+      box-shadow: var(--shadow-s);
+      opacity: 0;
+      translate: 0 -50%;
+      transition: opacity var(--motion);
+    }
+
+    .image-slider-prev {
+      left: var(--space-3);
+    }
+
+    .image-slider-next {
+      right: var(--space-3);
+    }
+
+    .image-slider-next > .icon {
+      transform: scaleX(-1);
+    }
+
+    .image-slider:hover > .image-slider-prev,
+    .image-slider:hover > .image-slider-next,
+    .image-slider-prev:focus-visible,
+    .image-slider-next:focus-visible {
+      opacity: 1;
+    }
+
+    .image-slider-prev:disabled,
+    .image-slider-next:disabled {
+      visibility: hidden;
+    }
+  }
+
+  .image-slider-count {
+    font-variant-numeric: tabular-nums;
   }
 
   /* @component image-grid
@@ -463,7 +511,6 @@
      @example <div class="color-band" data-ink="dark" style="background: #ffdd00; width: 280px"><span>Apricot Yellow</span><span class="color-band-hex">#ffdd00</span></div> */
   .color-band {
     display: flex;
-    justify-content: space-between;
     gap: var(--space-3);
     padding: var(--band-pad) var(--space-4);
     font-size: var(--text-s);
@@ -478,6 +525,7 @@
   }
 
   .color-band-hex {
+    margin-left: auto;
     font-variant-numeric: tabular-nums;
   }
 
@@ -1137,7 +1185,7 @@
   /* @component garment-detail
      @scope wardrobe
      @summary The detail of a garment, alone: Back, then the media (its picture, colour band and image strip) and the info, actions and outfits. From 1024px two columns, 7 to 5, the media in sight while the rest scrolls.
-     @part garment-detail-media     The picture, the colour band and the image strip.
+     @part garment-detail-media     The picture or the image slider, and the colour band.
      @part garment-detail-info      The name, the meta line and the facts.
      @part garment-detail-title     The name of the garment.
      @part garment-detail-meta      The slot, the brand and the season.

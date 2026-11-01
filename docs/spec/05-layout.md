@@ -23,7 +23,8 @@ Combinations says `combinations.pick`.
   It stops at the first and the last section. The content comes in from its side.
 - **NAV-3** Where a detail shows alone (`detailAlone`: a garment at every width, a combination
   below 840px), a slide to the right of NAV-2 closes it and shows its list again, which comes in
-  from the left. A slide to the left still goes to the next section. The **Back** of a detail
+  from the left. A slide to the left still goes to the next section. A slide that starts on the image slider
+  (WAR-4) moves the slider only. The **Back** of a detail
   starts with an arrow that lines up with the content edge.
 - **NAV-4** Below 600px the navigation is the bottom bar, `--nav-height` (56px) high, with the
   name of each section as text, no icon and no pill; the current one is in `--text` at

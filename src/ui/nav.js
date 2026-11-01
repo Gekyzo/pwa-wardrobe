@@ -65,12 +65,13 @@ export const bind = () => {
   document.querySelectorAll('.nav-item').forEach((button) => {
     button.addEventListener('click', () => setView(button.dataset.view));
   });
-  // A horizontal slide changes the section (NAV-2). A text field keeps its drag for the selection.
+  // A horizontal slide changes the section (NAV-2). A text field keeps its drag for the selection,
+// and the image slider for its own swipe.
   let sectionSlide = null;
   document.addEventListener('pointerdown', (event) => {
     sectionSlide = null;
     if (!event.isPrimary || event.button !== 0 || ui.sheetOpen || ui.onboarding !== null) return;
-    if (!event.target.closest('.app-header, main') || event.target.closest('input, textarea, select')) return;
+    if (!event.target.closest('.app-header, main') || event.target.closest('input, textarea, select, .image-slider-track')) return;
     sectionSlide = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
   });
   document.addEventListener('pointerup', (event) => {

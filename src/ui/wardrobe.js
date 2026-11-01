@@ -306,20 +306,39 @@ const randomPanel = () => {
 
 // The media of a detail: the image shown large, the band of its colour and, with two images or
 // more, the strip of all of them, where a tap on one shows it large (WAR-4).
+const sliderArrow = (className, label, onclick) => {
+  const button = el('button', { className, type: 'button', onclick }, [icon('back')]);
+  button.setAttribute('aria-label', t(label));
+  return button;
+};
+
+// The media of a detail: the picture and the colour band; with two or more images, a slider that a
+// swipe or an arrow moves, and the place of the shown image in the band (WAR-4). The shown image
+// stays across renders in `ui.detailImage`.
 const media = (garment) => {
-  const shown = garment.images.includes(ui.detailImage) ? ui.detailImage : undefined;
-  const strip = garment.images.length < 2 ? [] : [el('div', { className: 'image-strip' }, garment.images.map((url, index) => {
-    const button = el('button', { className: 'image-strip-item', type: 'button', onclick: () => {
-      ui.detailImage = url;
-      render();
-    } }, [remoteImage(url, 'image-grid-img')]);
-    // A thumb that does not load is not shown, as in the sheet (WAR-6).
-    button.firstChild.addEventListener('error', () => { button.hidden = true; }, { once: true });
-    button.setAttribute('aria-pressed', String(url === (shown ?? garment.images[0])));
-    button.setAttribute('aria-label', t('wardrobe.image', { number: index + 1 }));
-    return button;
-  }))];
-  return [picture(garment, 'hero', shown), colorBand(garment.color), ...strip];
+  const { images } = garment;
+  const band = colorBand(garment.color);
+  if (images.length < 2) return [picture(garment, 'hero'), band];
+  const count = el('span', { className: 'image-slider-count' });
+  band.append(count);
+  const track = el('div', { className: 'image-slider-track' }, images.map((url) => picture(garment, 'hero', url)));
+  const go = (step) => track.scrollBy({ left: step * track.clientWidth, behavior: 'smooth' });
+  const prev = sliderArrow('image-slider-prev', 'wardrobe.prevImage', () => go(-1));
+  const next = sliderArrow('image-slider-next', 'wardrobe.nextImage', () => go(1));
+  const show = (index) => {
+    count.textContent = t('wardrobe.imageCount', { index: index + 1, count: images.length });
+    prev.disabled = index === 0;
+    next.disabled = index === images.length - 1;
+    ui.detailImage = images[index];
+  };
+  track.addEventListener('scroll', () => {
+    if (track.clientWidth) show(Math.min(images.length - 1, Math.round(track.scrollLeft / track.clientWidth)));
+  }, { passive: true });
+  const start = Math.max(0, images.indexOf(ui.detailImage));
+  show(start);
+  // The track has a width once it is in the page.
+  requestAnimationFrame(() => { track.scrollLeft = start * track.clientWidth; });
+  return [el('div', { className: 'image-slider' }, [track, prev, next]), band];
 };
 
 const info = (garment) => [

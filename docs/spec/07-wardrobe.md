@@ -167,9 +167,11 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **WAR-4** A tap on a card opens its detail, which shows alone at every width, in place of the
   grid and the panel (LAY-3, `pane single`), and with no title row. **Back** reads `nav.wardrobe`. The media: the
   picture of the garment, 4:5 (WAR-1), with the image shown large; under it a band of its colour
-  with the colour name and its hex, in dark or light text (`inkOn`, PAL-5); and with two or more
-  images, all the images in a row, where a tap on one shows it large; an image of the row that
-  does not load is not shown. The info: the name at
+  with the colour name and its hex, in dark or light text (`inkOn`, PAL-5). With two or more
+  images the picture is a slider of all of them, one at a time: a swipe, or from 600px an arrow
+  that shows on hover or focus, shows the one before or after, and the band ends with
+  `wardrobe.imageCount` ("2 / 3"). An image that does not load shows the colour field (WAR-1).
+  The shown image stays while the detail is open. The info: the name at
   `--screen-title`, a line of slot, brand and season, then the facts in two columns, each a label
   over its value as plain text: the size, the reference, the fit, each measure, the price in euros, the buy
   date and `wardrobe.added` with the creation date, in the formats of the language, each one only
