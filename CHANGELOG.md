@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.25 - 2026-11-01
+
 - **Wardrobe cards switch moved to Settings** (WAR-11, SET-1): the `segmented wardrobe-cards` control leaves the top of the Wardrobe grid (`cardsSwitch` of `src/ui/wardrobe.js` removed) and becomes the third row of Preferences (`#wardrobe-cards`, `renderCards` in `src/ui/settings.js`). Key `wardrobe.cardsShow` replaced by `settings.cards`; `settings.preferencesHint` names the cards. The component `wardrobe-cards` is now scoped to `settings`.
 
 ## 0.1.24 - 2026-11-01
