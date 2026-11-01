@@ -4,6 +4,10 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
+No change.
+
+## 0.1.19 - 2026-11-01
+
 - **Ink primary**: `styles.css` drops the `--primary: var(--done)` override, so the main action takes the ink of the design system; `--done` keeps progress and the checked state. New app tokens for the catalogue look (`--screen-title*`, `--photo-ground`, `--grid-gap*`, `--panel-width`, `--band-pad`, `--field-*`, `--strip-height`, `--topbar-height`, `--wordmark`).
 - **Top bar** (NAV-4, NAV-5, NAV-8, DSV-5): from 600px `styles.css` has versions of `nav-bar` (a top bar of `--topbar-height`: wordmark, text links, `nav.local` foot) and `app-header` (the title row at `--screen-title`). `--rail-width` is `--frame-side`, so the body pads the frame on both sides; `--page-max` is 100% from 600px. `renderHeader` of `src/app.js` writes the summary: `wardrobe.summary` (with `countOutfits`), `combinations.summary`, or the account email / `nav.local`. `sessionNow` of `src/ui/account.js` is exported.
 - **Swipe-to-delete removed** (WAR-2): `src/swipe.js`, `tests/swipe.test.js`, the `#swipe` import-map line, its `SHELL` line, `bindSwipe`/`moveRow` and the row side action of `src/ui/wardrobe.js`, `SIDE_BUTTON`/`DRAG_START`/`openId`/`settleFrom` of `src/ui/context.js`, `iconButton` of `src/ui/controls.js`, and the key `row.delete`. Delete stays in the detail with the Undo toast.

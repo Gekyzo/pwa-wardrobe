@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.19 - 2026-11-01
+
 - The **main button** is black.
 - From a tablet, the sections are in a **top bar**, and each section shows a summary under its title.
 - To delete a garment, open it and tap **Delete**. A row no longer slides.

@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.1.19 - 2026-11-01
+
 - El **botón principal** es negro.
 - Desde la tablet, las secciones están en una **barra superior**, y cada sección muestra un resumen bajo su título.
 - Para borrar una prenda, ábrela y pulsa **Borrar**. Una fila ya no se desliza.
