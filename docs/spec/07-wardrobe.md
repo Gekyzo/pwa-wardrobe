@@ -138,7 +138,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 
 - **WAR-1** The Wardrobe section shows the garments as a grid of cards, grouped by slot in the
   order of `SLOTS`, then by name. Each group has a head with the slot name and `garments.count`.
-  The grid has 2 columns, 4 from 600px. A card is one button that opens the detail: the picture
+  The grid has 2 columns, 4 from 600px, with gaps of 20px by 12px, 24px by 16px from 1024px. A card is one button that opens the detail: the picture
   of the garment, 3:4, with square corners; the name; a dot of the colour and its name; and the
   brand, `wardrobe.sizeShort` with the size, and the count of `outfitsWith` under the season
   filter (`countKey`: `combinations.countMax` at `MAX_OUTFITS`, else `combinations.count`, so 0
@@ -165,7 +165,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   colour, or `wardrobe.colorNone`. A new garment starts with no colour, and **Save** without one
   is `error.colorInvalid`.
 - **WAR-4** A tap on a card opens its detail, which shows alone at every width, in place of the
-  grid and the panel (LAY-3, `pane single`). **Back** reads `nav.wardrobe`. The media: the
+  grid and the panel (LAY-3, `pane single`), and with no title row. **Back** reads `nav.wardrobe`. The media: the
   picture of the garment, 4:5 (WAR-1), with the image shown large; under it a band of its colour
   with the colour name and its hex, in dark or light text (`inkOn`, PAL-5); and with two or more
   images, all the images in a row, where a tap on one shows it large; an image of the row that

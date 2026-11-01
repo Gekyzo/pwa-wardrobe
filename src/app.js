@@ -31,10 +31,12 @@ const subtitle = () => {
   }
   const photos = garments.filter((garment) => garment.images.length > 0).length;
   const outfits = countOutfits(garments, { season: ui.season, of: outfitsOf });
-  return t('wardrobe.summary', { garments: t('garments.count', { count: garments.length }), photos, outfits: t('combinations.count', { count: outfits }) });
+  return t('wardrobe.summary', { garments: t('garments.count', { count: garments.length }), photos, outfits: t('combinations.count', { count: outfits }), total: COMBINATIONS.length });
 };
 
 const renderHeader = () => {
+  // An open garment stands alone, under its Back, with no title row (WAR-4).
+  document.querySelector('.app-header').hidden = ui.view === 'wardrobe' && ui.garmentId !== null;
   $('title').textContent = t(`nav.${ui.view}`);
   $('subtitle').textContent = subtitle();
 };

@@ -4,6 +4,8 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- Desde la tablet, la app ocupa un marco centrado, como la propuesta **Blanco de catálogo**. El resumen de **Armario** dice de cuántas combinaciones de Sanzo Wada salen tus conjuntos.
+- **Añadir prenda** ya no lleva el signo +, y el detalle de una prenda no repite el título de la sección.
 - El **filtro de temporada** son tres botones separados, y el pulsado es negro. En **Conjunto al azar** ya no queda apretado.
 - Los **conjuntos de un detalle** muestran cuántos son junto al título.
 - Un nombre largo de una sola palabra ya no se sale de su columna.

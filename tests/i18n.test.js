@@ -140,8 +140,8 @@ test('each catalog has the summaries of the header, with the plural of each coun
   }
   const t = translator('es');
   const summary = (garments, photos, outfits) =>
-    t('wardrobe.summary', { garments: t('garments.count', { count: garments }), photos, outfits: t('combinations.count', { count: outfits }) });
-  assert.equal(summary(8, 4, 4), '8 prendas, 4 con foto · 4 conjuntos');
-  assert.equal(summary(1, 0, 1), '1 prenda, 0 con foto · 1 conjunto');
+    t('wardrobe.summary', { garments: t('garments.count', { count: garments }), photos, outfits: t('combinations.count', { count: outfits }), total: 348 });
+  assert.equal(summary(8, 4, 4), '8 prendas, 4 con foto · 4 conjuntos de 348 combinaciones de Sanzo Wada');
+  assert.equal(summary(1, 0, 1), '1 prenda, 0 con foto · 1 conjunto de 348 combinaciones de Sanzo Wada');
   assert.equal(t('combinations.summary', { wearable: 12, total: 348 }), '12 de 348 combinaciones de Sanzo Wada se pueden poner con tu ropa');
 });

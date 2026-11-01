@@ -19,7 +19,7 @@ export default {
   'wardrobe.noOutfits': 'No outfit with this garment.',
   'wardrobe.random': 'Random outfit',
   'wardrobe.randomAgain': 'Another',
-  'wardrobe.summary': '{garments}, {photos} with a photo · {outfits}',
+  'wardrobe.summary': '{garments}, {photos} with a photo · {outfits} of {total} Sanzo Wada combinations',
   'wardrobe.noRandom': 'Your garments make no outfit yet.',
   'wardrobe.brand': 'Brand',
   'wardrobe.reference': 'Reference',

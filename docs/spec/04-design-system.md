@@ -34,11 +34,12 @@ This document holds the rules of the app only.
 
 - **DSV-5** The app follows LAY-1 to LAY-5 with one exception: it has no rail. From 600px the
   navigation is a top bar (NAV-4, NAV-5), a version of `nav-bar`, and the content takes the full
-  width of a centred frame of at most `--frame-max`. `--rail-width` is `--frame-side`, so the
+  width of a centred frame of at most `--frame-max`, 1200px in the app. `--rail-width` is `--frame-side`, so the
   `body` rule pads the frame's side margin at the start and at the end (LAY-4), and the shared
   toast, `+` and sheets stay inside the frame. The version of `app-header` is the title row: a
   title at `--screen-title` (`--screen-title-phone` below 600px) and the summary of the view
-  (NAV-8). `styles.css` has no version of `sheet`.
+  (NAV-8) at `--text-m`, with `--title-row-space` under it from 600px. The heads of the garment
+  groups, the random panel and the outfits are at `--section-title`, weight `--weight-book`. `styles.css` has no version of `sheet`.
 - **DSV-6** The garment sheet and the What's new sheet have a head, so from 840px each is the card
   of LAY-5 at the end of the frame. `src/app.js` writes the height of the header to
   `--header-height` with a `ResizeObserver`.
@@ -49,7 +50,7 @@ The parts of `styles.css`, by layer. The shared parts are in the design system.
 
 | Layer | Parts |
 |---|---|
-| tokens | the catalogue look: `--screen-title` (`-phone`, `-weight`, `-track`, `-leading`), `--photo-ground`, `--grid-gap` (`-wide`), `--panel-width`, `--band-pad`, `--field-tall`, `--field-short`, `--strip-height`, `--topbar-height`, `--wordmark` (`-track`). `--primary` is the ink of the design system; `--done` keeps progress and the checked state |
+| tokens | the catalogue look: `--screen-title` (`-phone`, `-weight`, `-track`, `-leading`), `--photo-ground`, `--grid-gap` (`-wide`), `--grid-row-gap-wide`, `--section-title`, `--title-row-space`, `--frame-max`, `--panel-width`, `--band-pad`, `--field-tall`, `--field-short`, `--strip-height`, `--topbar-height`, `--wordmark` (`-track`). `--primary` is the ink of the design system; `--done` keeps progress and the checked state |
 | tokens | `--settings-max` (SET-2) |
 | components | `swatch`, `strip`, `color-fields`, `swatch-grid`, `garment-picture`, `color-band`, `look`, `image-strip`, `image-grid`, `color-pick`, `detail-back`, `outfits`, `season-filter` · versions of `nav-bar` and `app-header` (DSV-5) |
 | layouts | version of `pane` with the variants `single` (Wardrobe) and `wide` (Combinations) (LAY-3) |

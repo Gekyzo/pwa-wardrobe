@@ -12,6 +12,9 @@
     --photo-ground: light-dark(#ffffff, #ececea);
     --grid-gap: 12px;
     --grid-gap-wide: 16px;
+    --grid-row-gap-wide: 24px;
+    --section-title: 1rem;
+    --title-row-space: 40px;
     --panel-width: 360px;
     --band-pad: 14px;
     --field-tall: 280px;
@@ -28,8 +31,10 @@
     --detail-gap: 48px;
     --combo-number: 88px;
     --combo-row: 72px;
-    /* No rail (DSV-5): the start margin is the frame's side margin, as the end one. */
+    /* No rail (DSV-5): the start margin is the frame's side margin, as the end one. The frame is
+       1200px wide, centred, from 1024px. */
     --rail-width: var(--frame-side);
+    --frame-max: 1200px;
   }
 
   /* The column of Settings from 840px (SET-2). */
@@ -334,7 +339,8 @@
 
   .outfits-title {
     margin: 0;
-    font-size: var(--text-m);
+    font-size: var(--section-title);
+    font-weight: var(--weight-book);
   }
 
   .outfits-count {
@@ -494,6 +500,10 @@
       color: var(--text);
     }
 
+    .nav-item[aria-current="page"] {
+      font-weight: var(--weight-normal);
+    }
+
     .nav-bar > .nav-foot:not([hidden]) {
       position: static;
       margin: 0 0 0 auto;
@@ -515,6 +525,11 @@
     letter-spacing: var(--screen-title-track);
   }
 
+  .app-header-subtitle {
+    margin-top: var(--space-2);
+    font-size: var(--text-m);
+  }
+
   .app-header-subtitle:empty {
     display: none;
   }
@@ -522,8 +537,8 @@
   @media (min-width: 600px) {
     .app-header {
       align-items: flex-end;
-      padding-top: var(--space-6);
-      padding-bottom: var(--space-5);
+      padding-top: var(--space-7);
+      padding-bottom: var(--title-row-space);
       border-bottom: 0;
     }
 
@@ -800,7 +815,7 @@
 
   .garment-groups-title {
     margin: 0;
-    font-size: var(--text-m);
+    font-size: var(--section-title);
     font-weight: var(--weight-book);
   }
 
@@ -821,7 +836,12 @@
   @media (min-width: 600px) {
     .garment-groups-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      column-gap: var(--grid-gap-wide);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .garment-groups-grid {
+      gap: var(--grid-row-gap-wide) var(--grid-gap-wide);
     }
   }
 
@@ -900,7 +920,7 @@
 
   .random-panel-title {
     margin: 0;
-    font-size: var(--text-m);
+    font-size: var(--section-title);
     font-weight: var(--weight-book);
   }
 

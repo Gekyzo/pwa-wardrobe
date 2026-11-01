@@ -34,7 +34,7 @@ Combinations says `combinations.pick`.
   `--text` and the others in `--muted`, and with no session (ACC-10) the text `nav.local` at the
   end.
 - **NAV-6** Below 600px the add of Wardrobe is the floating `+`. From 600px it is the button
-  **Add garment** of the header, with the same conditions, and the `+` does not float. While the
+  **Add garment** of the header, a text button with no icon, with the same conditions, and the `+` does not float. While the
   empty state shows its own **Add garment**, the header has no add.
 - **NAV-7** An open detail of a garment or of a combination has its own entry
   of the history. The **Back** of the phone, also the slide from the edge of the screen, closes the
@@ -42,7 +42,8 @@ Combinations says `combinations.pick`.
   its entry, so the next **Back** acts as before the detail opened.
 - **NAV-8** Under the title of each view the header shows its summary. Wardrobe:
   `wardrobe.summary` with `garments.count`, the count of garments with an image, and
-  `combinations.count` of `countOutfits` (OUT-10) under the season filter, each count in its plural. Palettes: `combinations.summary` with the count of
+  `combinations.count` of `countOutfits` (OUT-10) under the season filter, each count in its plural, and the
+  348 combinations. Palettes: `combinations.summary` with the count of
   combinations that have an outfit under the season filter, of the 348. Settings: the email of
   the account with a session, else `nav.local`. With no garment, Wardrobe and Palettes show no
   summary.
