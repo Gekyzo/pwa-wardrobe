@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.1.23 - 2026-11-01
+
 - New **Fill** tab: it suggests the garments that would give you more outfits, both basics and Sanzo Wada colours that complete palettes. Each colour says which palettes it completes. Tap one to add it with its type, its season and its colour already set. You can hide it in **Settings**.
 - **Missing basics** leaves **Wardrobe**: the basics are now in **Fill**, next to the Sanzo Wada colours.
 
