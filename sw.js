@@ -39,6 +39,7 @@ const SHELL = [
   './src/measures.js',
   './src/links.js',
   './src/outfits.js',
+  './src/basics.js',
   './src/install.js',
   './src/sections.js',
   './src/modules.js',

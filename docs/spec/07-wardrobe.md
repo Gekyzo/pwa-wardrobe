@@ -134,6 +134,20 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   the header and Combinations give `outfitsOf` of `src/ui/outfit.js`, which computes the
   outfits of each combination once for each doc and season filter.
 
+## Basics
+
+- **BAS-1** `BASICS` of `src/basics.js` is the seed list of the basics of a wardrobe, the most
+  needed first: `{ id, slot, season, color }`, with a slot and a season of GAR-2 and the id of a
+  palette colour. The name of a basic is the catalog key `basic.<id>`. `MAX_BASICS` is 4.
+- **BAS-2** A garment covers a basic when it has the slot of the basic, the distance of their
+  colours (PAL-3) is at most `MATCH_MAX`, and their seasons overlap: they are equal, or one of
+  them is `all`.
+- **BAS-3** `missingBasics` gives the basics that no garment of the wardrobe covers, at most
+  `MAX_BASICS` (option `max`).
+- **BAS-4** The gain of a missing basic is the count of `outfitsWith` (OUT-8) of the basic as a
+  garment of the wardrobe, under the season filter (option `season`). The basics with the higher
+  gain come first, then the order of `BASICS`.
+
 ## Wardrobe section
 
 - **WAR-1** The Wardrobe section shows the garments as a grid of cards, grouped by slot in the
