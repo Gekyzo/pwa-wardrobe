@@ -4,8 +4,6 @@ import {
   saveDoc,
   loadLanguage,
   saveLanguage,
-  loadHand,
-  saveHand,
   loadTheme,
   saveTheme,
   loadModules,
@@ -53,9 +51,6 @@ export const scroller = document.querySelector('main');
 export let chosen = storage ? loadLanguage(storage, LANGUAGES) : null;
 export let lang = resolveLanguage(navigator.languages, chosen);
 export let t = translator(lang);
-// The hand that holds the phone: `left` mirrors the controls, in styles.css.
-export let hand = storage ? loadHand(storage) : 'right';
-document.documentElement.dataset.hand = hand;
 
 // The colours: `light` or `dark` override the phone, in styles.css; `system` follows it.
 export let theme = storage ? loadTheme(storage) : 'system';
@@ -214,12 +209,6 @@ export const setLanguage = (code) => {
   if (storage) saveLanguage(storage, chosen);
   lang = resolveLanguage(navigator.languages, chosen);
   t = translator(lang);
-};
-
-export const setHand = (value) => {
-  hand = value === 'left' ? 'left' : 'right';
-  if (storage) saveHand(storage, hand);
-  document.documentElement.dataset.hand = hand;
 };
 
 export const setTheme = (value) => {

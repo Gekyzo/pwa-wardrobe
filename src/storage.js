@@ -111,31 +111,8 @@ export const saveLanguage = (storage, lang) => {
   }
 };
 
-// The hand that the user holds the phone with. It is a preference of the device, as the language is.
-export const HAND_KEY = keyOf('hand');
-
-// The stored hand when it is `left`, else `right`.
-export const loadHand = (storage) => {
-  try {
-    return storage.getItem(HAND_KEY) === 'left' ? 'left' : 'right';
-  } catch {
-    return 'right';
-  }
-};
-
-// `right` is the hand of an app with no choice: it removes the key.
-export const saveHand = (storage, hand) => {
-  try {
-    if (hand === 'left') storage.setItem(HAND_KEY, 'left');
-    else storage.removeItem(HAND_KEY);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 // The colours of the app: `light`, `dark`, or `system` to follow the phone. A preference of the
-// device, as the hand is.
+// device, as the language is.
 export const THEME_KEY = keyOf('theme');
 const THEMES = ['light', 'dark'];
 
@@ -188,7 +165,7 @@ export const saveModules = (storage, off) => {
 };
 
 // Set after the walkthrough of the first start closed. It is a preference of the device, as the
-// hand is.
+// language is.
 export const ONBOARDED_KEY = keyOf('onboarded');
 
 // A storage that cannot be read counts as seen, so the walkthrough does not show at each start.

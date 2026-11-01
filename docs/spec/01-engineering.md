@@ -73,7 +73,7 @@
 ## Storage keys
 
 The doc keys are in [07-wardrobe.md](07-wardrobe.md). The device preferences are `wardrobe.lang`,
-`wardrobe.hand`, `wardrobe.theme`, `wardrobe.modules`, `wardrobe.onboarded` and
+`wardrobe.theme`, `wardrobe.modules`, `wardrobe.onboarded` and
 `wardrobe.seen-version` (VER-21). The account keeps `wardrobe.session` (ACC-5), and
 `wardrobe.oauth` in `sessionStorage` for the time of a Google redirect (ACC-4). The sync keys are
 in [09-sync.md](09-sync.md).

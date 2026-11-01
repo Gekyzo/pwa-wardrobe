@@ -20,7 +20,7 @@ export const renderOnboarding = () => {
   const open = ui.onboarding !== null;
   $('onboarding').hidden = !open;
   // The walkthrough covers the app: no tap, no slide and no focus goes below it.
-  document.querySelectorAll('.app-header, main, .fab, .nav-bar').forEach((node) => {
+  document.querySelectorAll('.phone-brand, .app-header, main, .nav-bar').forEach((node) => {
     node.inert = open;
   });
   if (!open) return;

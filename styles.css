@@ -601,9 +601,20 @@
     letter-spacing: var(--screen-title-track);
   }
 
+  /* Below 600px the title row is a column: the title, the summary, then Add garment at full width
+     (NAV-6). */
   .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
     padding-top: var(--space-5);
     border-bottom: 0;
+  }
+
+  .app-header > .header-add:not([hidden]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .app-header-subtitle {
@@ -617,6 +628,7 @@
 
   @media (min-width: 600px) {
     .app-header {
+      flex-direction: row;
       align-items: flex-end;
       padding-top: var(--space-7);
       padding-bottom: var(--title-row-space);
@@ -1508,10 +1520,6 @@
 
   .onboarding-actions > .button {
     flex: 1 1 50%;
-  }
-
-  [data-hand="left"] .onboarding-actions {
-    flex-direction: row-reverse;
   }
 
   /* @component onboarding-art

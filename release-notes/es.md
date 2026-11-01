@@ -4,6 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+- En el teléfono, **Añadir prenda** es un botón ancho bajo el título, y ya no hay botón + flotante. Por eso **Ajustes** ya no tiene la opción **Mano**.
 - En el teléfono, una barra arriba muestra **ATTIRE**, y la barra de abajo muestra las secciones solo con su nombre.
 - **Ajustes** explica **Cuenta** y **Módulos**, muestra cuántas prendas exporta **Exportar**, y **Borrar todos los datos** tiene su flecha.
 - Los filtros de temporada y de colores son más pequeños. En **Conjunto al azar** y en el detalle de **Paletas**, la temporada está junto al título. **Solo las que puedo vestir** ya no está en una tarjeta.

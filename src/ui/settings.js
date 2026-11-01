@@ -10,7 +10,6 @@ import {
   t,
   lang,
   chosen,
-  hand,
   theme,
   off,
   isOn,
@@ -19,7 +18,6 @@ import {
   apply,
   render,
   setLanguage,
-  setHand,
   setTheme,
   setModules,
   setNavMotion,
@@ -31,7 +29,7 @@ import { signedIn, stopSync } from '#ui/account';
 
 // The value of a row of Preferences is the text of the option that its select has.
 const renderValues = () => {
-  for (const id of ['language', 'hand', 'theme']) {
+  for (const id of ['language', 'theme']) {
     $(`${id}-value`).textContent = $(id).selectedOptions[0]?.textContent ?? '';
   }
 };
@@ -62,8 +60,6 @@ export const applyLanguage = () => {
     option('', t('settings.automatic')),
     ...LANGUAGES.map((code) => option(code, LANGUAGE_NAMES[code])),
   );
-  const handOption = (value, key) => el('option', { value, textContent: t(key), selected: value === hand });
-  $('hand').replaceChildren(handOption('right', 'settings.handRight'), handOption('left', 'settings.handLeft'));
   const themeOption = (value, key) => el('option', { value, textContent: t(key), selected: value === theme });
   $('theme').replaceChildren(
     themeOption('system', 'settings.automatic'),
@@ -99,9 +95,8 @@ export const bind = () => {
     setLanguage(event.target.value || null);
     applyLanguage();
   });
-  $('hand').addEventListener('change', (event) => setHand(event.target.value));
   $('theme').addEventListener('change', (event) => setTheme(event.target.value));
-  for (const id of ['hand', 'theme']) $(id).addEventListener('change', renderValues);
+  $('theme').addEventListener('change', renderValues);
   document.querySelectorAll('[data-module]').forEach((box) => {
     box.addEventListener('change', () => {
       setModules(switchModule(off, box.dataset.module, box.checked));

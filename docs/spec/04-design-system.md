@@ -37,7 +37,7 @@ This document holds the rules of the app only.
   navigation is a top bar (NAV-4, NAV-5), a version of `nav-bar`, and the content takes the full
   width of a centred frame of at most `--frame-max`, 1200px in the app. `--rail-width` is `--frame-side`, so the
   `body` rule pads the frame's side margin at the start and at the end (LAY-4), and the shared
-  toast, `+` and sheets stay inside the frame. The version of `app-header` is the title row: a
+  toast and sheets stay inside the frame. The version of `app-header` is the title row: a
   title at `--screen-title` (`--screen-title-phone` below 600px) and the summary of the view
   (NAV-8) at `--text-m`, with `--title-row-space` under it from 600px. The heads of the garment
   groups, the random panel and the outfits are at `--section-title`, weight `--weight-book`. `styles.css` has no version of `sheet`.

@@ -28,16 +28,16 @@ Combinations says `combinations.pick`.
 - **NAV-4** Below 600px the navigation is the bottom bar, `--nav-height` (56px) high, with the
   name of each section as text, no icon and no pill; the current one is in `--text` at
   `--weight-book`. Above the title row a top bar of `--topbar-height` shows the wordmark
-  (`phone-brand`), and the title row has no rule under it. From 600px it is a top bar of `--topbar-height` above the title row, with **Right** and
-  with **Left** (DSV-5). **Left** still puts the `+` of a phone at the left and the buttons of the
-  header before its text.
+  (`phone-brand`), and the title row has no rule under it. From 600px it is a top bar of `--topbar-height` above the title
+  row (DSV-5).
 - **NAV-5** The top bar spans the frame, over a `--line` rule. From start to end it shows the
   wordmark (`app.name` in capitals), the sections as text with no icon, the current one in
   `--text` and the others in `--muted`, and with no session (ACC-10) the text `nav.local` at the
   end.
-- **NAV-6** Below 600px the add of Wardrobe is the floating `+`. From 600px it is the button
-  **Add garment** of the header, a text button with no icon, with the same conditions, and the `+` does not float. While the
-  empty state shows its own **Add garment**, the header has no add.
+- **NAV-6** The add of Wardrobe is the button **Add garment** of the header, a text button with
+  no icon, at every width: below 600px it is full width under the summary, from 600px at the end
+  of the title row. The app has no floating `+`. While the empty state shows its own **Add
+  garment**, the header has no add.
 - **NAV-7** An open detail of a garment or of a combination has its own entry
   of the history. The **Back** of the phone, also the slide from the edge of the screen, closes the
   detail and shows its list again; it does not close the app. A detail that the app closes leaves
@@ -65,7 +65,7 @@ Combinations says `combinations.pick`.
 
 - **SET-1** Settings is a column of groups, each a `list-group-head` above a `list-group` of
   settings rows, as in pwa-shopping-list: **Backup** (**Export**, **Import**, **Delete all data**), **Preferences**
-  (**Language**, **Hand**, **Theme**), **Modules** (MOD-1), **App** (INS-2) and **Help** (ONB-3),
+  (**Language**, **Theme**), **Modules** (MOD-1), **App** (INS-2) and **Help** (ONB-3),
   then the version lines (VER-4). **Export** shows `garments.count` with the count of garments. A row of Preferences shows its current value and a chevron, and
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.

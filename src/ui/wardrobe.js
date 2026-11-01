@@ -331,12 +331,10 @@ const info = (garment) => [
 export const renderWardrobe = () => {
   const visible = ui.view === 'wardrobe';
   $('wardrobe').hidden = !visible;
-  $('fab').hidden = !visible || ui.sheetOpen;
   const some = state.garments.length > 0;
   $('wardrobe-empty').hidden = some;
-  // From 600px the add is the button of the header (NAV-6), and the fab is hidden there. The add of
-  // the empty state replaces it.
-  $('header-add').hidden = $('fab').hidden || !$('wardrobe-empty').hidden;
+  // The add is the button of the header at every width (NAV-6). The add of the empty state replaces it.
+  $('header-add').hidden = !visible || ui.sheetOpen || !some;
   const garment = ui.garmentId === null ? null : findGarment(state, ui.garmentId);
   if (!garment) ui.garmentId = null;
   // The random outfit is picked at the first render, and again on a change of the doc or the filter.
@@ -363,7 +361,6 @@ export const renderWardrobe = () => {
 };
 
 export const bind = () => {
-  $('fab').addEventListener('click', () => openSheet());
   $('header-add').addEventListener('click', () => openSheet());
   $('wardrobe-add').addEventListener('click', () => openSheet());
   $('garment-veil').addEventListener('click', closeGarmentSheet);

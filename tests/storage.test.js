@@ -13,9 +13,6 @@ import {
   LANGUAGE_KEY,
   loadLanguage,
   saveLanguage,
-  HAND_KEY,
-  loadHand,
-  saveHand,
   THEME_KEY,
   loadTheme,
   saveTheme,
@@ -62,7 +59,7 @@ const normalize = (data) => (data?.version === 1 && Array.isArray(data.items) ? 
 const opts = { key: KEY, normalize, empty };
 
 test('every key starts with the slug of the app', () => {
-  for (const key of [KEY, LANGUAGE_KEY, HAND_KEY, THEME_KEY, MODULES_KEY, ONBOARDED_KEY, SEEN_VERSION_KEY]) {
+  for (const key of [KEY, LANGUAGE_KEY, THEME_KEY, MODULES_KEY, ONBOARDED_KEY, SEEN_VERSION_KEY]) {
     assert.ok(key.startsWith(`${APP_SLUG}.`), key);
   }
 });
@@ -158,37 +155,11 @@ test('the language functions do not throw when the storage does', () => {
 test('a preference is not part of the stored doc', () => {
   const storage = fakeStorage();
   saveLanguage(storage, 'en');
-  saveHand(storage, 'left');
   saveTheme(storage, 'dark');
   saveModules(storage, ['combinations']);
   saveOnboarded(storage);
   assert.deepEqual(loadDoc(storage, opts), empty());
   assert.equal(hasStoredDoc(storage, KEY), false);
-});
-
-test('loadHand returns the stored hand', () => {
-  assert.equal(loadHand(fakeStorage({ [HAND_KEY]: 'left' })), 'left');
-  assert.equal(loadHand(fakeStorage({ [HAND_KEY]: 'right' })), 'right');
-});
-
-test('loadHand returns right for no value and for an unknown value', () => {
-  assert.equal(loadHand(fakeStorage()), 'right');
-  assert.equal(loadHand(fakeStorage({ [HAND_KEY]: 'both' })), 'right');
-  assert.equal(loadHand(fakeStorage({ [HAND_KEY]: '' })), 'right');
-});
-
-test('saveHand stores left and right removes the key', () => {
-  const storage = fakeStorage();
-  assert.equal(saveHand(storage, 'left'), true);
-  assert.equal(storage.getItem(HAND_KEY), 'left');
-  assert.equal(saveHand(storage, 'right'), true);
-  assert.equal(storage.getItem(HAND_KEY), null);
-});
-
-test('the hand functions do not throw when the storage does', () => {
-  assert.equal(loadHand(brokenStorage()), 'right');
-  assert.equal(saveHand(brokenStorage(), 'left'), false);
-  assert.equal(saveHand(brokenStorage(), 'right'), false);
 });
 
 test('loadTheme returns the stored theme', () => {
