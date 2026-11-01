@@ -45,9 +45,10 @@ Combinations says `combinations.pick`.
   its entry, so the next **Back** acts as before the detail opened.
 - **NAV-8** Under the title of each view the header shows its summary. Wardrobe:
   `wardrobe.summary` with `garments.count`, the count of garments with an image, and
-  `combinations.count` of `countOutfits` (OUT-10) under the season filter, each count in its plural, and the
-  348 combinations. Palettes: `combinations.summary` with the count of
-  combinations that have an outfit under the season filter, of the 348. Fill: `fill.summary`
+  `combinations.count` of `countOutfits` (OUT-10) under the season filter, each count in its plural, the
+  count of sets of the family in use and its name `family.<id>` (FAM-1). Palettes:
+  `combinations.summary` with the count of sets of the family in use that have an outfit under
+  the season filter, the count of its sets and its name. Fill: `fill.summary`
   with the count of rows of FIL-1, and none with no row. Settings: the email of
   the account with a session, else `nav.local`. With no garment, Wardrobe and Palettes show no
   summary.
@@ -67,12 +68,13 @@ Combinations says `combinations.pick`.
 
 - **SET-1** Settings is a column of groups, each a `list-group-head` above a `list-group` of
   settings rows, as in pwa-shopping-list: **Backup** (**Export**, **Import**, **Delete all data**), **Preferences**
-  (**Language**, **Theme**), **Modules** (MOD-1), **Matching** (SET-4), **App** (INS-2) and **Help** (ONB-3),
+  (**Language**, **Theme**), **Modules** (MOD-1), **Palette families** (SET-5), **Matching** (SET-4), **App** (INS-2) and **Help** (ONB-3),
   then the version lines (VER-4). **Export** shows `garments.count` with the count of garments. A row of Preferences shows its current value and a chevron, and
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.
 - **SET-2** **Account** (`settings.accountHint`), **Backup**, **Preferences**, **Modules**
-  (`settings.modulesHint`) and **Matching** (`settings.matchingHint`) have a line of help below their head at every width.
+  (`settings.modulesHint`), **Palette families** (`settings.familiesHint`) and **Matching**
+  (`settings.matchingHint`) have a line of help below their head at every width.
   The groups are rounded cards on `--surface`, under heads of 16px. From 840px Settings is a
   column of at most 1040px (`--settings-max`) at the start of the frame, and each group is a row:
   its head and its help in a column of `--panel-width` at the left, its rows at the right, the
@@ -94,6 +96,13 @@ Combinations says `combinations.pick`.
   row of Preferences (SET-1). A change stores the choice (MAT-6) and builds the screen again: the
   outfits, the counts, the random outfit and Fill follow it at once.
 
+- **SET-5** **Palette families** (`settings.families`) comes before **Matching**. Its first row,
+  `settings.familyInUse`, shows the name of the family in use and a select of the families that
+  are on, as the select of Combinations (CMB-5); the choice stays possible while the module
+  `combinations` is off. Then one switch for each family of `FAMILIES`, named `family.<id>`, on
+  while the family is on. The switch of the last family that is on is disabled (FAM-5). A switch
+  stores the families that are off and moves the family in use (FAM-6), closes an open
+  combination and builds the screen again.
 ## Walkthrough
 
 - **ONB-1** The walkthrough shows at the start of a new install only: no `wardrobe.onboarded`

@@ -9,6 +9,8 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 - **Contraste** pone primero los conjuntos de contraste alto o suave.
 - **Tipo de color** (primavera, verano, otoño o invierno) deja en **Rellenar** solo los colores que te favorecen.
 - **Formalidad** añade un nivel a cada prenda y quita los conjuntos que mezclan niveles lejanos, como un traje con zapatillas de deporte.
+- **Paletas** tiene ahora siete familias de colores: Sanzo Wada, complementarios, análogos, tríadas, complementarios divididos, neutros y acento, y monocromo. Elige una arriba de **Paletas** o en **Ajustes**; da los conjuntos de toda la app, también los de **Armario** y **Rellenar**.
+- En **Ajustes**, **Familias de paletas** te deja apagar las familias que no te interesen.
 
 ## 0.1.23 - 2026-11-01
 

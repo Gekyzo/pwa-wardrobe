@@ -9,6 +9,8 @@ What changes for you in each version of the app. The newest version is first.
 - **Contrast** puts the outfits of high or soft contrast first.
 - **Colour type** (spring, summer, autumn or winter) keeps in **Fill** only the colours that suit you.
 - **Formality** adds a level to each garment and removes outfits that mix levels far apart, such as a suit with trainers.
+- **Palettes** now has seven colour families: Sanzo Wada, complementary, analogous, triadic, split complementary, neutrals and accent, and monochrome. Pick one at the top of **Palettes** or in **Settings**; it gives the outfits of the whole app, **Wardrobe** and **Fill** too.
+- In **Settings**, **Palette families** lets you turn off the families you do not want.
 
 ## 0.1.23 - 2026-11-01
 

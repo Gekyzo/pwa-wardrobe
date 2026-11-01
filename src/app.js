@@ -1,4 +1,4 @@
-import { $, ui, state, storage, t, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
+import { $, ui, state, storage, t, family, setRender, render, showToast, hideToast, toastAction, clickGuardUntil } from '#ui/context';
 import { bind as bindNav, renderNav, syncHistory } from '#ui/nav';
 import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
 import { bind as bindCombinations, renderCombinations } from '#ui/combinations';
@@ -10,7 +10,7 @@ import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onb
 import { bind as bindWhatsNew, startWhatsNew, isWhatsNewOpen, closeWhatsNew } from '#ui/whatsnew';
 import { bind as bindAccount, renderAccount, startAccount, goOnline, goOffline, goVisible, goStale, isAccountOpen, closeAccount, sessionNow } from '#ui/account';
 import { readOAuthReturn } from '#session';
-import { COMBINATIONS } from '#palette';
+import { familyOf } from '#families';
 import { countOutfits } from '#outfits';
 import { outfitsOf } from '#ui/outfit';
 
@@ -31,12 +31,14 @@ const subtitle = () => {
   }
   if (garments.length === 0) return '';
   if (ui.view === 'combinations') {
-    const wearable = COMBINATIONS.filter(({ number }) => outfitsOf(number).length > 0).length;
-    return t('combinations.summary', { wearable, total: COMBINATIONS.length });
+    const { combinations } = familyOf(family);
+    const wearable = combinations.filter(({ number }) => outfitsOf(number).length > 0).length;
+    return t('combinations.summary', { wearable, total: combinations.length, family: t(`family.${family}`) });
   }
   const photos = garments.filter((garment) => garment.images.length > 0).length;
-  const outfits = countOutfits(garments, { season: ui.season, of: outfitsOf });
-  return t('wardrobe.summary', { garments: t('garments.count', { count: garments.length }), photos, outfits: t('combinations.count', { count: outfits }), total: COMBINATIONS.length });
+  const outfits = countOutfits(garments, { season: ui.season, family, of: outfitsOf });
+  const total = familyOf(family).combinations.length;
+  return t('wardrobe.summary', { garments: t('garments.count', { count: garments.length }), photos, outfits: t('combinations.count', { count: outfits }), total, family: t(`family.${family}`) });
 };
 
 const renderHeader = () => {

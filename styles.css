@@ -952,6 +952,14 @@
     font-size: var(--text-s);
   }
 
+  /* @component family-pick
+     @scope combinations
+     @summary The select of the palette family in use, at the top of the list of Combinations (CMB-5).
+     @example <select class="select family-pick" aria-label="Palette family" style="width: 100%"><option>Sanzo Wada</option><option>Complementary</option></select> */
+  .family-pick {
+    margin-bottom: var(--space-3);
+  }
+
   /* @component size-filter
      @scope combinations
      @summary The chips of the size filter of Combinations: a scroll cluster of compact outline chips (as season-filter); the pressed one is ink.
@@ -1196,7 +1204,7 @@
 
   /* @component fill
      @scope fill
-     @summary The Fill tab: the season filter, a hint, and one row for each suggestion, a missing basic or a Sanzo Wada colour in a slot. A row is a basics-panel-item with the outfits it adds on the end, a tag, and for a Wada colour up to three palettes it completes, the added colour outlined. A tap opens a new garment filled with it.
+     @summary The Fill tab: the season filter, a hint, and one row for each suggestion, a missing basic or a colour in a slot that completes sets of the family in use. A row is a basics-panel-item with the outfits it adds on the end, a tag, and for such a colour up to three palettes it completes, the added colour outlined. A tap opens a new garment filled with it.
      @part fill-page      The column of the tab.
      @part fill-hint      The hint over the list.
      @part fill-list      The rows.
@@ -1205,9 +1213,9 @@
      @part fill-tag       Básico, or the count of palettes that it completes.
      @part fill-palettes  The palettes that it completes.
      @part fill-palette   One palette: its number and its colours.
-     @state wada          On fill-tag: the tag of a Wada colour.
+     @state set           On fill-tag: the tag of a colour that completes sets.
      @state new           On a strip-block of fill-palette: the colour that the row adds.
-     @example <ul class="basics-panel-list fill-list" style="width: 360px"><li class="basics-panel-row"><button class="basics-panel-item fill-item" type="button"><span class="swatch" style="background: #ebd3a2"></span><span class="basics-panel-name">Top Ivory Buff</span><span class="fill-gain">+9</span><span class="basics-panel-meta">Top · All year</span><span class="fill-tag wada">Completes 2 palettes</span><span class="fill-palettes"><span class="fill-palette"><span>Nº 11</span><span class="strip"><span class="strip-block new" style="background: #ebd3a2"></span><span class="strip-block" style="background: #12354e"></span></span></span><span class="fill-palette"><span>Nº 94</span><span class="strip"><span class="strip-block" style="background: #2b3a4a"></span><span class="strip-block new" style="background: #ebd3a2"></span></span></span></span></button></li><li class="basics-panel-row"><button class="basics-panel-item fill-item" type="button"><span class="swatch" style="background: #12354e"></span><span class="basics-panel-name">Jeans</span><span class="fill-gain">+7</span><span class="basics-panel-meta">Bottom · All year</span><span class="fill-tag">Basic</span></button></li></ul> */
+     @example <ul class="basics-panel-list fill-list" style="width: 360px"><li class="basics-panel-row"><button class="basics-panel-item fill-item" type="button"><span class="swatch" style="background: #ebd3a2"></span><span class="basics-panel-name">Top Ivory Buff</span><span class="fill-gain">+9</span><span class="basics-panel-meta">Top · All year</span><span class="fill-tag set">Completes 2 palettes</span><span class="fill-palettes"><span class="fill-palette"><span>Nº 11</span><span class="strip"><span class="strip-block new" style="background: #ebd3a2"></span><span class="strip-block" style="background: #12354e"></span></span></span><span class="fill-palette"><span>Nº 94</span><span class="strip"><span class="strip-block" style="background: #2b3a4a"></span><span class="strip-block new" style="background: #ebd3a2"></span></span></span></span></button></li><li class="basics-panel-row"><button class="basics-panel-item fill-item" type="button"><span class="swatch" style="background: #12354e"></span><span class="basics-panel-name">Jeans</span><span class="fill-gain">+7</span><span class="basics-panel-meta">Bottom · All year</span><span class="fill-tag">Basic</span></button></li></ul> */
   .fill-page {
     display: flex;
     flex-direction: column;
@@ -1267,7 +1275,7 @@
     font-weight: 600;
   }
 
-  .fill-tag.wada {
+  .fill-tag.set {
     background: color-mix(in srgb, var(--primary) 14%, transparent);
     color: var(--primary);
   }

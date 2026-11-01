@@ -3,9 +3,11 @@ import { importJson, resetAll } from '#storage';
 import { LANGUAGES, LANGUAGE_NAMES } from '#i18n';
 import { switchModule } from '#modules';
 import { CONTRASTS, COLOR_TYPES } from '#matching';
+import { FAMILIES, switchFamily } from '#families';
 import {
   $,
   el,
+  ui,
   state,
   storage,
   t,
@@ -24,10 +26,14 @@ import {
   setNavMotion,
   matching,
   setMatching,
+  family,
+  familiesOff,
+  setFamiliesOff,
   exportDoc,
 } from '#ui/context';
 import { runUpdate } from '#ui/update';
 import { renderOnboarding } from '#ui/onboarding';
+import { familyOptions, chooseFamily } from '#ui/combinations';
 import { signedIn, stopSync } from '#ui/account';
 
 // The value of a row of Preferences is the text of the option that its select has.
@@ -37,9 +43,17 @@ const renderValues = () => {
   }
 };
 
-// The count of garments beside Export (SET-1).
+// The count of garments beside Export (SET-1), and the group Palettes (SET-5): the family in use,
+// and a switch for each family, the last one that is on disabled.
 export const renderSettings = () => {
   $('export-count').textContent = t('garments.count', { count: state.garments.length });
+  $('family-in-use').replaceChildren(...familyOptions());
+  $('family-in-use-value').textContent = t(`family.${family}`);
+  const last = FAMILIES.length - familiesOff.length === 1;
+  document.querySelectorAll('[data-family]').forEach((box) => {
+    box.checked = !familiesOff.includes(box.dataset.family);
+    box.disabled = last && box.checked;
+  });
 };
 
 // Writes the fixed text of the page, then the text that a render builds.
@@ -118,6 +132,14 @@ export const bind = () => {
   document.querySelectorAll('[data-matching]').forEach((box) => {
     box.addEventListener('change', () => {
       setMatching({ [box.dataset.matching]: box.checked });
+      render();
+    });
+  });
+  $('family-in-use').addEventListener('change', (event) => chooseFamily(event.target.value));
+  document.querySelectorAll('[data-family]').forEach((box) => {
+    box.addEventListener('change', () => {
+      setFamiliesOff(switchFamily(familiesOff, box.dataset.family, box.checked));
+      ui.combination = null;
       render();
     });
   });

@@ -1,6 +1,6 @@
-import { COMBINATIONS, combination, combinationsBySize } from '#palette';
 import { whyNone, countKey } from '#outfits';
-import { $, el, ui, state, t, textOf, render } from '#ui/context';
+import { FAMILIES, familyOf } from '#families';
+import { $, el, ui, state, t, textOf, render, family, familiesOff, setFamily } from '#ui/context';
 import { strip, colorFields, renderOutfits, outfitsOf } from '#ui/outfit';
 
 const SIZES = [null, 2, 3, 4];
@@ -40,17 +40,29 @@ const sizeChips = () =>
     return chip;
   });
 
+// The options of a select of the families that are on, the family in use chosen (CMB-5, SET-5).
+export const familyOptions = () =>
+  FAMILIES.filter((id) => !familiesOff.includes(id)).map((id) => el('option', { value: id, textContent: t(`family.${id}`), selected: id === family }));
+
+// A new family closes the detail: its numbers name other sets (CMB-5).
+export const chooseFamily = (id) => {
+  setFamily(id);
+  ui.combination = null;
+  render();
+};
+
 export const renderCombinations = () => {
   const visible = ui.view === 'combinations';
   $('combinations').hidden = !visible;
   if (!visible) return;
   $('combination-sizes').replaceChildren(...sizeChips());
   $('combination-wearable').checked = ui.wearable;
-  const sized = new Set(combinationsBySize(ui.size));
-  const rows = COMBINATIONS.filter(({ number }) => sized.has(number) && (!ui.wearable || outfitsOf(number).length > 0));
+  $('family').replaceChildren(...familyOptions());
+  const fam = familyOf(family);
+  const rows = fam.combinations.filter(({ number, colors }) => (ui.size === null || colors.length === ui.size) && (!ui.wearable || outfitsOf(number).length > 0));
   $('combination-list').replaceChildren(...rows.map(row));
   $('combinations-empty').hidden = rows.length > 0;
-  const colors = ui.combination === null ? null : combination(ui.combination);
+  const colors = ui.combination === null ? null : fam.combination(ui.combination);
   if (!colors) ui.combination = null;
   // The pane shows the detail alone below 840px, and beside the list from 840px (LAY-3).
   if (colors) $('combinations').dataset.detail = '';
@@ -60,12 +72,13 @@ export const renderCombinations = () => {
   $('combination-outfits').hidden = !colors;
   if (colors) {
     const outfits = outfitsOf(ui.combination);
-    const empty = outfits.length ? '' : textOf(whyNone(ui.combination, state.garments, { season: ui.season }));
+    const empty = outfits.length ? '' : textOf(whyNone(ui.combination, state.garments, { season: ui.season, family }));
     renderOutfits($('combination-outfits'), t('combinations.outfits'), outfits, empty, { inline: true });
   }
 };
 
 export const bind = () => {
+  $('family').addEventListener('change', (event) => chooseFamily(event.target.value));
   $('combination-back').addEventListener('click', () => openCombination(null));
   // Show all clears both filters (CMB-2).
   $('combinations-all').addEventListener('click', () => {

@@ -65,6 +65,7 @@
 
       <section id="combinations" class="pane wide" hidden>
         <div class="pane-list">
+          <select id="family" class="select family-pick" data-i18n-attr="aria-label:combinations.family"></select>
           <div id="combination-sizes" class="cluster scroll size-filter"></div>
           <label class="switch wearable-switch"><span data-i18n="combinations.wearable"></span><input id="combination-wearable" class="switch-input" type="checkbox" role="switch"></label>
           <ul id="combination-list" class="item-list combo-list"></ul>
@@ -124,6 +125,25 @@
           <div class="list-group">
             <label class="switch"><span data-i18n="nav.combinations"></span><input class="switch-input" type="checkbox" role="switch" data-module="combinations"></label>
             <label class="switch"><span data-i18n="nav.fill"></span><input class="switch-input" type="checkbox" role="switch" data-module="fill"></label>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h2 class="list-group-head" data-i18n="settings.families"></h2>
+          <p class="settings-hint" data-i18n="settings.familiesHint"></p>
+          <div class="list-group">
+            <div class="settings-row">
+              <span class="settings-row-label" data-i18n="settings.familyInUse"></span>
+              <span id="family-in-use-value" class="settings-row-value"></span>
+              <span class="chevron" aria-hidden="true">›</span>
+              <select id="family-in-use" class="select" data-i18n-attr="aria-label:settings.familyInUse"></select>
+            </div>
+            <label class="switch"><span data-i18n="family.wada"></span><input class="switch-input" type="checkbox" role="switch" data-family="wada"></label>
+            <label class="switch"><span data-i18n="family.complementary"></span><input class="switch-input" type="checkbox" role="switch" data-family="complementary"></label>
+            <label class="switch"><span data-i18n="family.analogous"></span><input class="switch-input" type="checkbox" role="switch" data-family="analogous"></label>
+            <label class="switch"><span data-i18n="family.triadic"></span><input class="switch-input" type="checkbox" role="switch" data-family="triadic"></label>
+            <label class="switch"><span data-i18n="family.split"></span><input class="switch-input" type="checkbox" role="switch" data-family="split"></label>
+            <label class="switch"><span data-i18n="family.accent"></span><input class="switch-input" type="checkbox" role="switch" data-family="accent"></label>
+            <label class="switch"><span data-i18n="family.mono"></span><input class="switch-input" type="checkbox" role="switch" data-family="mono"></label>
           </div>
         </div>
         <div class="settings-section">

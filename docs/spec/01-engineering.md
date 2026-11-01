@@ -27,7 +27,7 @@
 | `src/matching.js` | The optional matching rules: their defaults, neutral colours, value contrast, formality and colour type | `palette`, `garments` |
 | `src/families.js` | The palette families: Sanzo Wada and the sets that colour theories build from the same colours, and the families in use and off | `palette`, `matching` |
 | `src/basics.js` | The seed list of basics, the basics that the wardrobe misses and the outfits that each one adds | `palette`, `outfits` |
-| `src/fill.js` | The ranked list of the Fill tab: the missing basics and the Wada colours that complete open palettes | `basics`, `garments`, `palette`, `outfits`, `matching`, `families` |
+| `src/fill.js` | The ranked list of the Fill tab: the missing basics and the colours that complete open sets of the family in use | `basics`, `garments`, `palette`, `outfits`, `matching`, `families` |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
 | `src/onboarding.js` | The show rule and the page steps of the walkthrough (optional) | nothing |
 | `src/ui/context.js` | The values that the views share, the toast, `render`, `commit`, `apply`, the hook of each save, the doc that the sync puts in place and the export file | `garments`, `storage`, `i18n`, `onboarding`, `matching`, `families` |
@@ -36,11 +36,11 @@
 | `src/ui/update.js` | The version line, the check, the refresh and the update toast | `version`, `i18n`, `ui/context` |
 | `src/ui/install.js` | The Install button | `install`, `ui/context` |
 | `src/ui/nav.js` | The navigation, the change and the slide of a section | `sections`, `modules`, `ui/context`, `ui/update`, `ui/dust` |
-| `src/ui/combinations.js` | The Combinations section, its filters, its list and its detail | `palette`, `outfits`, `ui/context`, `ui/outfit` |
-| `src/ui/fill.js` | The Fill tab: its season filter, its ranked rows and the tap that opens a filled garment | `fill`, `outfits`, `palette`, `ui/context`, `ui/outfit`, `ui/wardrobe` |
+| `src/ui/combinations.js` | The Combinations section, its family, its filters, its list and its detail, and the choice of the family | `families`, `outfits`, `ui/context`, `ui/outfit` |
+| `src/ui/fill.js` | The Fill tab: its season filter, its ranked rows and the tap that opens a filled garment | `fill`, `outfits`, `palette`, `families`, `ui/context`, `ui/outfit`, `ui/wardrobe` |
 | `src/ui/outfit.js` | The swatch, the image and the picture of a garment, the colour band, the strip, the colour fields, the looks, the season filter and the outfits of each combination, cached | `garments`, `palette`, `outfits`, `matching`, `ui/context`, `ui/controls` |
 | `src/ui/wardrobe.js` | The Wardrobe section, its rows, its detail, its sheet and the missing basics | `ds/sheet`, `garments`, `brands`, `links`, `palette`, `outfits`, `basics`, `measures`, `ui/context`, `ui/controls`, `ui/outfit` |
-| `src/ui/settings.js` | Settings, Delete all data (SET-3), the matching rules (SET-4), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `matching`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account` |
+| `src/ui/settings.js` | Settings, Delete all data (SET-3), the matching rules (SET-4), and the text of the page in its language | `garments`, `storage`, `i18n`, `modules`, `matching`, `families`, `ui/context`, `ui/update`, `ui/onboarding`, `ui/account`, `ui/combinations` |
 | `src/ui/dust.js` | The dust of a navigation item (optional) | `particles`, `ui/context`, `ui/controls` |
 | `src/ui/onboarding.js` | The walkthrough (optional) | `onboarding`, `sections`, `storage`, `ui/context`, `ui/controls` |
 | `src/ui/whatsnew.js` | The release notes sheet, its Settings row and the seen version | `whatsnew`, `onboarding`, `i18n`, `storage`, `ds/sheet`, `ui/context` |
@@ -114,7 +114,7 @@ in [09-sync.md](09-sync.md).
 | `tests/basics.test.js` | The basics, when a garment covers one, the missing ones and their order (BAS-1 to BAS-4) |
 | `tests/matching.test.js` | LCh, the defaults of the matching rules, neutral colours, contrast, formality and colour type (PAL-6, MAT-1 to MAT-5) |
 | `tests/families.test.js` | The palette families: Wada, the generated sets, their targets and counts, the switch and the family in use (FAM-1 to FAM-5) |
-| `tests/fill.test.js` | The ranked list of the Fill tab: basics, Wada colours, drops, slot pick, order and cap (FIL-1 to FIL-6) |
+| `tests/fill.test.js` | The ranked list of the Fill tab: basics, set colours, drops, slot pick, order and cap, the colour type and the family (FIL-1 to FIL-9) |
 | `tests/storage.test.js` | Load, save, the corrupt copy, the lost doc (SYNC-2), export, import and the device preferences |
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6, SYNC-4) |
 | `tests/session.test.js` | The session, the start route, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5) |

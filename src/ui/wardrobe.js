@@ -5,7 +5,7 @@ import { COLORS, colorOf, nearestColor, parseColor } from '#palette';
 import { outfitsWith, outfitKey, randomOutfit, countKey } from '#outfits';
 import { FITS, measuresOf } from '#measures';
 import { suggestBrands } from '#brands';
-import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, setCards, matching } from '#ui/context';
+import { $, el, ui, state, t, lang, textOf, apply, render, showToast, cards, setCards, matching, family } from '#ui/context';
 import { icon } from '#ui/controls';
 import { swatch, remoteImage, renderOutfits, picture, smallPicture, colorBand, seasonFilter, outfitList } from '#ui/outfit';
 
@@ -252,7 +252,7 @@ const openGarment = (id) => {
 
 // A pick for the doc and the season filter in view; a change of either picks again (WAR-9).
 const pickRandom = (except = null) => {
-  ui.random = { garments: state.garments, season: ui.season, matching, outfit: randomOutfit(state.garments, { season: ui.season, match: matching, except }) };
+  ui.random = { garments: state.garments, season: ui.season, matching, family, outfit: randomOutfit(state.garments, { season: ui.season, match: matching, family, except }) };
 };
 
 // Picks another outfit than the one in view.
@@ -288,12 +288,12 @@ const facts = (garment) => {
 };
 
 // The count of outfits of each garment, for one doc and one season filter (WAR-1).
-let counts = { garments: null, season: null, matching: null, byId: new Map() };
+let counts = { garments: null, season: null, matching: null, family: null, byId: new Map() };
 const outfitCount = (garment) => {
-  if (counts.garments !== state.garments || counts.season !== ui.season || counts.matching !== matching) {
-    counts = { garments: state.garments, season: ui.season, matching, byId: new Map() };
+  if (counts.garments !== state.garments || counts.season !== ui.season || counts.matching !== matching || counts.family !== family) {
+    counts = { garments: state.garments, season: ui.season, matching, family, byId: new Map() };
   }
-  if (!counts.byId.has(garment.id)) counts.byId.set(garment.id, outfitsWith(garment, state.garments, { season: ui.season, match: matching }).length);
+  if (!counts.byId.has(garment.id)) counts.byId.set(garment.id, outfitsWith(garment, state.garments, { season: ui.season, match: matching, family }).length);
   return counts.byId.get(garment.id);
 };
 
@@ -410,7 +410,7 @@ export const renderWardrobe = () => {
   if (!garment) ui.garmentId = null;
   // The random outfit is picked at the first render, and again on a change of the doc or the filter.
   if (!some) ui.random = null;
-  else if (!ui.random || ui.random.garments !== state.garments || ui.random.season !== ui.season || ui.random.matching !== matching) pickRandom();
+  else if (!ui.random || ui.random.garments !== state.garments || ui.random.season !== ui.season || ui.random.matching !== matching || ui.random.family !== family) pickRandom();
   // The detail of a garment shows alone at every width (LAY-3, WAR-4).
   if (garment) $('wardrobe').dataset.detail = '';
   else delete $('wardrobe').dataset.detail;
@@ -425,7 +425,7 @@ export const renderWardrobe = () => {
   if (garment?.link) $('garment-open').href = garment.link;
   $('garment-outfits').hidden = !garment;
   if (garment && visible) {
-    const outfits = outfitsWith(garment, state.garments, { season: ui.season, match: matching });
+    const outfits = outfitsWith(garment, state.garments, { season: ui.season, match: matching, family });
     renderOutfits($('garment-outfits'), t('wardrobe.outfits'), outfits, t('wardrobe.noOutfits'));
   }
   $('garment-sheet').hidden = !ui.sheetOpen;

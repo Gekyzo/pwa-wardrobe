@@ -1,7 +1,8 @@
 import { fillSuggestions } from '#fill';
 import { MATCH_MAX, MAX_OUTFITS } from '#outfits';
-import { colorOf, combination, distance } from '#palette';
-import { $, el, ui, state, t, matching } from '#ui/context';
+import { colorOf, distance } from '#palette';
+import { familyOf } from '#families';
+import { $, el, ui, state, t, matching, family } from '#ui/context';
 import { swatch, strip, seasonFilter, outfitsOf } from '#ui/outfit';
 import { openNewGarment } from '#ui/wardrobe';
 
@@ -9,23 +10,24 @@ import { openNewGarment } from '#ui/wardrobe';
 const SHOWN_PALETTES = 3;
 
 // The list of one doc and one season filter, computed once for each.
-let cache = { garments: null, season: null, matching: null, list: [] };
+let cache = { garments: null, season: null, matching: null, family: null, list: [] };
 export const fillNow = () => {
-  if (cache.garments !== state.garments || cache.season !== ui.season || cache.matching !== matching) {
-    const list = fillSuggestions(state.garments, { season: ui.season, match: matching, of: (n) => outfitsOf(n) });
-    cache = { garments: state.garments, season: ui.season, matching, list };
+  if (cache.garments !== state.garments || cache.season !== ui.season || cache.matching !== matching || cache.family !== family) {
+    const list = fillSuggestions(state.garments, { season: ui.season, match: matching, family, of: (n) => outfitsOf(n) });
+    cache = { garments: state.garments, season: ui.season, matching, family, list };
   }
   return cache.list;
 };
 
 const nameOf = (s) => (s.kind === 'basic'
   ? t(`basic.${s.basic}`)
-  : t('fill.wadaName', { slot: t(`slot.${s.slot}`), color: colorOf(s.color).name }));
+  : t('fill.setName', { slot: t(`slot.${s.slot}`), color: colorOf(s.color).name }));
 
 // One palette that a Wada row completes: its number and its colours, the added one outlined.
 const palette = (number, color) => {
-  const bar = strip(combination(number));
-  [...bar.children].forEach((block, i) => block.classList.toggle('new', distance(combination(number)[i], color) <= MATCH_MAX));
+  const colors = familyOf(family).combination(number);
+  const bar = strip(colors);
+  [...bar.children].forEach((block, i) => block.classList.toggle('new', distance(colors[i], color) <= MATCH_MAX));
   return el('span', { className: 'fill-palette' }, [el('span', { textContent: t('outfit.number', { number }) }), bar]);
 };
 
@@ -39,7 +41,7 @@ const row = (s) => {
     el('span', { className: 'basics-panel-name', textContent: name }),
     ...(s.gain > 0 ? [el('span', { className: 'fill-gain', textContent: t(s.gain >= MAX_OUTFITS ? 'fill.gainMax' : 'fill.gain', { count: s.gain }) })] : []),
     el('span', { className: 'basics-panel-meta', textContent: [t(`slot.${s.slot}`), t(`season.${s.season}`)].join(' · ') }),
-    el('span', { className: s.kind === 'basic' ? 'fill-tag' : 'fill-tag wada', textContent: tag }),
+    el('span', { className: s.kind === 'basic' ? 'fill-tag' : 'fill-tag set', textContent: tag }),
     ...(s.completes.length ? [el('span', { className: 'fill-palettes' }, s.completes.slice(0, SHOWN_PALETTES).map((n) => palette(n, s.color)))] : []),
   ])]);
 };

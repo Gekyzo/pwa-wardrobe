@@ -147,7 +147,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   the sum of the outfits of each combination (OUT-5), so each combination counts at most
   `MAX_OUTFITS`. Its option `of` reads the outfits of one combination in place of `outfitsFor`;
   the header and Combinations give `outfitsOf` of `src/ui/outfit.js`, which computes the
-  outfits of each combination once for each doc, season filter and matching choice.
+  outfits of each combination once for each doc, season filter, matching choice and family.
 - **OUT-11** `outfitsFor`, `outfitsWith`, `countOutfits` and `randomOutfit` take the matching
   choice (MAT-1) as the option `match`, `MATCHING` when it is not given. With every rule off, the
   outfits are those of OUT-3 to OUT-10.
@@ -266,11 +266,11 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   of `BASICS`, then the colour id, and cut to `max`.
 - **FIL-7** The Fill section (`nav.fill`, the `star` icon) shows the season filter shared with the
   other views, the hint `fill.hint`, and the rows of `fillSuggestions` under the filter, computed
-  once for each doc, season filter and matching choice, with the cached outfits of each combination as `of`. A
+  once for each doc, season filter, matching choice and family, with the cached outfits of each combination as `of`. A
   row is one button: a swatch of its colour; its name, `basic.<id>` for a basic or
-  `fill.wadaName` with the slot and the colour name for a Wada colour; a line of its slot and its
+  `fill.setName` with the slot and the colour name for a set colour; a line of its slot and its
   season; with a gain above 0, its gain, `fill.gain` (`fill.gainMax` at `MAX_OUTFITS`), on the end; the tag
-  `fill.basic` or `fill.completes` with the count of `completes`; and for a Wada colour the first
+  `fill.basic` or `fill.completes` with the count of `completes`; and for a set colour the first
   three palettes of `completes`, each `outfit.number` and its strip, the colours within
   `MATCH_MAX` of the row outlined. A tap opens the sheet of a new garment (WAR-3) with the name,
   the slot, the season and the colour of the row; **Save** adds it, and the view stays. With no
@@ -291,7 +291,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   brand, `wardrobe.sizeShort` with the size, and the count of `outfitsWith` under the season
   filter (`countKey`: `combinations.countMax` at `MAX_OUTFITS`, else `combinations.count`, so 0
   reads "0 conjuntos"), each one if it has one. The counts are cached for each doc, season
-  filter and matching choice. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
+  filter, matching choice and family. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
   image, or whose image fails to load, shows the drawing of its shape (GAR-14) on the same ground,
   filled with its colour, at 76% of the box with a `--muted` outline; with **Colour** of WAR-11
   every card shows a field of its colour. In a card and in a look the
@@ -365,7 +365,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   1024px is in a column of `--panel-width` beside it that stays in sight. It holds its title, the
   season filter, one outfit of OUT-9 as a card of WAR-5 (its pictures follow WAR-11), and **Another**, which takes another
   outfit (OUT-9 `except`). With no outfit it shows `wardrobe.noRandom` and no **Another**. The
-  first render takes an outfit, and a change of the season filter, of the matching choice or of the garments takes a new
+  first render takes an outfit, and a change of the season filter, of the matching choice, of the family or of the garments takes a new
   one. The panel is no detail: it has no history entry (NAV-7), and an open garment hides it.
 - **WAR-10** Removed: the missing basics are rows of the Fill tab (FIL-2, FIL-7). Wardrobe has no
   panel of basics.
@@ -381,7 +381,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Combinations section
 
 - **CMB-1** The Combinations section, named `nav.combinations` (Palettes) so that its label fits
-  the bottom bar, lists the 348 combinations by number. A row, 72px high, shows `outfit.number`,
+  the bottom bar, lists the sets of the family in use (CMB-5) by number. A row, 72px high, shows `outfit.number`,
   the colours as one bar of `--strip-height`, and the count of its outfits under the season
   filter (`countKey`: a count of `MAX_OUTFITS` reads `combinations.countMax`). A `--line` parts
   the rows; the open row has `aria-current="true"` on `--secondary`. The size chips are outline,
@@ -398,3 +398,8 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   the season filter.
 - **CMB-4** A combination with no outfit names why: `outfits.noColor` with the first colour that
   no garment matches, or `outfits.noSet` when no set of candidates is wearable (OUT-4).
+- **CMB-5** The list of Combinations starts with a select (`combinations.family`) of the
+  families that are on, named `family.<id>`, the family in use chosen. A choice makes it the
+  family in use (FAM-6) and closes an open combination, since its number names a set of the old
+  family. The list, the size filter, the detail, its outfits and `whyNone` read the sets of the
+  family in use (FAM-2, OUT-15). A size with no set of that family shows `combinations.empty`.
