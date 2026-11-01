@@ -225,6 +225,20 @@ test('randomOutfit gives another outfit than `except` while the pool has one (OU
   assert.deepEqual(randomOutfit(single, { except: outfitKey(only) }), only);
 });
 
+test('countOutfits reads the outfits of a combination through `of` when given (OUT-10)', () => {
+  const [a, b] = two.colors;
+  const garments = [g(a, 'top'), g(b, 'bottom')];
+  const asked = [];
+  const of = (number, list, { season }) => {
+    asked.push(season);
+    return outfitsFor(number, list, { season });
+  };
+  assert.equal(countOutfits(garments, { season: 'warm', of }), countOutfits(garments, { season: 'warm' }));
+  assert.equal(asked.length, COMBINATIONS.length);
+  assert.ok(asked.every((season) => season === 'warm'));
+  assert.equal(countOutfits(garments, { of: () => [1, 2] }), 2 * COMBINATIONS.length);
+});
+
 test('countOutfits sums the outfits of every combination under the season filter (OUT-10)', () => {
   const [a, b] = two.colors;
   const garments = [g(a, 'top'), g(b, 'bottom'), g(a, 'top', { season: 'cold' })];

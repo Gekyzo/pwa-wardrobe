@@ -24,8 +24,7 @@ This document holds the rules of the app only.
   its version of a shared component. A version of a shared component starts with the block
   `/* @extends <name> */`, in the same layer, so that it wins; the block documents the parts,
   variants and states that the app adds. No other rule of `components` or `layouts` repeats a
-  selector of the shared sheet. The app has its own version of `item-row`: no row is lifted, so
-  the row has no transition, and the app sets no `lifted` class. It also has a version of
+  selector of the shared sheet. The app has a version of
   `list-group` in `settings`: the select of a row of Preferences lies over the row (SET-1), and
   versions of `nav-bar` and `app-header` for the top bar (DSV-5).
 - **DSV-4** A change of a shared part is made in `pwa-design-system`, then `npm run ds` here.
@@ -50,8 +49,8 @@ The parts of `styles.css`, by layer. The shared parts are in the design system.
 
 | Layer | Parts |
 |---|---|
-| tokens | the catalogue look: `--screen-title` (`-phone`, `-weight`, `-track`), `--photo-ground`, `--grid-gap` (`-wide`), `--panel-width`, `--band-pad`, `--field-tall`, `--field-short`, `--strip-height`, `--topbar-height`, `--wordmark`. `--primary` is the ink of the design system; `--done` keeps progress and the checked state |
+| tokens | the catalogue look: `--screen-title` (`-phone`, `-weight`, `-track`, `-leading`), `--photo-ground`, `--grid-gap` (`-wide`), `--panel-width`, `--band-pad`, `--field-tall`, `--field-short`, `--strip-height`, `--topbar-height`, `--wordmark` (`-track`). `--primary` is the ink of the design system; `--done` keeps progress and the checked state |
 | tokens | `--settings-max` (SET-2) |
-| components | `swatch`, `strip`, `color-fields`, `swatch-grid`, `garment-picture`, `color-band`, `look`, `image-strip`, `image-grid`, `color-pick`, `detail-back`, `outfits`, `season-filter` · versions of `nav-bar`, `app-header` (DSV-5) and `item-row` (DSV-3) |
+| components | `swatch`, `strip`, `color-fields`, `swatch-grid`, `garment-picture`, `color-band`, `look`, `image-strip`, `image-grid`, `color-pick`, `detail-back`, `outfits`, `season-filter` · versions of `nav-bar` and `app-header` (DSV-5) |
 | layouts | version of `pane` with the variants `single` (Wardrobe) and `wide` (Combinations) (LAY-3) |
 | screens | wardrobe: `garment-groups`, `garment-card`, `random-panel`, `garment-detail`, `garment-facts` · combinations: `combo-row`, `combo-head`, `size-filter` · settings: `settings` (`settings-section`, `settings-hint`, version of `list-group`), `about`, `version-status` · nav: `dust` · onboarding: `onboarding`, `onboarding-art` |

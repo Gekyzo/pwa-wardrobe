@@ -7,6 +7,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 - **Season filter** (WAR-5): `seasonFilter()` of `src/ui/outfit.js` is a `cluster season-filter` group (`role="group"`, label `wardrobe.season`) of outline `chip`s, the pressed one ink, as the size filter. It replaces the `segmented` switch, whose knob was wider than its label in the 360px random panel head; there it has no margin and wraps under the title.
 - **Long names and broken thumbs** (WAR-4, WAR-5): `.look-name`, `.garment-card-name` and `.garment-detail-title` take `overflow-wrap: anywhere`, so a long one-word name stays in its column at 360px. `media()` of `src/ui/wardrobe.js` hides an image-strip thumb whose image fails, as the sheet does (WAR-6).
 - **Outfit count in the details** (WAR-5): `renderOutfits` of `src/ui/outfit.js` writes an `outfits-head` of the title and an `outfits-count` (`countKey`, only with one outfit or more), as the gallery shows.
+- **Cleanup** (OUT-10, DSV-3): `outfitsOf` moves from `src/ui/combinations.js` to `src/ui/outfit.js`, and `subtitle()` of `src/app.js` reads it (and `countOutfits` gets an `of` option), so the header no longer computes the 348 combinations at each render. Removed the dead `@extends item-row` block and the `swatch large` variant. New tokens `--screen-title-leading` and `--wordmark-track` replace raw values. `picture()` makes a `span`, not a `figure`, which a `button` may not hold.
 
 ## 0.1.19 - 2026-11-01
 

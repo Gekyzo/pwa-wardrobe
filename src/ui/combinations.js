@@ -1,18 +1,9 @@
 import { COMBINATIONS, combination, combinationsBySize } from '#palette';
-import { outfitsFor, whyNone, countKey } from '#outfits';
+import { whyNone, countKey } from '#outfits';
 import { $, el, ui, state, t, textOf, render } from '#ui/context';
-import { strip, colorFields, renderOutfits } from '#ui/outfit';
+import { strip, colorFields, renderOutfits, outfitsOf } from '#ui/outfit';
 
 const SIZES = [null, 2, 3, 4];
-
-// The outfits of each combination for one doc and one season filter. The list counts them at
-// each render; a new doc or a new filter starts the cache again.
-let cache = { garments: null, season: null, outfits: new Map() };
-const outfitsOf = (number) => {
-  if (cache.garments !== state.garments || cache.season !== ui.season) cache = { garments: state.garments, season: ui.season, outfits: new Map() };
-  if (!cache.outfits.has(number)) cache.outfits.set(number, outfitsFor(number, state.garments, { season: ui.season }));
-  return cache.outfits.get(number);
-};
 
 const countText = (count) => t(countKey(count), { count });
 

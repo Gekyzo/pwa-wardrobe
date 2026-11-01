@@ -130,7 +130,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   another one is in the pool.
 - **OUT-10** `countOutfits` gives the number of outfits of the wardrobe under the season filter:
   the sum of the outfits of each combination (OUT-5), so each combination counts at most
-  `MAX_OUTFITS`.
+  `MAX_OUTFITS`. Its option `of` reads the outfits of one combination in place of `outfitsFor`;
+  the header and Combinations give `outfitsOf` of `src/ui/outfit.js`, which computes the
+  outfits of each combination once for each doc and season filter.
 
 ## Wardrobe section
 

@@ -10,7 +10,8 @@ import { bind as bindWhatsNew, startWhatsNew, isWhatsNewOpen, closeWhatsNew } fr
 import { bind as bindAccount, renderAccount, startAccount, goOnline, goOffline, goVisible, goStale, isAccountOpen, closeAccount, sessionNow } from '#ui/account';
 import { readOAuthReturn } from '#session';
 import { COMBINATIONS } from '#palette';
-import { countOutfits, outfitsFor } from '#outfits';
+import { countOutfits } from '#outfits';
+import { outfitsOf } from '#ui/outfit';
 
 // The return of the Google sign-in (ACC-4): `code`, `state` and `error` leave the URL at once.
 const { oauth, clean } = readOAuthReturn(new URL(location.href));
@@ -25,11 +26,11 @@ const subtitle = () => {
   }
   if (garments.length === 0) return '';
   if (ui.view === 'combinations') {
-    const wearable = COMBINATIONS.filter(({ number }) => outfitsFor(number, garments, { season: ui.season }).length > 0).length;
+    const wearable = COMBINATIONS.filter(({ number }) => outfitsOf(number).length > 0).length;
     return t('combinations.summary', { wearable, total: COMBINATIONS.length });
   }
   const photos = garments.filter((garment) => garment.images.length > 0).length;
-  const outfits = countOutfits(garments, { season: ui.season });
+  const outfits = countOutfits(garments, { season: ui.season, of: outfitsOf });
   return t('wardrobe.summary', { garments: t('garments.count', { count: garments.length }), photos, outfits: t('combinations.count', { count: outfits }) });
 };
 

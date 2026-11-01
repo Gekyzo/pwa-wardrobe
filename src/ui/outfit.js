@@ -1,11 +1,20 @@
 import { mainImage } from '#garments';
 import { colorOf, inkOn } from '#palette';
-import { SEASON_FILTERS, countKey } from '#outfits';
-import { el, ui, t, render } from '#ui/context';
+import { SEASON_FILTERS, countKey, outfitsFor } from '#outfits';
+import { el, ui, state, t, render } from '#ui/context';
+
+// The outfits of each combination for the doc and the season filter of now, computed once each.
+// The header and Combinations read them at each render; a new doc or a new filter starts again.
+let cache = { garments: null, season: null, outfits: new Map() };
+export const outfitsOf = (number) => {
+  if (cache.garments !== state.garments || cache.season !== ui.season) cache = { garments: state.garments, season: ui.season, outfits: new Map() };
+  if (!cache.outfits.has(number)) cache.outfits.set(number, outfitsFor(number, state.garments, { season: ui.season }));
+  return cache.outfits.get(number);
+};
 
 // A block of one palette colour.
 export const swatch = (colorId, variant = '') => {
-  const node = el('span', { className: variant === 'dot' ? 'swatch dot' : variant === 'large' ? 'swatch large' : 'swatch' });
+  const node = el('span', { className: variant === 'dot' ? 'swatch dot' : 'swatch' });
   node.style.background = colorOf(colorId).hex;
   return node;
 };
@@ -18,26 +27,26 @@ export const remoteImage = (src, className) => el('img', { className, referrerPo
 // card and a look have the name and the colour as text beside the picture, so there the picture
 // is hidden from a screen reader; the hero names the garment and its colour.
 export const picture = (garment, variant, url = mainImage(garment)) => {
-  const figure = el('figure', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'look' ? 'garment-picture look' : 'garment-picture card' });
+  const box = el('span', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'look' ? 'garment-picture look' : 'garment-picture card' });
   const named = variant === 'hero';
-  if (!named) figure.setAttribute('aria-hidden', 'true');
+  if (!named) box.setAttribute('aria-hidden', 'true');
   const field = () => {
     const color = colorOf(garment.color);
-    figure.replaceChildren();
-    figure.style.background = color.hex;
+    box.replaceChildren();
+    box.style.background = color.hex;
     if (!named) return;
-    figure.setAttribute('role', 'img');
-    figure.setAttribute('aria-label', `${garment.name}, ${color.name}`);
+    box.setAttribute('role', 'img');
+    box.setAttribute('aria-label', `${garment.name}, ${color.name}`);
   };
   if (!url) {
     field();
-    return figure;
+    return box;
   }
   const image = remoteImage(url, 'garment-picture-img');
   if (named) image.alt = garment.name;
   image.addEventListener('error', field, { once: true });
-  figure.append(image);
-  return figure;
+  box.append(image);
+  return box;
 };
 
 // The colours of a combination as equal blocks in one row.

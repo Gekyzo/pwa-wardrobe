@@ -71,8 +71,9 @@ export const outfitsFor = (number, garments, { season = 'any' } = {}) => {
 export const countKey = (count) => (count >= MAX_OUTFITS ? 'combinations.countMax' : 'combinations.count');
 
 // The number of outfits of every combination under the season filter, each capped at MAX_OUTFITS.
-export const countOutfits = (garments, { season = 'any' } = {}) =>
-  COMBINATIONS.reduce((n, { number }) => n + outfitsFor(number, garments, { season }).length, 0);
+// `of` reads the outfits of one combination, so a caller can give a cached `outfitsFor`.
+export const countOutfits = (garments, { season = 'any', of = outfitsFor } = {}) =>
+  COMBINATIONS.reduce((n, { number }) => n + of(number, garments, { season }).length, 0);
 
 // The outfits that contain `garment`: for each combination of a colour near it, and each place
 // of that combination that it can take, the hero holds that place and the others are searched.
