@@ -29,7 +29,8 @@ const subtitle = () => {
     return t('combinations.summary', { wearable, total: COMBINATIONS.length });
   }
   const photos = garments.filter((garment) => garment.images.length > 0).length;
-  return t('wardrobe.summary', { count: garments.length, garments: garments.length, photos, outfits: countOutfits(garments, { season: ui.season }) });
+  const outfits = countOutfits(garments, { season: ui.season });
+  return t('wardrobe.summary', { garments: t('garments.count', { count: garments.length }), photos, outfits: t('combinations.count', { count: outfits }) });
 };
 
 const renderHeader = () => {

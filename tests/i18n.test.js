@@ -133,13 +133,15 @@ test('app.title is a descriptor in each language, then the brand, as the fallbac
   assert.equal(html.match(/<title>(.*)<\/title>/)[1], CATALOGS[lang]['app.title']);
 });
 
-test('each catalog has the summaries of the header, with the plural of the wardrobe (NAV-8)', () => {
+test('each catalog has the summaries of the header, with the plural of each count (NAV-8)', () => {
   for (const lang of LANGUAGES) {
-    const catalog = CATALOGS[lang];
-    assert.deepEqual(Object.keys(catalog['wardrobe.summary'] ?? {}).sort(), ['one', 'other'], lang);
-    assert.equal(typeof catalog['combinations.summary'], 'string', lang);
+    assert.equal(typeof CATALOGS[lang]['wardrobe.summary'], 'string', lang);
+    assert.equal(typeof CATALOGS[lang]['combinations.summary'], 'string', lang);
   }
   const t = translator('es');
-  assert.equal(t('wardrobe.summary', { count: 8, garments: 8, photos: 4, outfits: 4 }), '8 prendas, 4 con foto · 4 conjuntos');
+  const summary = (garments, photos, outfits) =>
+    t('wardrobe.summary', { garments: t('garments.count', { count: garments }), photos, outfits: t('combinations.count', { count: outfits }) });
+  assert.equal(summary(8, 4, 4), '8 prendas, 4 con foto · 4 conjuntos');
+  assert.equal(summary(1, 0, 1), '1 prenda, 0 con foto · 1 conjunto');
   assert.equal(t('combinations.summary', { wearable: 12, total: 348 }), '12 de 348 combinaciones de Sanzo Wada se pueden poner con tu ropa');
 });

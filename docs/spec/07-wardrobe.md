@@ -142,7 +142,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   filter (`countKey`: `combinations.countMax` at `MAX_OUTFITS`, else `combinations.count`, so 0
   reads "0 conjuntos"), each one if it has one. The counts are cached for each doc and season
   filter. The picture is the main image (GAR-7), contained on `--photo-ground`; a garment with no
-  image, or whose image fails to load, shows a field of its colour with `role="img"` and the label
+  image, or whose image fails to load, shows a field of its colour. In a card and in a look the
+  picture is hidden from a screen reader, since the name and the colour stand beside it as text;
+  the picture of the detail has the alt text of the name, or as a field `role="img"` and the label
   "name, colour name". With no garment the section shows only `wardrobe.empty` and **Add
   garment**, which opens the sheet of WAR-3.
 - **WAR-2** **Delete** is in the detail of a garment (WAR-4, GAR-4); the toast

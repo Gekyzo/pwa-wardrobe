@@ -19,7 +19,7 @@ export default {
   'wardrobe.noOutfits': 'No outfit with this garment.',
   'wardrobe.random': 'Random outfit',
   'wardrobe.randomAgain': 'Another',
-  'wardrobe.summary': { one: '{garments} garment, {photos} with a photo · {outfits} outfits', other: '{garments} garments, {photos} with a photo · {outfits} outfits' },
+  'wardrobe.summary': '{garments}, {photos} with a photo · {outfits}',
   'wardrobe.noRandom': 'Your garments make no outfit yet.',
   'wardrobe.brand': 'Brand',
   'wardrobe.reference': 'Reference',

@@ -339,7 +339,7 @@
      @part look-item    One garment.
      @part look-name    The name of the garment.
      @part look-color   A small dot and the name of the colour.
-     @example <ul class="outfits-list" style="width: 320px"><li class="look"><div class="look-head"><span class="look-number">No. 69</span><span class="pill">Exact</span></div><ul class="look-row"><li class="look-item"><figure class="garment-picture look" style="background: #a1a39a" role="img" aria-label="Jumper, Warm Gray"></figure><span class="look-name">Jumper</span><span class="look-color"><span class="swatch dot" style="background: #a1a39a"></span>Warm Gray</span></li><li class="look-item"><figure class="garment-picture look" style="background: #111314" role="img" aria-label="Trousers, Black"></figure><span class="look-name">Trousers</span><span class="look-color"><span class="swatch dot" style="background: #111314"></span>Black</span></li></ul></li></ul> */
+     @example <ul class="outfits-list" style="width: 320px"><li class="look"><div class="look-head"><span class="look-number">No. 69</span><span class="pill">Exact</span></div><ul class="look-row"><li class="look-item"><figure class="garment-picture look" style="background: #a1a39a" aria-hidden="true"></figure><span class="look-name">Jumper</span><span class="look-color"><span class="swatch dot" style="background: #a1a39a"></span>Warm Gray</span></li><li class="look-item"><figure class="garment-picture look" style="background: #111314" aria-hidden="true"></figure><span class="look-name">Trousers</span><span class="look-color"><span class="swatch dot" style="background: #111314"></span>Black</span></li></ul></li></ul> */
   .look {
     padding: var(--space-4);
     border-radius: var(--radius-l);
@@ -518,7 +518,7 @@
      @variant card  3:4, in a card of the grid.
      @variant hero  4:5, in the detail.
      @variant look  3:4, in an outfit.
-     @example <figure class="garment-picture card" style="width: 120px; background: #a5c8d1" role="img" aria-label="Shirt, Light Glaucous Blue"></figure>
+     @example <figure class="garment-picture card" style="width: 120px; background: #a5c8d1" aria-hidden="true"></figure>
      @example <figure class="garment-picture hero" style="width: 200px"><img class="garment-picture-img" alt="Trousers" src="./icons/icon-192.png"></figure> */
   .garment-picture {
     display: grid;
@@ -774,7 +774,7 @@
      @part garment-groups-title  The name of the slot.
      @part garment-groups-count  The count of its garments.
      @part garment-groups-grid   The cards of the slot.
-     @example <div class="garment-groups" style="width: 100%"><section class="garment-groups-group"><div class="garment-groups-head"><h2 class="garment-groups-title">Tops</h2><span class="garment-groups-count">2 garments</span></div><ul class="garment-groups-grid"><li class="garment-card"><button class="garment-card-open" type="button"><figure class="garment-picture card" style="background: #a5c8d1" role="img" aria-label="Shirt, Light Glaucous Blue"></figure><span class="garment-card-name">Shirt</span><span class="garment-card-color"><span class="swatch dot" style="background: #a5c8d1"></span>Light Glaucous Blue</span><span class="garment-card-meta">Sfera · Size M · 1 outfit</span></button></li><li class="garment-card"><button class="garment-card-open" type="button"><figure class="garment-picture card" style="background: #ffdd00" role="img" aria-label="Jumper, Apricot Yellow"></figure><span class="garment-card-name">Jumper</span><span class="garment-card-color"><span class="swatch dot" style="background: #ffdd00"></span>Apricot Yellow</span><span class="garment-card-meta">0 outfits</span></button></li></ul></section></div> */
+     @example <div class="garment-groups" style="width: 100%"><section class="garment-groups-group"><div class="garment-groups-head"><h2 class="garment-groups-title">Tops</h2><span class="garment-groups-count">2 garments</span></div><ul class="garment-groups-grid"><li class="garment-card"><button class="garment-card-open" type="button"><figure class="garment-picture card" style="background: #a5c8d1" aria-hidden="true"></figure><span class="garment-card-name">Shirt</span><span class="garment-card-color"><span class="swatch dot" style="background: #a5c8d1"></span>Light Glaucous Blue</span><span class="garment-card-meta">Sfera · Size M · 1 outfit</span></button></li><li class="garment-card"><button class="garment-card-open" type="button"><figure class="garment-picture card" style="background: #ffdd00" aria-hidden="true"></figure><span class="garment-card-name">Jumper</span><span class="garment-card-color"><span class="swatch dot" style="background: #ffdd00"></span>Apricot Yellow</span><span class="garment-card-meta">0 outfits</span></button></li></ul></section></div> */
   .garment-groups-group + .garment-groups-group {
     margin-top: var(--space-7);
   }
@@ -821,7 +821,7 @@
      @part garment-card-name   The name of the garment.
      @part garment-card-color  A small dot and the name of the colour.
      @part garment-card-meta   The brand, the size and the count of outfits.
-     @example <ul class="garment-groups-grid" style="width: 200px"><li class="garment-card"><button class="garment-card-open" type="button"><figure class="garment-picture card" style="background: #7c4226" role="img" aria-label="Polo, Brown"></figure><span class="garment-card-name">Polo</span><span class="garment-card-color"><span class="swatch dot" style="background: #7c4226"></span>Brown</span><span class="garment-card-meta">20+ outfits</span></button></li></ul> */
+     @example <ul class="garment-groups-grid" style="width: 200px"><li class="garment-card"><button class="garment-card-open" type="button"><figure class="garment-picture card" style="background: #7c4226" aria-hidden="true"></figure><span class="garment-card-name">Polo</span><span class="garment-card-color"><span class="swatch dot" style="background: #7c4226"></span>Brown</span><span class="garment-card-meta">20+ outfits</span></button></li></ul> */
   .garment-card-open {
     display: flex;
     flex-direction: column;

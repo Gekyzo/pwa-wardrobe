@@ -41,8 +41,8 @@ Combinations says `combinations.pick`.
   detail and shows its list again; it does not close the app. A detail that the app closes leaves
   its entry, so the next **Back** acts as before the detail opened.
 - **NAV-8** Under the title of each view the header shows its summary. Wardrobe:
-  `wardrobe.summary` with the count of garments, of garments with an image, and `countOutfits`
-  (OUT-10) under the season filter. Palettes: `combinations.summary` with the count of
+  `wardrobe.summary` with `garments.count`, the count of garments with an image, and
+  `combinations.count` of `countOutfits` (OUT-10) under the season filter, each count in its plural. Palettes: `combinations.summary` with the count of
   combinations that have an outfit under the season filter, of the 348. Settings: the email of
   the account with a session, else `nav.local`. With no garment, Wardrobe and Palettes show no
   summary.

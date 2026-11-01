@@ -14,13 +14,18 @@ export const swatch = (colorId, variant = '') => {
 export const remoteImage = (src, className) => el('img', { className, referrerPolicy: 'no-referrer', loading: 'lazy', decoding: 'async', alt: '', src });
 
 // The picture of a garment: its main image (GAR-7), or `url`, on the photo ground, or a field of
-// its colour when it has none or when the image fails to load. `variant` is card, hero or look.
+// its colour when it has none or when the image fails to load. `variant` is card, hero or look. A
+// card and a look have the name and the colour as text beside the picture, so there the picture
+// is hidden from a screen reader; the hero names the garment and its colour.
 export const picture = (garment, variant, url = mainImage(garment)) => {
   const figure = el('figure', { className: variant === 'hero' ? 'garment-picture hero' : variant === 'look' ? 'garment-picture look' : 'garment-picture card' });
+  const named = variant === 'hero';
+  if (!named) figure.setAttribute('aria-hidden', 'true');
   const field = () => {
     const color = colorOf(garment.color);
     figure.replaceChildren();
     figure.style.background = color.hex;
+    if (!named) return;
     figure.setAttribute('role', 'img');
     figure.setAttribute('aria-label', `${garment.name}, ${color.name}`);
   };
@@ -29,7 +34,7 @@ export const picture = (garment, variant, url = mainImage(garment)) => {
     return figure;
   }
   const image = remoteImage(url, 'garment-picture-img');
-  image.alt = garment.name;
+  if (named) image.alt = garment.name;
   image.addEventListener('error', field, { once: true });
   figure.append(image);
   return figure;
