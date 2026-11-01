@@ -25,8 +25,10 @@ Combinations says `combinations.pick`.
   below 840px), a slide to the right of NAV-2 closes it and shows its list again, which comes in
   from the left. A slide to the left still goes to the next section. The **Back** of a detail
   starts with an arrow that lines up with the content edge.
-- **NAV-4** Below 600px the navigation is the bottom bar, with the icon and the name of each
-  section. From 600px it is a top bar of `--topbar-height` above the title row, with **Right** and
+- **NAV-4** Below 600px the navigation is the bottom bar, `--nav-height` (56px) high, with the
+  name of each section as text, no icon and no pill; the current one is in `--text` at
+  `--weight-book`. Above the title row a top bar of `--topbar-height` shows the wordmark
+  (`phone-brand`), and the title row has no rule under it. From 600px it is a top bar of `--topbar-height` above the title row, with **Right** and
   with **Left** (DSV-5). **Left** still puts the `+` of a phone at the left and the buttons of the
   header before its text.
 - **NAV-5** The top bar spans the frame, over a `--line` rule. From start to end it shows the
@@ -64,16 +66,17 @@ Combinations says `combinations.pick`.
 - **SET-1** Settings is a column of groups, each a `list-group-head` above a `list-group` of
   settings rows, as in pwa-shopping-list: **Backup** (**Export**, **Import**, **Delete all data**), **Preferences**
   (**Language**, **Hand**, **Theme**), **Modules** (MOD-1), **App** (INS-2) and **Help** (ONB-3),
-  then the version lines (VER-4). A row of Preferences shows its current value and a chevron, and
+  then the version lines (VER-4). **Export** shows `garments.count` with the count of garments. A row of Preferences shows its current value and a chevron, and
   a tap on it opens the native picker of its select. A row that opens something ends with a
   chevron.
-- **SET-2** **Backup** and **Preferences** have a line of help below their head at every width.
+- **SET-2** **Account** (`settings.accountHint`), **Backup**, **Preferences** and **Modules**
+  (`settings.modulesHint`) have a line of help below their head at every width.
   The groups are rounded cards on `--surface`, under heads of 16px. From 840px Settings is a
   column of at most 1040px (`--settings-max`) at the start of the frame, and each group is a row:
   its head and its help in a column of `--panel-width` at the left, its rows at the right, the
   groups split by a line.
-- **SET-3** **Delete all data** is the last row of Backup, in the colour of danger, with no
-  chevron. It asks `reset.confirm`, or `reset.confirmLocal` with a session, which also says that
+- **SET-3** **Delete all data** is the last row of Backup, in the colour of danger at normal
+  weight, with a chevron. It asks `reset.confirm`, or `reset.confirmLocal` with a session, which also says that
   the session closes and that the garments of the account stay on the server. A yes first stops the
   sync (SYNC-10), then removes each `localStorage` key of the app, `wardrobe.*` (`resetAll`),
   and no key of another app of the origin, then loads the page again: the app starts as a new

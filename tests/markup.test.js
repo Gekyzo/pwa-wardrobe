@@ -113,8 +113,8 @@ test('the offline note is the first child of main, a hidden status with the offl
   assert.match(body, /<main>\s*<p id="sync-offline" class="sync-note" role="status" hidden><svg class="icon small" aria-hidden="true"><use href="icons.svg#offline"\/><\/svg><span data-i18n="sync.offline"><\/span><\/p>/);
 });
 
-test('Backup ends with Delete all data, a danger row with no chevron (SET-3)', () => {
-  assert.match(body, /<button id="import" class="settings-row" type="button">.*?<\/button>\s*<button id="reset" class="settings-row danger" type="button"><span class="settings-row-label" data-i18n="settings.reset"><\/span><\/button>\s*<\/div>/);
+test('Backup ends with Delete all data, a danger row with a chevron (SET-3)', () => {
+  assert.match(body, /<button id="import" class="settings-row" type="button">.*?<\/button>\s*<button id="reset" class="settings-row danger" type="button"><span class="settings-row-label" data-i18n="settings.reset"><\/span><span class="chevron" aria-hidden="true">›<\/span><\/button>\s*<\/div>/);
 });
 
 test('the header has the title and the subtitle of the view (NAV-8)', () => {

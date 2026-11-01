@@ -4,6 +4,8 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+- On a phone, a bar at the top shows **ATTIRE**, and the bottom bar shows the sections by name only.
+- **Settings** explains **Account** and **Modules**, shows how many garments **Export** writes, and **Delete all data** has its arrow.
 - The season and colour filters are smaller. In **Random outfit** and the **Palettes** detail, the season is beside the title. **Wearable only** is no longer in a card.
 - The app no longer uses green: **Exact** is grey, the switches are black and **Fit** is text. **Delete** is underlined.
 - The pictures of an outfit fill their place, with square corners.

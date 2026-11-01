@@ -2,7 +2,7 @@ import { $, ui, state, storage, t, setRender, render, showToast, hideToast, toas
 import { bind as bindNav, renderNav, syncHistory } from '#ui/nav';
 import { bind as bindWardrobe, renderWardrobe, closeGarmentSheet } from '#ui/wardrobe';
 import { bind as bindCombinations, renderCombinations } from '#ui/combinations';
-import { bind as bindSettings, applyLanguage } from '#ui/settings';
+import { bind as bindSettings, applyLanguage, renderSettings } from '#ui/settings';
 import { bind as bindInstall, renderInstall } from '#ui/install';
 import { readVersion, renderVersion, offerUpdate } from '#ui/update';
 import { bind as bindOnboarding, closeOnboarding, turnOnboarding } from '#ui/onboarding';
@@ -47,6 +47,7 @@ const renderAll = () => {
   renderWardrobe();
   renderCombinations();
   $('settings').hidden = ui.view !== 'settings';
+  renderSettings();
   renderVersion();
   renderInstall();
   renderAccount();

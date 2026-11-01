@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
+    <div class="phone-brand" aria-hidden="true" data-i18n="app.name"></div>
     <header class="app-header">
       <div class="app-header-text">
         <h1 id="title" class="app-header-title"></h1>
@@ -72,6 +73,7 @@
       <section id="settings" class="settings" hidden>
         <div id="account-group" class="settings-section" hidden>
           <h2 class="list-group-head" data-i18n="settings.account"></h2>
+          <p class="settings-hint" data-i18n="settings.accountHint"></p>
           <div class="list-group">
             <div id="account-row" class="settings-row account-row"><span id="account-email" class="settings-row-label"></span><span id="account-sync" class="settings-row-value"></span></div>
             <button id="logout" class="settings-row" type="button"><span class="settings-row-label" data-i18n="account.logout"></span><span class="chevron" aria-hidden="true">›</span></button>
@@ -82,9 +84,9 @@
           <h2 class="list-group-head" data-i18n="settings.backup"></h2>
           <p class="settings-hint" data-i18n="settings.backupHint"></p>
           <div class="list-group">
-            <button id="export" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.export"></span><span class="chevron" aria-hidden="true">›</span></button>
+            <button id="export" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.export"></span><span id="export-count" class="settings-row-value"></span><span class="chevron" aria-hidden="true">›</span></button>
             <button id="import" class="settings-row" type="button"><span class="settings-row-label" data-i18n="settings.import"></span><span class="chevron" aria-hidden="true">›</span></button>
-            <button id="reset" class="settings-row danger" type="button"><span class="settings-row-label" data-i18n="settings.reset"></span></button>
+            <button id="reset" class="settings-row danger" type="button"><span class="settings-row-label" data-i18n="settings.reset"></span><span class="chevron" aria-hidden="true">›</span></button>
           </div>
         </div>
         <div class="settings-section">
@@ -113,6 +115,7 @@
         </div>
         <div class="settings-section">
           <h2 class="list-group-head" data-i18n="settings.modules"></h2>
+          <p class="settings-hint" data-i18n="settings.modulesHint"></p>
           <div class="list-group">
             <label class="switch"><span data-i18n="nav.combinations"></span><input class="switch-input" type="checkbox" role="switch" data-module="combinations"></label>
           </div>

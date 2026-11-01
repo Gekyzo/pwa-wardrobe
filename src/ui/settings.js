@@ -36,6 +36,11 @@ const renderValues = () => {
   }
 };
 
+// The count of garments beside Export (SET-1).
+export const renderSettings = () => {
+  $('export-count').textContent = t('garments.count', { count: state.garments.length });
+};
+
 // Writes the fixed text of the page, then the text that a render builds.
 export const applyLanguage = () => {
   document.documentElement.lang = lang;
