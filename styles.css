@@ -1074,8 +1074,8 @@
 
   /* @component wardrobe-side
      @scope wardrobe
-     @summary The side of the wardrobe: the random outfit and the missing basics. After the grid or the empty state, and from 1024px a column beside it that stays in sight.
-     @example <div class="wardrobe-side" style="width: 360px"><aside class="random-panel"><div class="random-panel-head"><h2 class="random-panel-title">Random outfit</h2></div><p class="empty-state inline">No outfit with these garments.</p></aside><aside class="basics-panel"><h2 class="basics-panel-title">Missing basics</h2></aside></div> */
+     @summary The side of the wardrobe: the random outfit. After the grid or the empty state, and from 1024px a column beside it that stays in sight.
+     @example <div class="wardrobe-side" style="width: 360px"><aside class="random-panel"><div class="random-panel-head"><h2 class="random-panel-title">Random outfit</h2></div><p class="empty-state inline">No outfit with these garments.</p></aside></div> */
   .wardrobe-side {
     display: flex;
     flex-direction: column;
@@ -1120,8 +1120,7 @@
     margin: 0;
   }
 
-  .random-panel-title,
-  .basics-panel-title {
+  .random-panel-title {
     margin: 0;
     font-size: var(--section-title);
     font-weight: var(--weight-book);
@@ -1129,21 +1128,14 @@
 
   /* @component basics-panel
      @scope wardrobe
-     @summary The basics that the wardrobe misses: the title, a hint, and one row for each basic, a swatch of its colour, its name and a line of slot, season and the outfits it adds. A tap opens a new garment filled with it.
-     @part basics-panel-title  The title.
-     @part basics-panel-hint   The hint under the title.
+     @summary The rows of a list of garments to add: a hint, and one row for each, a swatch of its colour, its name and a line of slot and season. A tap opens a new garment filled with it. The Fill tab builds on it.
+     @part basics-panel-hint   The hint over the rows.
      @part basics-panel-list   The rows.
-     @part basics-panel-row    One basic of the list.
+     @part basics-panel-row    One row of the list.
      @part basics-panel-item   Its button.
-     @part basics-panel-name   The name of the basic.
-     @part basics-panel-meta   Its slot, its season and its gain.
-     @example <aside class="basics-panel" style="width: 360px"><h2 class="basics-panel-title">Missing basics</h2><p class="basics-panel-hint">Tap one to add it.</p><ul class="basics-panel-list"><li class="basics-panel-row"><button class="basics-panel-item" type="button"><span class="swatch" style="background: #12354e"></span><span class="basics-panel-name">Jeans</span><span class="basics-panel-meta">Bottom · All year · +3 outfits</span></button></li><li class="basics-panel-row"><button class="basics-panel-item" type="button"><span class="swatch" style="background: #ffffff"></span><span class="basics-panel-name">White sneakers</span><span class="basics-panel-meta">Shoes · All year</span></button></li></ul></aside> */
-  .basics-panel:not([hidden]) {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
+     @part basics-panel-name   The name of the garment.
+     @part basics-panel-meta   Its slot and its season.
+     @example <div style="width: 360px"><p class="basics-panel-hint">Tap one to add it.</p><ul class="basics-panel-list"><li class="basics-panel-row"><button class="basics-panel-item" type="button"><span class="swatch" style="background: #12354e"></span><span class="basics-panel-name">Jeans</span><span class="basics-panel-meta">Bottom · All year</span></button></li><li class="basics-panel-row"><button class="basics-panel-item" type="button"><span class="swatch" style="background: #ffffff"></span><span class="basics-panel-name">White sneakers</span><span class="basics-panel-meta">Shoes · All year</span></button></li></ul></div> */
   .basics-panel-hint {
     margin: 0;
     color: var(--muted);

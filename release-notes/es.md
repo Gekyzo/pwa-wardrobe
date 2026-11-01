@@ -5,6 +5,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 ## Unreleased
 
 - Nueva pestaña **Rellenar**: te sugiere las prendas que te darían más conjuntos, tanto básicos como colores de Sanzo Wada que completan paletas. Cada color dice qué paletas completa. Toca una para añadirla con su tipo, su temporada y su color ya puestos. Puedes ocultarla en **Ajustes**.
+- **Básicos que faltan** deja **Armario**: los básicos están ahora en **Rellenar**, junto a los colores de Sanzo Wada.
 
 ## 0.1.22 - 2026-11-01
 
