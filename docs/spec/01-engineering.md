@@ -24,6 +24,7 @@
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
+| `src/matching.js` | The optional matching rules: their defaults, neutral colours, value contrast, formality and colour type | `palette` |
 | `src/basics.js` | The seed list of basics, the basics that the wardrobe misses and the outfits that each one adds | `palette`, `outfits` |
 | `src/fill.js` | The ranked list of the Fill tab: the missing basics and the Wada colours that complete open palettes | `basics`, `garments`, `palette`, `outfits` |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |
@@ -110,6 +111,7 @@ in [09-sync.md](09-sync.md).
 | `tests/links.test.js` | The images of a shop page and their load through the proxy (LNK-1 to LNK-3) |
 | `tests/outfits.test.js` | The outfit rules: match distance, slots, order, cap, season and the hero garment |
 | `tests/basics.test.js` | The basics, when a garment covers one, the missing ones and their order (BAS-1 to BAS-4) |
+| `tests/matching.test.js` | LCh, the defaults of the matching rules, neutral colours, contrast, formality and colour type (PAL-6, MAT-1 to MAT-5) |
 | `tests/fill.test.js` | The ranked list of the Fill tab: basics, Wada colours, drops, slot pick, order and cap (FIL-1 to FIL-6) |
 | `tests/storage.test.js` | Load, save, the corrupt copy, the lost doc (SYNC-2), export, import and the device preferences |
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6, SYNC-4) |

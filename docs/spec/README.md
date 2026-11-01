@@ -37,7 +37,7 @@ The rules DS-1 to DS-8 and LAY-1 to LAY-4 belong to the design system, `pwa-desi
 | `DSV` | 04-design-system |
 | `NAV`, `MOD`, `SET`, `ONB` | 05-layout |
 | `I18N` | 06-i18n |
-| `PAL`, `GAR`, `LNK`, `OUT`, `BAS`, `FIL`, `WAR`, `CMB` | 07-wardrobe |
+| `PAL`, `GAR`, `LNK`, `OUT`, `MAT`, `BAS`, `FIL`, `WAR`, `CMB` | 07-wardrobe |
 | `ACC` | 08-account |
 | `SYNC` | 09-sync |
 

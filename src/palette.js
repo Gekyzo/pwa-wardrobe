@@ -39,6 +39,14 @@ export const distance = (a, b) => deltaE(LABS[a], LABS[b]);
 
 export const colorOf = (id) => COLORS[id] ?? null;
 
+// The lightness, the chroma and the hue in degrees [0, 360) of a palette colour, or null (PAL-6).
+export const lchOf = (id) => {
+  const lab = LABS[id];
+  if (!lab) return null;
+  const [l, a, b] = lab;
+  return [l, Math.hypot(a, b), ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360];
+};
+
 // The id of the palette colour nearest to `hex`, or null when `hex` is not `#rrggbb`.
 export const nearestColor = (hex) => {
   if (typeof hex !== 'string' || !HEX.test(hex)) return null;

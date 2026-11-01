@@ -26,6 +26,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   and an alpha is read and ignored. Any other text gives null.
 - **PAL-5** `inkOn` gives the text colour on a field of a colour: `dark` when the WCAG relative
   luminance of its hex is above 0.18, else `light`.
+- **PAL-6** `lchOf` gives `[L, C, h]` of a palette colour: the lightness L\* of PAL-3, the chroma
+  √(a\*² + b\*²) and the hue angle atan2(b\*, a\*) in degrees, from 0 up to 360. An id that is
+  not in the palette gives null.
 
 ## Garments
 
@@ -142,6 +145,27 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   `MAX_OUTFITS`. Its option `of` reads the outfits of one combination in place of `outfitsFor`;
   the header and Combinations give `outfitsOf` of `src/ui/outfit.js`, which computes the
   outfits of each combination once for each doc and season filter.
+
+## Matching
+
+- **MAT-1** `src/matching.js` holds the optional matching rules. `MATCHING` is the default choice
+  `{ neutrals: false, contrast: 'off', colorType: 'off', formality: false }`: every rule is off.
+  `contrast` is one of `CONTRASTS` (`off`, `high`, `soft`), `colorType` one of `COLOR_TYPES`
+  (`off`, `spring`, `summer`, `autumn`, `winter`). `normalizeMatching` keeps a known value of each
+  field and gives the default for any other value and for a value that is not an object.
+- **MAT-2** A colour is neutral when its chroma (PAL-6) is at most `NEUTRAL_CHROMA`, 28: white,
+  black, grey, beige, navy, denim, brown and stone.
+- **MAT-3** The contrast of some garments is the range of the lightness L\* of their colours, 0
+  for one garment or none. A contrast is in the band `high` from `CONTRAST_HIGH`, 40, and in the
+  band `soft` up to `CONTRAST_SOFT`, 25; `off` is no band.
+- **MAT-4** `FORMALITIES` is `''` (not said), `sport`, `casual`, `smart` and `formal`, in this
+  order. Some garments fit the formality when the levels that are set span one step or less. A
+  garment with no level never blocks.
+- **MAT-5** The traits of a colour come from PAL-6: warm when its hue is from 20° up to 120°,
+  light when L\* is 60 or more, bright when its chroma is 40 or more. A neutral colour (MAT-2)
+  suits every colour type. Another colour suits `spring` when warm and light or bright, `summer`
+  when cool and light or not bright, `autumn` when warm and not light or not bright, `winter` when
+  cool and not light or bright. Every colour suits `off`.
 
 ## Basics
 
