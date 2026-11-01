@@ -24,7 +24,7 @@
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
 | `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
-| `src/matching.js` | The optional matching rules: their defaults, neutral colours, value contrast, formality and colour type | `palette` |
+| `src/matching.js` | The optional matching rules: their defaults, neutral colours, value contrast, formality and colour type | `palette`, `garments` |
 | `src/basics.js` | The seed list of basics, the basics that the wardrobe misses and the outfits that each one adds | `palette`, `outfits` |
 | `src/fill.js` | The ranked list of the Fill tab: the missing basics and the Wada colours that complete open palettes | `basics`, `garments`, `palette`, `outfits` |
 | `src/particles.js` | The particles of a picture and their place in time (optional) | nothing |

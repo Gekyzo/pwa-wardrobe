@@ -1,11 +1,11 @@
 import { lchOf } from '#palette';
+import { FORMALITIES } from '#garments';
 
 // The optional matching rules of Settings, all off by default (MAT-1).
 export const MATCHING = Object.freeze({ neutrals: false, contrast: 'off', colorType: 'off', formality: false });
 export const CONTRASTS = ['off', 'high', 'soft'];
 export const COLOR_TYPES = ['off', 'spring', 'summer', 'autumn', 'winter'];
-// '' is not said; the others go from the least formal to the most.
-export const FORMALITIES = ['', 'sport', 'casual', 'smart', 'formal'];
+export { FORMALITIES };
 
 export const NEUTRAL_CHROMA = 28;
 export const CONTRAST_HIGH = 40;

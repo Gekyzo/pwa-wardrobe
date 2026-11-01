@@ -15,6 +15,8 @@ export const MAX_IMAGES = 8;
 export const MAX_PRICE = 1_000_000;
 export const SLOTS = ['top', 'bottom', 'outer', 'shoes', 'accessory'];
 export const SEASONS = ['all', 'warm', 'cold'];
+// The formality of a garment (GAR-15): '' is not said; the others go from the least formal up.
+export const FORMALITIES = ['', 'sport', 'casual', 'smart', 'formal'];
 
 export const emptyGarments = () => ({ version: 4, garments: [] });
 
@@ -46,7 +48,7 @@ const checkPrice = (price) => {
 };
 
 // The clean fields, or an error message.
-const checkFields = ({ name, slot, season, color, brand = '', reference = '', link = '', images = [], size, fit, measures, buy_date = '', price } = {}) => {
+const checkFields = ({ name, slot, season, color, brand = '', reference = '', link = '', images = [], size, fit, measures, buy_date = '', price, formality = '' } = {}) => {
   const clean = String(name ?? '').trim();
   if (!clean) return { error: { key: 'error.nameRequired' } };
   if (clean.length > MAX_NAME) return { error: { key: 'error.nameTooLong', params: { max: MAX_NAME } } };
@@ -57,6 +59,7 @@ const checkFields = ({ name, slot, season, color, brand = '', reference = '', li
   if (typeof reference !== 'string' || reference.trim().length > MAX_REFERENCE) {
     return { error: { key: 'error.referenceTooLong', params: { max: MAX_REFERENCE } } };
   }
+  if (!FORMALITIES.includes(formality)) return { error: { key: 'error.formalityInvalid' } };
   const cleanLink = typeof link === 'string' ? link.trim() : null;
   if (cleanLink === null || (cleanLink !== '' && !isWebUrl(cleanLink))) return { error: { key: 'error.linkInvalid' } };
   if (!Array.isArray(images) || images.length > MAX_IMAGES || !images.every(isWebUrl) || new Set(images).size !== images.length) {
@@ -68,7 +71,7 @@ const checkFields = ({ name, slot, season, color, brand = '', reference = '', li
   const { price: cleanPrice, error: priceError } = checkPrice(price);
   if (priceError) return { error: priceError };
   const purchase = { buy_date, price: cleanPrice };
-  return { fields: { name: clean, slot, season, color, brand: brand.trim(), reference: reference.trim(), link: cleanLink, images: [...images], ...sizing, ...purchase } };
+  return { fields: { name: clean, slot, season, color, brand: brand.trim(), reference: reference.trim(), link: cleanLink, images: [...images], ...sizing, ...purchase, formality } };
 };
 
 export const findGarment = (state, id) => state.garments.find((garment) => garment.id === id) ?? null;

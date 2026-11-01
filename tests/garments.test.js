@@ -12,6 +12,7 @@ import {
   isDay,
   SLOTS,
   SEASONS,
+  FORMALITIES,
   emptyGarments,
   findGarment,
   addGarment,
@@ -28,7 +29,7 @@ import {
 } from '#garments';
 
 const shirt = { name: 'Shirt', slot: 'top', season: 'all', color: 3 };
-const extra = { brand: '', reference: '', link: '', images: [], size: '', fit: '', measures: [], buy_date: '', price: null };
+const extra = { brand: '', reference: '', link: '', images: [], size: '', fit: '', measures: [], buy_date: '', price: null, formality: '' };
 const NOW = '2026-10-30T10:00:00.000Z';
 const build = (...list) => ({ version: 4, garments: list.map((fields, i) => ({ id: `g${i}`, ...fields, creation_date: '' })) });
 
@@ -139,6 +140,7 @@ test('normalizeGarments keeps a valid doc, trims names and drops unknown fields 
         measures: [{ name: 'Waist', value: 84, unit: 'cm' }],
         buy_date: '2026-09-01',
         price: 29.95,
+        formality: '',
         creation_date: NOW,
       },
     ],
@@ -155,7 +157,7 @@ test('normalizeGarments migrates a version 1 doc (GAR-5)', () => {
 
 test('normalizeGarments migrates a version 2 doc: no size, fit or measures (GAR-5)', () => {
   const garment = { id: 'a', ...shirt, brand: 'Zara', link: '', images: [] };
-  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), { version: 4, garments: [{ ...garment, reference: '', size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: '' }] });
+  assert.deepEqual(normalizeGarments({ version: 2, garments: [garment] }), { version: 4, garments: [{ ...garment, reference: '', size: '', fit: '', measures: [], buy_date: '', price: null, formality: '', creation_date: '' }] });
 });
 
 test('normalizeGarments migrates a version 3 doc: no buy date, no price, unknown creation date (GAR-5)', () => {
@@ -212,7 +214,7 @@ test('brand, link and images are optional, and each is checked (GAR-3)', () => {
   const state = emptyGarments();
   const ok = addGarment(state, { ...shirt, brand: '  Zara ', link: ' https://zara.com/p/1 ', images: ['https://a.example/1.jpg', 'http://a.example/2.png'] }, 'x', NOW);
   assert.equal(ok.error, undefined);
-  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', reference: '', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'], size: '', fit: '', measures: [], buy_date: '', price: null, creation_date: NOW });
+  assert.deepEqual(ok.state.garments[0], { id: 'x', ...shirt, brand: 'Zara', reference: '', link: 'https://zara.com/p/1', images: ['https://a.example/1.jpg', 'http://a.example/2.png'], size: '', fit: '', measures: [], buy_date: '', price: null, formality: '', creation_date: NOW });
   const url = (n) => `https://a.example/${n}.jpg`;
   const cases = [
     [{ ...shirt, brand: 'b'.repeat(MAX_BRAND + 1) }, { key: 'error.brandTooLong', params: { max: MAX_BRAND } }],
@@ -344,4 +346,20 @@ test('shapeOf ignores case, accents and words of another slot, and falls back to
 
 test('SHAPES holds each shape that shapeOf gives', () => {
   assert.deepEqual([...SHAPES].sort(), ['bag', 'belt', 'boot', 'cap', 'coat', 'jacket', 'jersey', 'scarf', 'shirt', 'shoe', 'shorts', 'skirt', 'trousers', 'tshirt']);
+});
+
+test('the formality is optional and one of FORMALITIES (GAR-15)', () => {
+  const state = emptyGarments();
+  assert.deepEqual(FORMALITIES, ['', 'sport', 'casual', 'smart', 'formal']);
+  assert.equal(addGarment(state, shirt, 'x', NOW).state.garments[0].formality, '');
+  assert.equal(addGarment(state, { ...shirt, formality: 'smart' }, 'x', NOW).state.garments[0].formality, 'smart');
+  for (const formality of ['dressy', 2, null]) {
+    assert.deepEqual(addGarment(state, { ...shirt, formality }, 'x').error, { key: 'error.formalityInvalid' });
+  }
+  const added = addGarment(state, shirt, 'x', NOW).state;
+  assert.equal(editGarment(added, 'x', { ...shirt, formality: 'sport' }).state.garments[0].formality, 'sport');
+  const { formality, ...stored } = added.garments[0];
+  assert.equal(normalizeGarments({ version: 4, garments: [stored] }).garments[0].formality, '', 'a doc of version 4 with no formality');
+  assert.equal(normalizeGarments({ version: 4, garments: [{ ...stored, formality: 'formal' }] }).garments[0].formality, 'formal');
+  assert.equal(normalizeGarments({ version: 4, garments: [{ ...stored, formality: 'x' }] }), null);
 });

@@ -184,6 +184,7 @@ export default {
   'error.priceInvalid': 'The price is a number greater than 0, up to 1,000,000.',
   'error.sizeTooLong': 'The size has at most {max} characters.',
   'error.fitInvalid': 'Pick how it fits.',
+  'error.formalityInvalid': 'Pick a level of formality.',
   'error.measuresInvalid': 'The measures are not valid.',
   'error.measuresFull': 'At most {max} measures.',
   'error.measureNameRequired': 'Write the name of each measure.',

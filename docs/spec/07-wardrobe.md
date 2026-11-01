@@ -33,7 +33,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 ## Garments
 
 - **GAR-1** The doc is
-  `{ version: 4, garments: [{ id, name, slot, season, color, brand, reference, link, images, size, fit, measures, buy_date, price, creation_date }] }`,
+  `{ version: 4, garments: [{ id, name, slot, season, color, brand, reference, link, images, size, fit, measures, buy_date, price, formality, creation_date }] }`,
   newest garment first, stored as JSON under `wardrobe.garments`. A stored doc that is not valid is kept
   under `wardrobe.garments.corrupt`, and the app starts with no garments.
 - **GAR-2** `slot` is one of `top`, `bottom`, `outer`, `shoes`, `accessory`. `season` is one of
@@ -98,6 +98,9 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   the words of two or more first; the first found gives the shape, and none gives the default.
   An unknown slot is searched as `top`. Each shape is the symbol `shape-<shape>` of `icons.svg`,
   48×48.
+- **GAR-15** The formality of a garment is optional: one of `FORMALITIES` (MAT-4), `''` when it
+  is not given. Another value is `error.formalityInvalid`. A doc of version 4 with no formality
+  gets `''` (GAR-5): the version does not change.
 
 ## Links
 

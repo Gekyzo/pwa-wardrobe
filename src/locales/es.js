@@ -184,6 +184,7 @@ export default {
   'error.priceInvalid': 'El precio es un número mayor que 0, hasta 1.000.000.',
   'error.sizeTooLong': 'La talla tiene como máximo {max} caracteres.',
   'error.fitInvalid': 'Elige cómo queda.',
+  'error.formalityInvalid': 'Elige un nivel de formalidad.',
   'error.measuresInvalid': 'Las medidas no son válidas.',
   'error.measuresFull': 'Como máximo {max} medidas.',
   'error.measureNameRequired': 'Escribe el nombre de cada medida.',
