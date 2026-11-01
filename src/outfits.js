@@ -1,4 +1,5 @@
 import { COMBINATIONS, combination, colorOf, colorsNear, distance } from '#palette';
+import { MATCHING, contrastOf, formalityFits, inBand, isNeutral } from '#matching';
 
 // The largest colour distance of a match, the outfits of one search, and the garments that one
 // colour keeps: the cap bounds the search to MAX_CANDIDATES ** 4 for a combination of 4 colours.
@@ -29,15 +30,18 @@ const slotFree = (picks, garment) => garment.slot === 'accessory' || !picks.some
 
 const wearable = (picks) => ['top', 'bottom'].every((slot) => picks.some((pick) => pick.garment.slot === slot));
 
-// Every assignment of a different garment to each colour, with distinct slots, a top and a bottom.
-const search = (lists, picks = [], found = []) => {
+const garmentsOf = (picks) => picks.map((pick) => pick.garment);
+
+// Every assignment of a different garment to each colour, with distinct slots, a top and a bottom;
+// with the formality rule, levels that span one step or less (OUT-12).
+const search = (lists, match = MATCHING, picks = [], found = []) => {
   if (picks.length === lists.length) {
-    if (wearable(picks)) found.push(picks);
+    if (wearable(picks) && (!match.formality || formalityFits(garmentsOf(picks)))) found.push(picks);
     return found;
   }
   for (const pick of lists[picks.length]) {
     if (picks.some((other) => other.garment.id === pick.garment.id) || !slotFree(picks, pick.garment)) continue;
-    search(lists, [...picks, pick], found);
+    search(lists, match, [...picks, pick], found);
   }
   return found;
 };
@@ -47,24 +51,50 @@ const outfitOf = (number, picks) => ({
   picks,
   score: picks.reduce((sum, pick) => sum + pick.distance, 0),
   exact: picks.every((pick) => pick.distance === 0),
+  contrast: contrastOf(garmentsOf(picks)),
 });
 
 export const outfitKey = (outfit) => `${outfit.combination}:${outfit.picks.map((pick) => pick.garment.id).sort().join(',')}`;
 
-// Exact first, then the lower score, then a stable order; one outfit for one set of garments.
-const best = (outfits) => {
-  const sorted = [...outfits].sort(
-    (a, b) => Number(b.exact) - Number(a.exact) || a.score - b.score || a.combination - b.combination || byId(outfitKey(a), outfitKey(b)),
-  );
-  const seen = new Set();
-  return sorted.filter((outfit) => !seen.has(outfitKey(outfit)) && seen.add(outfitKey(outfit))).slice(0, MAX_OUTFITS);
+// The slots that neutral completion fills: shoes, and an outer under the season filter `cold`.
+const completedSlots = (season) => (season === 'cold' ? ['shoes', 'outer'] : ['shoes']);
+
+// Neutral completion (OUT-14): each empty slot of `completedSlots` gets the neutral garment of
+// that slot nearest to a colour of the outfit, out of `pool`. An added pick has no colour and no
+// distance, so the score, the exact mark and the contrast stay those of the Wada colours.
+const complete = (outfit, pool, season, match) => {
+  let picks = outfit.picks;
+  for (const slot of completedSlots(season)) {
+    if (picks.some((pick) => pick.garment.slot === slot)) continue;
+    const near = (garment) => Math.min(...picks.map((pick) => distance(pick.garment.color, garment.color)));
+    const [pick] = pool
+      .filter((garment) => garment.slot === slot && isNeutral(garment.color) && !picks.some((other) => other.garment.id === garment.id))
+      .filter((garment) => !match.formality || formalityFits([...garmentsOf(picks), garment]))
+      .map((garment) => ({ garment, d: near(garment) }))
+      .sort((a, b) => a.d - b.d || byId(a.garment.id, b.garment.id));
+    if (pick) picks = [...picks, { color: null, garment: pick.garment, distance: 0, added: true }];
+  }
+  return picks === outfit.picks ? outfit : { ...outfit, picks };
 };
 
-export const outfitsFor = (number, garments, { season = 'any' } = {}) => {
+// Exact first; with a contrast band, the outfits in it next (OUT-13); then the lower score, then a
+// stable order; one outfit for one set of garments. Completion comes after the cut, so it adds
+// garments, never outfits.
+const best = (outfits, { pool = [], season = 'any', match = MATCHING } = {}) => {
+  const band = (outfit) => Number(inBand(outfit.contrast, match.contrast));
+  const sorted = [...outfits].sort(
+    (a, b) => Number(b.exact) - Number(a.exact) || band(b) - band(a) || a.score - b.score || a.combination - b.combination || byId(outfitKey(a), outfitKey(b)),
+  );
+  const seen = new Set();
+  const kept = sorted.filter((outfit) => !seen.has(outfitKey(outfit)) && seen.add(outfitKey(outfit))).slice(0, MAX_OUTFITS);
+  return match.neutrals ? kept.map((outfit) => complete(outfit, pool, season, match)) : kept;
+};
+
+export const outfitsFor = (number, garments, { season = 'any', match = MATCHING } = {}) => {
   const colors = combination(number);
   if (!colors) return [];
   const fit = garments.filter((garment) => fitsSeason(garment, season));
-  return best(search(colors.map((color) => candidates(color, fit))).map((picks) => outfitOf(number, picks)));
+  return best(search(colors.map((color) => candidates(color, fit)), match).map((picks) => outfitOf(number, picks)), { pool: fit, season, match });
 };
 
 // The catalog key of a count of outfits: a full count reads `combinations.countMax` (20+).
@@ -72,12 +102,12 @@ export const countKey = (count) => (count >= MAX_OUTFITS ? 'combinations.countMa
 
 // The number of outfits of every combination under the season filter, each capped at MAX_OUTFITS.
 // `of` reads the outfits of one combination, so a caller can give a cached `outfitsFor`.
-export const countOutfits = (garments, { season = 'any', of = outfitsFor } = {}) =>
-  COMBINATIONS.reduce((n, { number }) => n + of(number, garments, { season }).length, 0);
+export const countOutfits = (garments, { season = 'any', match = MATCHING, of = outfitsFor } = {}) =>
+  COMBINATIONS.reduce((n, { number }) => n + of(number, garments, { season, match }).length, 0);
 
 // The outfits that contain `garment`: for each combination of a colour near it, and each place
 // of that combination that it can take, the hero holds that place and the others are searched.
-export const outfitsWith = (garment, garments, { season = 'any' } = {}) => {
+export const outfitsWith = (garment, garments, { season = 'any', match = MATCHING } = {}) => {
   if (!fitsSeason(garment, season)) return [];
   const others = garments.filter((other) => other.id !== garment.id && fitsSeason(other, season));
   const numbers = [...new Set(colorsNear(garment.color, MATCH_MAX).flatMap((id) => colorOf(id).combinations))];
@@ -87,10 +117,10 @@ export const outfitsWith = (garment, garments, { season = 'any' } = {}) => {
       const d = distance(color, garment.color);
       if (d > MATCH_MAX) return [];
       const lists = colors.map((other, i) => (i === place ? [{ color, garment, distance: d }] : candidates(other, others)));
-      return search(lists).map((picks) => outfitOf(number, picks));
+      return search(lists, match).map((picks) => outfitOf(number, picks));
     });
   });
-  return best(outfits);
+  return best(outfits, { pool: [garment, ...others], season, match });
 };
 
 // Why a combination gives no outfit: the first colour with no garment near it, or no set of
@@ -104,8 +134,8 @@ export const whyNone = (number, garments, { season = 'any' } = {}) => {
 
 // One outfit at random among those of every combination, or null with none. `except` is the key
 // of the outfit in view, so that the next pick is another one while the wardrobe has another.
-export const randomOutfit = (garments, { season = 'any', except = null, random = Math.random } = {}) => {
-  const all = COMBINATIONS.flatMap(({ number }) => outfitsFor(number, garments, { season }));
+export const randomOutfit = (garments, { season = 'any', match = MATCHING, except = null, random = Math.random } = {}) => {
+  const all = COMBINATIONS.flatMap(({ number }) => outfitsFor(number, garments, { season, match }));
   const others = all.filter((outfit) => outfitKey(outfit) !== except);
   const pool = others.length ? others : all;
   return pool.length ? pool[Math.floor(random() * pool.length)] : null;

@@ -23,7 +23,7 @@
 | `src/syncer.js` | The sync driver: the queue of each save, the run, the retries, the token refresh, the stream, the status and the check of a change by another tab (SYNC-2 to SYNC-4, SYNC-11, SYNC-12) | `records`, `sync`, `session`, `pocketbase`, `garments`, `storage` |
 | `src/measures.js` | The size, the fit and the measures of a garment, and the measures of a slot | nothing |
 | `src/links.js` | The images of a shop page, read through a public proxy | `garments` |
-| `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none | `palette` |
+| `src/outfits.js` | The outfits of a combination, the outfits with one garment, and why there is none, under the matching rules | `palette`, `matching` |
 | `src/matching.js` | The optional matching rules: their defaults, neutral colours, value contrast, formality and colour type | `palette`, `garments` |
 | `src/basics.js` | The seed list of basics, the basics that the wardrobe misses and the outfits that each one adds | `palette`, `outfits` |
 | `src/fill.js` | The ranked list of the Fill tab: the missing basics and the Wada colours that complete open palettes | `basics`, `garments`, `palette`, `outfits` |

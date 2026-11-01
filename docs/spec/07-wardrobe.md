@@ -147,7 +147,22 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   the sum of the outfits of each combination (OUT-5), so each combination counts at most
   `MAX_OUTFITS`. Its option `of` reads the outfits of one combination in place of `outfitsFor`;
   the header and Combinations give `outfitsOf` of `src/ui/outfit.js`, which computes the
-  outfits of each combination once for each doc and season filter.
+  outfits of each combination once for each doc, season filter and matching choice.
+- **OUT-11** `outfitsFor`, `outfitsWith`, `countOutfits` and `randomOutfit` take the matching
+  choice (MAT-1) as the option `match`, `MATCHING` when it is not given. With every rule off, the
+  outfits are those of OUT-3 to OUT-10.
+- **OUT-12** With `formality` on, a set of garments is wearable (OUT-4) only when it fits the
+  formality (MAT-4).
+- **OUT-13** Each outfit carries its `contrast` (MAT-3) of the garments of its combination. With
+  `contrast` set to `high` or `soft`, the outfits in that band come after the exact ones and
+  before the others (OUT-5); the band removes no outfit.
+- **OUT-14** With `neutrals` on, each outfit of the cut of OUT-5 with no `shoes`, and under the
+  season filter `cold` with no `outer`, gets the neutral garment (MAT-2) of that slot that fits
+  the season filter, is not in the outfit and, with `formality` on, keeps it fitting: the one
+  nearest to a colour of its garments (PAL-3), then the lower id. An added pick is
+  `{ color: null, garment, distance: 0, added: true }`: the score, the exact mark and the
+  contrast stay. Completion adds garments, never outfits: the counts of OUT-10 and WAR-1 count
+  the outfits of the combinations.
 
 ## Matching
 

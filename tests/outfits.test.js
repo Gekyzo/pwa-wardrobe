@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { COMBINATIONS, combination, colorsNear, distance, colorOf } from '#palette';
 import { MATCH_MAX, MAX_OUTFITS, MAX_CANDIDATES, SEASON_FILTERS, fitsSeason, outfitsFor, outfitsWith, whyNone, outfitKey, randomOutfit, countOutfits, countKey } from '#outfits';
+import { MATCHING, isNeutral, contrastOf, inBand } from '#matching';
 
 let next = 0;
 const g = (color, slot, extra = {}) => ({ id: `g${next++}`, name: `${slot} ${color}`, slot, season: 'all', color, ...extra });
@@ -254,3 +255,117 @@ test('countKey reads a full count as 20+ and any other count, 0 too, by its plur
   assert.equal(countKey(0), 'combinations.count');
   assert.equal(countKey(MAX_OUTFITS - 1), 'combinations.count');
 });
+
+// The matching rules (OUT-11 to OUT-13).
+const on = (changes) => ({ ...MATCHING, ...changes });
+const neutralOf = () => colorsNearAll().find((id) => isNeutral(id));
+
+test('with every rule off the outfits are those of OUT-5 (OUT-11)', () => {
+  const [a, b] = two.colors;
+  const garments = [g(a, 'top'), g(b, 'bottom'), g(neutralOf(), 'shoes')];
+  assert.deepEqual(outfitsFor(two.number, garments, { match: MATCHING }), outfitsFor(two.number, garments));
+});
+
+test('formality removes an outfit whose levels span more than one step (OUT-12)', () => {
+  const [a, b] = two.colors;
+  const top = g(a, 'top', { formality: 'sport' });
+  const far = g(b, 'bottom', { formality: 'formal' });
+  const near = g(b, 'bottom', { formality: 'casual' });
+  const blank = g(b, 'bottom');
+  assert.equal(outfitsFor(two.number, [top, far]).length, 1, 'the rule off keeps it');
+  assert.deepEqual(outfitsFor(two.number, [top, far], { match: on({ formality: true }) }), []);
+  assert.equal(outfitsFor(two.number, [top, near], { match: on({ formality: true }) }).length, 1);
+  assert.equal(outfitsFor(two.number, [top, blank], { match: on({ formality: true }) }).length, 1);
+  assert.deepEqual(outfitsWith(top, [top, far], { match: on({ formality: true }) }), []);
+});
+
+test('each outfit carries the contrast of its garments (OUT-13)', () => {
+  const [a, b] = two.colors;
+  const top = g(a, 'top');
+  const bottom = g(b, 'bottom');
+  const [outfit] = outfitsFor(two.number, [top, bottom]);
+  assert.equal(outfit.contrast, contrastOf([top, bottom]));
+});
+
+test('a contrast band ranks its outfits first, after the exact ones, and removes none (OUT-13)', () => {
+  // Two tops of one colour, near the first colour of `two`: one far in lightness from the bottom.
+  const pairs = COMBINATIONS.filter(({ colors }) => colors.length === 2).map(({ number, colors }) => ({ number, colors }));
+  const found = pairs.map(({ number, colors: [a, b] }) => {
+    const tops = colorsNear(a, MATCH_MAX).filter((id) => id !== a);
+    const hi = tops.find((id) => inBand(contrastOf([{ color: id }, { color: b }]), 'high'));
+    const lo = tops.find((id) => !inBand(contrastOf([{ color: id }, { color: b }]), 'high'));
+    return hi !== undefined && lo !== undefined && distance(a, lo) < distance(a, hi) ? { number, a, b, hi, lo } : null;
+  }).find(Boolean);
+  assert.ok(found, 'a fixture of two tops');
+  const high = g(found.hi, 'top');
+  const low = g(found.lo, 'top');
+  const bottom = g(found.b, 'bottom');
+  const plain = outfitsFor(found.number, [high, low, bottom]);
+  assert.equal(plain[0].picks[0].garment.id, low.id, 'the lower score first with the rule off');
+  const ranked = outfitsFor(found.number, [high, low, bottom], { match: on({ contrast: 'high' }) });
+  assert.equal(ranked.length, plain.length);
+  assert.equal(ranked[0].picks[0].garment.id, high.id);
+});
+
+test('neutral completion adds the neutral shoes nearest to the colours of an outfit (OUT-14)', () => {
+  const [a, b] = two.colors;
+  const top = g(a, 'top');
+  const bottom = g(b, 'bottom');
+  const neutrals = colorsNearAll().filter((id) => isNeutral(id));
+  const [n1, n2] = neutrals;
+  const near = Math.min(distance(n1, a), distance(n1, b)) <= Math.min(distance(n2, a), distance(n2, b)) ? n1 : n2;
+  const far = near === n1 ? n2 : n1;
+  const shoesNear = g(near, 'shoes');
+  const shoesFar = g(far, 'shoes');
+  const bright = g(colorsNearAll().find((id) => !isNeutral(id)), 'shoes');
+  const garments = [top, bottom, shoesFar, shoesNear, bright];
+  const [outfit] = outfitsFor(two.number, garments, { match: on({ neutrals: true }) }).filter((o) => o.picks.length > 0 && ids(o).includes(top.id) && ids(o).includes(bottom.id));
+  const added = outfit.picks.filter((pick) => pick.added);
+  assert.equal(added.length, 1);
+  assert.equal(added[0].garment.id, shoesNear.id);
+  assert.equal(added[0].color, null);
+  assert.equal(added[0].distance, 0);
+  assert.equal(outfit.score, outfitsFor(two.number, [top, bottom])[0].score, 'the score stays');
+  assert.equal(outfit.exact, true, 'exact stays');
+});
+
+test('neutral completion adds no shoes to an outfit that has shoes, and no outer out of cold (OUT-14)', () => {
+  const [a, b] = two.colors;
+  const top = g(a, 'top');
+  const bottom = g(b, 'bottom');
+  const coat = g(neutralOf(), 'outer');
+  const outfits = outfitsFor(two.number, [top, bottom, coat], { match: on({ neutrals: true }) });
+  assert.ok(outfits.every((o) => !o.picks.some((pick) => pick.added)), 'no outer under any');
+  const cold = outfitsFor(two.number, [top, bottom, coat], { season: 'cold', match: on({ neutrals: true }) });
+  assert.deepEqual(cold[0].picks.filter((pick) => pick.added).map((pick) => pick.garment.id), [coat.id]);
+  const warmCoat = g(neutralOf(), 'outer', { season: 'warm' });
+  const cold2 = outfitsFor(two.number, [top, bottom, warmCoat], { season: 'cold', match: on({ neutrals: true }) });
+  assert.ok(cold2.every((o) => !o.picks.some((pick) => pick.added)), 'a garment out of the season filter is not added');
+});
+
+test('neutral completion keeps the formality of the outfit, and the count of outfits stays (OUT-14)', () => {
+  const [a, b] = two.colors;
+  const top = g(a, 'top', { formality: 'smart' });
+  const bottom = g(b, 'bottom', { formality: 'smart' });
+  const sneakers = g(neutralOf(), 'shoes', { formality: 'sport' });
+  const both = on({ neutrals: true, formality: true });
+  assert.ok(outfitsFor(two.number, [top, bottom, sneakers], { match: both }).every((o) => !o.picks.some((pick) => pick.added)));
+  const garments = [top, bottom, g(neutralOf(), 'shoes')];
+  assert.equal(countOutfits(garments, { match: on({ neutrals: true }) }), countOutfits(garments));
+  assert.equal(outfitsWith(garments[2], garments, { match: on({ neutrals: true }) }).length, outfitsWith(garments[2], garments).length);
+});
+
+test('randomOutfit and outfitsWith take the rules too (OUT-11)', () => {
+  const [a, b] = two.colors;
+  const top = g(a, 'top');
+  const bottom = g(b, 'bottom');
+  const shoes = g(neutralOf(), 'shoes');
+  const outfit = randomOutfit([top, bottom, shoes], { match: on({ neutrals: true }), random: () => 0 });
+  assert.ok(outfit.picks.some((pick) => pick.garment.id === shoes.id));
+  const withTop = outfitsWith(top, [top, bottom, shoes], { match: on({ neutrals: true }) });
+  assert.ok(withTop.some((o) => o.picks.some((pick) => pick.added && pick.garment.id === shoes.id)));
+});
+
+function colorsNearAll() {
+  return Array.from({ length: 159 }, (_, id) => id).filter((id) => !two.colors.some((c) => distance(c, id) <= MATCH_MAX));
+}
