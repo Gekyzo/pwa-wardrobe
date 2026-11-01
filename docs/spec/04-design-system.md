@@ -46,7 +46,7 @@ The parts of `styles.css`, by layer. The shared parts are in the design system.
 
 | Layer | Parts |
 |---|---|
-| tokens | `--primary` and `--on-primary` take `--done` and `--on-done`: one green for the main action, progress and the checked state |
+| tokens | the catalogue look: `--screen-title` (`-phone`, `-weight`, `-track`), `--photo-ground`, `--grid-gap` (`-wide`), `--panel-width`, `--band-pad`, `--field-tall`, `--field-short`, `--strip-height`, `--topbar-height`, `--wordmark`. `--primary` is the ink of the design system; `--done` keeps progress and the checked state |
 | tokens | `--settings-max` (SET-2) |
 | components | `swatch`, `strip`, `blocks`, `swatch-grid`, `thumb`, `image-strip`, `image-grid`, `color-pick`, `detail-head`, `outfits`, `outfit` · version of `item-row` (DSV-3) |
 | screens | combinations: `size-filter` · settings: `settings` (`settings-section`, `settings-hint`, version of `list-group`), `about`, `version-status` · nav: `dust` · onboarding: `onboarding`, `onboarding-art` |

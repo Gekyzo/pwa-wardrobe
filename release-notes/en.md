@@ -4,7 +4,7 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
-No change.
+- The **main button** is black.
 
 ## 0.1.18 - 2026-10-31
 

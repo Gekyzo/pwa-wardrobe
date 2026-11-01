@@ -4,7 +4,7 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- **Ink primary**: `styles.css` drops the `--primary: var(--done)` override, so the main action takes the ink of the design system; `--done` keeps progress and the checked state. New app tokens for the catalogue look (`--screen-title*`, `--photo-ground`, `--grid-gap*`, `--panel-width`, `--band-pad`, `--field-*`, `--strip-height`, `--topbar-height`, `--wordmark`).
 
 ## 0.1.18 - 2026-10-31
 

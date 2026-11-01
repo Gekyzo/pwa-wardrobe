@@ -1,10 +1,23 @@
 @layer tokens, base, components, layouts, screens;
 
 @layer tokens {
+  /* The catalogue look of Attire: ink chrome from the design system; the only hues are the Wada
+     colours of the garments. */
   :root {
-    /* The colour of Attire: one green for the main action, progress and the checked state. */
-    --primary: var(--done);
-    --on-primary: var(--on-done);
+    --screen-title: 2rem;
+    --screen-title-phone: 1.5rem;
+    --screen-title-weight: 300;
+    --screen-title-track: -0.02em;
+    --photo-ground: light-dark(#ffffff, #ececea);
+    --grid-gap: 12px;
+    --grid-gap-wide: 16px;
+    --panel-width: 360px;
+    --band-pad: 14px;
+    --field-tall: 280px;
+    --field-short: 180px;
+    --strip-height: 40px;
+    --topbar-height: 56px;
+    --wordmark: 1.375rem;
   }
 
   /* The column of Settings from 840px (SET-2). */

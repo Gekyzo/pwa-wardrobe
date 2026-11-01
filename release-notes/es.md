@@ -4,7 +4,7 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
-No change.
+- El **botón principal** es negro.
 
 ## 0.1.18 - 2026-10-31
 
