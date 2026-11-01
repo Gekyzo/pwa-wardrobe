@@ -197,7 +197,7 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
 - **FAM-1** `src/families.js` holds the palette families, in this order: `wada` (the
   combinations of the book), `complementary`, `analogous`, `triadic`, `split`
   (split-complementary), `accent` (neutral and accent) and `mono` (monochrome). Every family is a
-  list of sets of the 159 colours of PAL-1. One family is in use at a time.
+  list of sets of the 159 colours of PAL-1. One family is in use at a time (FAM-6).
 - **FAM-2** `familyOf(id)` gives `{ id, combinations, combination(n), numbersOf(color) }`, built
   once for each family: the sets `{ number, colors }`, the colours of the set of a number (null
   for another number), and the numbers of the sets that hold a colour, in order. `wada` is
@@ -219,6 +219,12 @@ gives for them. Its files are `src/wada.js`, `src/palette.js`, `src/garments.js`
   order of `FAMILIES`; a switch that would turn off the last family that is on changes nothing.
   `activeFamily(chosen, off)` gives `chosen` when it is a family that is on, else the first
   family that is on.
+- **FAM-6** The family in use and the families that are off are preferences of the device, not
+  part of the doc: `wardrobe.family` holds the id in use (`wada` removes the key, and an unknown
+  value reads as `wada`), and `wardrobe.families` a JSON list of the ids that are off, in the
+  order of `FAMILIES` (none removes the key). A stored list that turns every family off, or one
+  that cannot be read, reads as none. At start the family in use is `activeFamily` of the stored
+  one; a change of the families that are off moves it the same way and stores both.
 
 ## Basics
 

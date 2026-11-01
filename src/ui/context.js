@@ -12,6 +12,10 @@ import {
   saveModules,
   loadMatching,
   saveMatching,
+  loadFamily,
+  saveFamily,
+  loadFamiliesOff,
+  saveFamiliesOff,
   loadOnboarded,
   hasStoredDoc,
   isDocLost,
@@ -21,6 +25,7 @@ import {
 import { LANGUAGES, resolveLanguage, translator } from '#i18n';
 import { shouldShow } from '#onboarding';
 import { MATCHING } from '#matching';
+import { activeFamily } from '#families';
 
 // The values that the views share. A view reads them through the import, a live binding, and
 // changes them only through the setters of this module.
@@ -72,6 +77,10 @@ export let navMotion = false;
 // The choice of the matching rules (MAT-6). A change gives a new object, so a cache keyed on it
 // computes again.
 export let matching = storage ? loadMatching(storage) : MATCHING;
+
+// The palette families that are off, and the family in use, which is always on (FAM-6).
+export let familiesOff = storage ? loadFamiliesOff(storage) : [];
+export let family = activeFamily(storage ? loadFamily(storage) : 'wada', familiesOff);
 
 // The text of a message of a pure module.
 export const textOf = ({ key, params }) => t(key, params);
@@ -237,6 +246,21 @@ export const setCards = (value) => {
 export const setModules = (next) => {
   off = next;
   if (storage) saveModules(storage, off);
+};
+
+export const setFamily = (id) => {
+  family = activeFamily(id, familiesOff);
+  if (storage) saveFamily(storage, family);
+};
+
+// A change of the families that are off moves the family in use to one that is on (FAM-5).
+export const setFamiliesOff = (next) => {
+  familiesOff = next;
+  family = activeFamily(family, familiesOff);
+  if (storage) {
+    saveFamiliesOff(storage, familiesOff);
+    saveFamily(storage, family);
+  }
 };
 
 export const setMatching = (changes) => {

@@ -1,6 +1,7 @@
 import { APP_SLUG } from '#config';
 import { MODULES } from '#modules';
 import { MATCHING, normalizeMatching } from '#matching';
+import { FAMILIES } from '#families';
 
 // Every key of this app: `<slug>.<name>`, so two apps of one origin do not share data.
 export const keyOf = (name) => `${APP_SLUG}.${name}`;
@@ -180,6 +181,57 @@ export const saveMatching = (storage, matching) => {
     const changed = Object.fromEntries(Object.entries(clean).filter(([name, value]) => value !== MATCHING[name]));
     if (Object.keys(changed).length) storage.setItem(MATCHING_KEY, JSON.stringify(changed));
     else storage.removeItem(MATCHING_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const FAMILY_KEY = keyOf('family');
+
+// The family in use (FAM-6); an unknown value or a storage that throws gives wada.
+export const loadFamily = (storage) => {
+  try {
+    const id = storage.getItem(FAMILY_KEY);
+    return FAMILIES.includes(id) ? id : 'wada';
+  } catch {
+    return 'wada';
+  }
+};
+
+// wada is the app with no choice: it removes the key.
+export const saveFamily = (storage, id) => {
+  try {
+    if (FAMILIES.includes(id) && id !== 'wada') storage.setItem(FAMILY_KEY, id);
+    else storage.removeItem(FAMILY_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const FAMILIES_KEY = keyOf('families');
+
+const knownFamilies = (ids) => FAMILIES.filter((id) => ids.includes(id));
+
+// The families that are off, in the order of FAMILIES. A list that turns every family off, or a
+// value that cannot be read, reads as none (FAM-6).
+export const loadFamiliesOff = (storage) => {
+  try {
+    const ids = JSON.parse(storage.getItem(FAMILIES_KEY));
+    const off = Array.isArray(ids) ? knownFamilies(ids) : [];
+    return off.length === FAMILIES.length ? [] : off;
+  } catch {
+    return [];
+  }
+};
+
+// No family off removes the key.
+export const saveFamiliesOff = (storage, off) => {
+  try {
+    const ids = knownFamilies(off);
+    if (ids.length) storage.setItem(FAMILIES_KEY, JSON.stringify(ids));
+    else storage.removeItem(FAMILIES_KEY);
     return true;
   } catch {
     return false;

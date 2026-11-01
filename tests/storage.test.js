@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { APP_SLUG } from '#config';
 import { MATCHING } from '#matching';
+import { FAMILIES } from '#families';
 import {
   keyOf,
   loadDoc,
@@ -24,6 +25,12 @@ import {
   loadModules,
   saveModules,
   MATCHING_KEY,
+  FAMILY_KEY,
+  loadFamily,
+  saveFamily,
+  FAMILIES_KEY,
+  loadFamiliesOff,
+  saveFamiliesOff,
   loadMatching,
   saveMatching,
   ONBOARDED_KEY,
@@ -273,6 +280,42 @@ test('saveMatching stores the fields that differ from the defaults, and the defa
 test('the matching functions do not throw when the storage does (MAT-6)', () => {
   assert.deepEqual(loadMatching(brokenStorage()), MATCHING);
   assert.equal(saveMatching(brokenStorage(), { ...MATCHING, neutrals: true }), false);
+});
+
+test('loadFamily gives the stored family, or wada (FAM-6)', () => {
+  assert.equal(FAMILY_KEY, `${APP_SLUG}.family`);
+  assert.equal(loadFamily(fakeStorage({ [FAMILY_KEY]: 'triadic' })), 'triadic');
+  assert.equal(loadFamily(fakeStorage()), 'wada');
+  assert.equal(loadFamily(fakeStorage({ [FAMILY_KEY]: 'pastel' })), 'wada');
+  assert.equal(loadFamily(brokenStorage()), 'wada');
+});
+
+test('saveFamily stores the family and wada removes the key (FAM-6)', () => {
+  const storage = fakeStorage();
+  assert.equal(saveFamily(storage, 'mono'), true);
+  assert.equal(storage.getItem(FAMILY_KEY), 'mono');
+  assert.equal(saveFamily(storage, 'wada'), true);
+  assert.equal(storage.getItem(FAMILY_KEY), null);
+  assert.equal(saveFamily(brokenStorage(), 'mono'), false);
+});
+
+test('loadFamiliesOff gives the known ids in order, and none for a list that turns every family off (FAM-6)', () => {
+  assert.equal(FAMILIES_KEY, `${APP_SLUG}.families`);
+  assert.deepEqual(loadFamiliesOff(fakeStorage({ [FAMILIES_KEY]: '["mono","x","wada"]' })), ['wada', 'mono']);
+  assert.deepEqual(loadFamiliesOff(fakeStorage({ [FAMILIES_KEY]: JSON.stringify(FAMILIES) })), []);
+  assert.deepEqual(loadFamiliesOff(fakeStorage({ [FAMILIES_KEY]: '{' })), []);
+  assert.deepEqual(loadFamiliesOff(fakeStorage({ [FAMILIES_KEY]: '"mono"' })), []);
+  assert.deepEqual(loadFamiliesOff(fakeStorage()), []);
+  assert.deepEqual(loadFamiliesOff(brokenStorage()), []);
+});
+
+test('saveFamiliesOff stores the known ids, and none removes the key (FAM-6)', () => {
+  const storage = fakeStorage();
+  assert.equal(saveFamiliesOff(storage, ['mono', 'x', 'triadic']), true);
+  assert.equal(storage.getItem(FAMILIES_KEY), '["triadic","mono"]');
+  assert.equal(saveFamiliesOff(storage, []), true);
+  assert.equal(storage.getItem(FAMILIES_KEY), null);
+  assert.equal(saveFamiliesOff(brokenStorage(), ['mono']), false);
 });
 
 test('loadOnboarded is true only when the flag is stored', () => {
