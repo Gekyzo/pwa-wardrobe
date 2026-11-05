@@ -6,7 +6,7 @@ import { LANGUAGES } from '#i18n';
 
 // sw.js is a classic script: run it with a stub `self` and return its pure functions.
 const source = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
-const { localizeManifest, SHELL } = vm.runInNewContext(`${source}\n;({ localizeManifest, SHELL })`, {
+const { localizeManifest, SHELL, staleCaches } = vm.runInNewContext(`${source}\n;({ localizeManifest, SHELL, staleCaches })`, {
   self: { addEventListener: () => {} },
 });
 
@@ -81,4 +81,10 @@ test('staleImages gives the cached URLs that no garment keeps (SW-14)', () => {
 
 test('SHELL has the release notes of each language, so they show offline (VER-21)', () => {
   for (const lang of LANGUAGES) assert.ok(SHELL.includes(`./release-notes/${lang}.md`), lang);
+});
+
+// The old origin gekyzo.github.io holds the caches of every app there (ADDR-1).
+test('the activate deletes only the old caches of this app, never those of another app (SW-4)', () => {
+  const keys = ['wardrobe-shell-v8', 'wardrobe-shell-v9', 'wardrobe-manifest', 'wardrobe-images', 'shopping-shell-v29', 'shopping-manifest', 'lists-shell-v1'];
+  assert.deepEqual(plain(staleCaches(keys)), ['wardrobe-shell-v8']);
 });

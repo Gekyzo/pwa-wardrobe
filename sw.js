@@ -116,11 +116,15 @@ self.addEventListener('install', (event) => {
   event.waitUntil(fill().then(() => self.skipWaiting()));
 });
 
+// SW-4: the old caches of this app only. The origin gekyzo.github.io holds the caches of every app
+// there, and each one keeps its own.
+const staleCaches = (keys) => keys.filter((key) => key.startsWith('wardrobe-') && ![CACHE, MANIFEST, IMAGES].includes(key));
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => ![CACHE, MANIFEST, IMAGES].includes(key)).map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(staleCaches(keys).map((key) => caches.delete(key))))
       .then(() => self.clients.claim()),
   );
 });

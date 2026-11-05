@@ -54,6 +54,13 @@ export const takeMove = async (hash, clear) => {
   return decodeMove(hash);
 };
 
+// ADDR-6, SYNC-9: with a session an import replaces the garments of the account on every device.
+export const replaceKey = (signedIn) => (signedIn ? 'import.confirmAccount' : 'move.replace');
+
+// ADDR-6, ACC-1: a signed-out user had the app open on the old address, so the new one opens it too,
+// with no Sign in in front of the moved garments and their message.
+export const keepsOffline = ({ imported, signedIn }) => imported && !signedIn;
+
 export const moveUrl = (hash, search) => (hash.length > MAX_HASH ? null : `${NEW_ORIGIN}/${search}${hash}`);
 
 // ADDR-2: a session never travels in a URL. A signed-in user syncs first; only a clean sync of an

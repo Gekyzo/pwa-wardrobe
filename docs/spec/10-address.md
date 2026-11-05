@@ -27,8 +27,11 @@ document only.
   before anything else, so a reload or the back button imports nothing. Data that is not a backup
   gets the error of Import as a message, and the state stays as it was.
 - **ADDR-6** A backup that arrives on an app with no data is imported, with the message that the
-  data moved and an undo. On an app with data the app asks first whether to replace this device's
-  data; No keeps it. The move never merges.
+  data moved and an undo. With no session, the arrival also sets the flag of **Use offline** (ACC-1),
+  so the app opens and not **Sign in**: the user had the app open on the old address. On an app with
+  data the app asks first whether to replace this device's
+  data; with a session it asks the question of Import, since the account is replaced on every
+  device (SYNC-9). No keeps it. The move never merges.
 - **ADDR-7** The old address keeps its data: the move copies it.
 - **ADDR-8** After a move, the new address tells the user to install the new address and to remove
   the icon of the old one.

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { exportJson } from '#storage';
 import { addGarment, emptyGarments } from '#garments';
-import { OLD_HOST, NEW_ORIGIN, MAX_HASH, isOldOrigin, encodeMove, decodeMove, moveUrl, moveMode, takeMove } from '#move';
+import { OLD_HOST, NEW_ORIGIN, MAX_HASH, isOldOrigin, encodeMove, decodeMove, moveUrl, moveMode, takeMove, replaceKey, keepsOffline } from '#move';
 
 const sample = [{ name: 'Shirt', slot: 'top', season: 'all', color: 3 }, { name: 'Jeans', slot: 'bottom', season: 'all', color: 5 }]
   .reduce((doc, garment) => addGarment(doc, garment).state, emptyGarments());
@@ -119,4 +119,15 @@ test('the moved payload holds the garments document only (ADDR-3)', async () => 
   const { state } = await decodeMove(await encodeMove(exportJson(sample)));
   assert.deepEqual(Object.keys(state).sort(), Object.keys(emptyGarments()).sort());
   assert.deepEqual(state, sample);
+});
+
+test('the replace question names the account when a session would replace it on every device (ADDR-6, SYNC-9)', () => {
+  assert.equal(replaceKey(false), 'move.replace');
+  assert.equal(replaceKey(true), 'import.confirmAccount');
+});
+
+test('moved garments with no session open the app, not Sign in (ADDR-6, ACC-1)', () => {
+  assert.equal(keepsOffline({ imported: true, signedIn: false }), true);
+  assert.equal(keepsOffline({ imported: true, signedIn: true }), false);
+  assert.equal(keepsOffline({ imported: false, signedIn: false }), false);
 });

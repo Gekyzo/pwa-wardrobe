@@ -14,11 +14,12 @@ Rules of `sw.js`, `src/version.js`, `version.json`, `scripts/bump-version.mjs`,
   offline at the first start.
 - **SW-3** At its install the worker downloads the full shell past the HTTP cache, so the shell is
   never a mix of two deploys. It then takes control at once (`skipWaiting`, `clients.claim`).
-- **SW-4** At its activation the worker deletes each cache that is not the current one,
+- **SW-4** At its activation the worker deletes each `wardrobe-` cache that is not the current one,
   `wardrobe-manifest` (SW-13) or `wardrobe-images` (SW-14). The cache name is
   `wardrobe-shell-v9`; it went up for version 2 of the garments doc (GAR-5), then for design
   system 0.7.1 and 0.7.2, then for the release notes, then for versions 3 and 4 of the doc, then
-  for the sync (09-sync.md), then for the move to the new address (10-address.md).
+  for the sync (09-sync.md), then for the move to the new address (10-address.md). A cache of another app of the origin, such as
+  `shopping-shell-v29` on `gekyzo.github.io`, stays.
 - **SW-5** The worker answers only `GET` requests of its own origin, and the images of other
   origins (SW-14). The proxy of the links (LNK-1) goes to the network.
 - **SW-6** A request is answered stale-while-revalidate: the cached copy at once, and a fresh copy

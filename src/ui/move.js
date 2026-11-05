@@ -1,8 +1,9 @@
 // The move to the new address (ADDR-1 to ADDR-8): the screen of the old address, and the import of a
 // moved backup on the new one.
-import { NEW_ORIGIN, isOldOrigin, encodeMove, takeMove, moveUrl, moveMode } from '#move';
+import { NEW_ORIGIN, isOldOrigin, encodeMove, takeMove, moveUrl, moveMode, replaceKey, keepsOffline } from '#move';
+import { saveOffline } from '#session';
 import { exportJson } from '#storage';
-import { $, t, textOf, showToast, apply, state } from '#ui/context';
+import { $, storage, t, textOf, showToast, apply, state } from '#ui/context';
 import { signedIn, sessionNow, syncer } from '#ui/account';
 import { closeOnboarding } from '#ui/onboarding';
 
@@ -76,11 +77,12 @@ const importMoved = async () => {
   }
   if (state.garments.length > 0) {
     const items = t('garments.count', { count: result.state.garments.length });
-    if (!window.confirm(t('move.replace', { items }))) return;
+    if (!window.confirm(t(replaceKey(signedIn()), { items }))) return;
   }
   // A moved backup is data, not a first start: the walkthrough would cover it.
   closeOnboarding();
   apply(result, { undoText: t('move.done'), explicit: true });
+  if (storage && keepsOffline({ imported: true, signedIn: signedIn() })) saveOffline(storage);
 };
 
 // Runs before the account starts, so ACC-1 routes on the moved garments. `?moved`: the old address
