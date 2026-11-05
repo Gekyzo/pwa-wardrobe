@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 0.2.0 - 2026-11-05
+
 - Attire se muda a `attire.artisandevs.duckdns.org`. En la dirección antigua, **Mover mis datos** copia tus prendas a la nueva; con cuenta, envía antes tus cambios y luego inicias sesión allí.
 
 ## 0.1.26 - 2026-11-01

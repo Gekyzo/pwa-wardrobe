@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 0.2.0 - 2026-11-05
+
 - Attire moves to `attire.artisandevs.duckdns.org`. On the old address, **Move my data** copies your garments to the new one; with an account, it sends your changes first, and then you sign in there.
 
 ## 0.1.26 - 2026-11-01
