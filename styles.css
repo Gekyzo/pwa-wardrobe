@@ -1672,6 +1672,7 @@
   /* @component onboarding
      @scope onboarding
      @summary The walkthrough of the first start, over the full app: a page, the dots, the buttons.
+     @variant move             The screen of the old address (ADDR-1): over every layer, the account screen too.
      @part onboarding-logo     The app icon, in the middle of the band above the page. It stays while the pages change.
      @part onboarding-page     The page in view: its drawing, its title and its text.
      @part onboarding-title    The title of a page.
@@ -1699,6 +1700,11 @@
     touch-action: pan-y;
     overflow: hidden auto;
   }
+  /* ADDR-1: the move screen covers the account screen (z-index 50) too. */
+  .onboarding.move {
+    z-index: 60;
+  }
+
 
   /* The free space of the layer is three equal margins: above the logo, below it and below the
      page. The logo thus sits in the middle of the band above the drawing. */

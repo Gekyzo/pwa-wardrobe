@@ -24,6 +24,7 @@ const SHELL = [
   './src/ui/fill.js',
   './src/ui/wardrobe.js',
   './src/ui/settings.js',
+  './src/ui/move.js',
   './src/ui/update.js',
   './src/ui/dust.js',
   './src/ui/onboarding.js',

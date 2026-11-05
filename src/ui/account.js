@@ -128,7 +128,7 @@ const onStatus = (next) => {
 };
 
 // The doc that a merge gives is put in place with no save of the user (SYNC-2).
-const syncer = client ? createSyncer({ client, storage, getDoc: () => state, setDoc: replaceDoc, onStatus, lost: stateLost }) : null;
+export const syncer = client ? createSyncer({ client, storage, getDoc: () => state, setDoc: replaceDoc, onStatus, lost: stateLost }) : null;
 if (syncer) {
   status = syncer.status();
   setOnSave((doc, options) => syncer.notify(doc, options));

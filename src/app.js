@@ -13,6 +13,7 @@ import { readOAuthReturn } from '#session';
 import { familyOf } from '#families';
 import { countOutfits } from '#outfits';
 import { outfitsOf } from '#ui/outfit';
+import { startMove } from '#ui/move';
 
 // The return of the Google sign-in (ACC-4): `code`, `state` and `error` leave the URL at once.
 const { oauth, clean } = readOAuthReturn(new URL(location.href));
@@ -120,6 +121,9 @@ applyLanguage();
 if (ui.onboarding !== null) $('onboarding-next').focus();
 // The account and the sync (ACC-1, SYNC-3): the start refreshes the session and runs the sync; so do
 // the `online` event and a return to the app.
+// ADDR-1, ADDR-5: before the account starts, so its route (ACC-1) sees the moved garments. A failed
+// move must not stop the start of the app.
+await startMove().catch((error) => console.error(error));
 startAccount(oauth);
 window.addEventListener('online', goOnline);
 window.addEventListener('offline', goOffline);

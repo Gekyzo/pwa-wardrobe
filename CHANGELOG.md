@@ -4,7 +4,8 @@ Technical changes, newest first. What a user sees of a version goes to `release-
 
 ## Unreleased
 
-No change.
+- The API is `https://api.artisandevs.duckdns.org` (ACC-3); the old name stays an alias on the server.
+- The move to `attire.artisandevs.duckdns.org` (ADDR-1 to ADDR-8): `src/move.js`, `src/ui/move.js`, the screen `#move` of the old address; shell cache `wardrobe-shell-v9`.
 
 ## 0.1.27 - 2026-11-02
 

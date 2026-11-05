@@ -262,6 +262,17 @@
       </form>
     </div>
 
+    <div id="move" class="onboarding move" role="dialog" aria-modal="true" data-i18n-attr="aria-label:move.label" hidden>
+      <img class="onboarding-logo" src="./icons/logo.png" alt="">
+      <div class="onboarding-page">
+        <h2 id="move-title" class="onboarding-title" tabindex="-1"></h2>
+        <p class="onboarding-text" data-i18n="move.text"></p>
+        <p id="move-status" class="onboarding-text" role="status"></p>
+        <button id="move-export" class="button quiet wide" type="button" data-i18n="move.export" hidden></button>
+        <button id="move-go" class="button primary wide" type="button" data-i18n="move.go"></button>
+      </div>
+    </div>
+
     <div id="onboarding" class="onboarding" role="dialog" aria-modal="true" data-i18n-attr="aria-label:onboarding.label" hidden>
       <img class="onboarding-logo" src="./icons/logo.png" alt="">
       <div id="onboarding-page" class="onboarding-page">
@@ -373,6 +384,7 @@
           "#ui/fill": "./src/ui/fill.js",
           "#ui/wardrobe": "./src/ui/wardrobe.js",
           "#ui/settings": "./src/ui/settings.js",
+          "#ui/move": "./src/ui/move.js",
           "#particles": "./src/particles.js",
           "#onboarding": "./src/onboarding.js",
           "#ui/dust": "./src/ui/dust.js",
