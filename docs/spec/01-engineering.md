@@ -5,6 +5,7 @@
 | Module | Responsibility | May import |
 |---|---|---|
 | `src/config.js` | The slug of the app, which `npm run init` rewrites, and the URL of the account server | nothing |
+| `src/move.js` | The old and the new address, the garments packed into a URL fragment, what the move button does (ADDR-1 to ADDR-5) | `storage`, `garments` |
 | `src/pocketbase.js` | The client of the account server: Google sign-in, refresh, the access row (ACC-3), the garment records: pull, push, stream (SYNC-4) | `config` |
 | `src/session.js` | The session on the device, the start route and the return from Google (ACC-1, ACC-4, ACC-5) | `storage` |
 | `src/version.js` | Version rules and the update offer rule | nothing |
@@ -115,6 +116,7 @@ in [09-sync.md](09-sync.md).
 | `tests/matching.test.js` | LCh, the defaults of the matching rules, neutral colours, contrast, formality and colour type (PAL-6, MAT-1 to MAT-5) |
 | `tests/families.test.js` | The palette families: Wada, the generated sets, their targets and counts, the switch and the family in use (FAM-1 to FAM-5) |
 | `tests/fill.test.js` | The ranked list of the Fill tab: basics, set colours, drops, slot pick, order and cap, the colour type and the family (FIL-1 to FIL-9) |
+| `tests/move.test.js` | The old origin, the fragment of a move and its errors, the size limit, the move mode (ADDR-1 to ADDR-5) |
 | `tests/storage.test.js` | Load, save, the corrupt copy, the lost doc (SYNC-2), export, import and the device preferences |
 | `tests/pocketbase.test.js` | The client of the account server and its URL (ACC-3, ACC-4, ACC-6, SYNC-4) |
 | `tests/session.test.js` | The session, the start route, the pending sign-in and the return URL (ACC-1, ACC-4, ACC-5) |

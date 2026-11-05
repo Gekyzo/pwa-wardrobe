@@ -1,4 +1,4 @@
-const CACHE = 'wardrobe-shell-v8';
+const CACHE = 'wardrobe-shell-v9';
 
 const SHELL = [
   './',
@@ -11,6 +11,7 @@ const SHELL = [
   './manifest.webmanifest',
   './src/app.js',
   './src/config.js',
+  './src/move.js',
   './src/pocketbase.js',
   './src/session.js',
   './src/ui/context.js',

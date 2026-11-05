@@ -30,7 +30,8 @@ const fake = (...replies) => {
 
 test('apiUrl gives the local server on a local host and the production one elsewhere', () => {
   for (const host of ['localhost', '127.0.0.1', '[::1]']) assert.equal(apiUrl(host), LOCAL_API);
-  assert.equal(apiUrl('gekyzo.github.io'), PRODUCTION_API);
+  for (const host of ['attire.artisandevs.duckdns.org', 'gekyzo.github.io']) assert.equal(apiUrl(host), 'https://api.artisandevs.duckdns.org', host);
+  assert.equal(PRODUCTION_API, 'https://api.artisandevs.duckdns.org');
 });
 
 test('oauthStart appends the encoded redirect URL to the authURL of google', async () => {

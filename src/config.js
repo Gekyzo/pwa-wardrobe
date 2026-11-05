@@ -2,7 +2,7 @@
 export const APP_SLUG = 'wardrobe';
 
 // The PocketBase server of the account (ACC-3). A local host talks to the local server.
-export const PRODUCTION_API = 'https://artisandevs.duckdns.org';
+export const PRODUCTION_API = 'https://api.artisandevs.duckdns.org';
 export const LOCAL_API = 'http://localhost:8090';
 
 const LOCAL_HOSTS = ['localhost', '127.0.0.1', '[::1]', '::1'];

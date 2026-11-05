@@ -22,7 +22,7 @@ with `fetch`, with no SDK. The garments of an approved account sync between its 
 - **ACC-3** "Approved" is the `app_access` row of the app `APP_SLUG` with the status
   `approved`. Each sign-in and each refresh reads it. With no row, the app creates a `pending`
   one; a duplicate row that another device made meanwhile is read again. The server URL is
-  `http://localhost:8090` on a local host, else `https://artisandevs.duckdns.org`.
+  `http://localhost:8090` on a local host, else `https://api.artisandevs.duckdns.org`.
 - **ACC-4** Google sign-in is a redirect. The app asks the server for the URL of the provider,
   keeps the state and the verifier in `sessionStorage` (`wardrobe.oauth`), and sends the browser
   there with the URL of the app as the return address. On return the app removes `code`, `state`
@@ -73,6 +73,7 @@ with `fetch`, with no SDK. The garments of an approved account sync between its 
 
 ## Set-up outside the app
 
-- The server has a row in `apps`: slug `wardrobe`, url `https://gekyzo.github.io/pwa-wardrobe/`.
-- The Google OAuth client has the redirect URIs `https://gekyzo.github.io/pwa-wardrobe/` and
+- The server has a row in `apps`: slug `wardrobe`, url `https://attire.artisandevs.duckdns.org/`.
+- The Google OAuth client has the redirect URIs `https://attire.artisandevs.duckdns.org/`,
+  `https://gekyzo.github.io/pwa-wardrobe/` (the old address, until it is retired) and
   `http://localhost:8081/` (`npm run serve`).
